@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -1038,9 +1038,7 @@
 // ══ CONFIG GOOGLE ══
 const SHEET_ID    = '16itvJEnFxz42INaipQtaikisLooQ339oyfIW0F4-0XE';
 const CLIENT_ID   = '498586951900-fpom0ad71viisb61iqv203civkci6hve.apps.googleusercontent.com';
-const SCOPES      = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.file';
-const SHEET_NAME  = 'Dossiers';
-const ALLOWED_EMAILS = []; // Laisser vide = tout compte Google autorisé, ou ['email1@gmail.com','email2@gmail.com']
+const ALLOWED_EMAILS = []; // [] = tout compte Google autorisé, ou ['email@gmail.com','email2@gmail.com']
 
 let accessToken = null;
 let tokenClient = null;
@@ -1096,7 +1094,7 @@ function signInWithGoogle() {
     if(!tokenClient) {
         tokenClient = google.accounts.oauth2.initTokenClient({
             client_id: CLIENT_ID,
-            scope: SCOPES,
+            scope: 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
             callback: async (resp) => {
                 if(resp.error) {
                     document.getElementById('loginLoading').style.display = 'none';
@@ -1155,39 +1153,108 @@ function signOut() {
 }
 
 // ══ GOOGLE SHEETS ══
+const SHEET_NAME     = 'Dossiers';       // tableau lisible
+const SHEET_BACKUP   = 'Données_Brutes'; // JSON complet
+
 async function sheetsRequest(method, path, body) {
     const base = 'https://sheets.googleapis.com/v4/spreadsheets';
     const r = await fetch(`${base}/${SHEET_ID}${path}`, {
         method,
-        headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json'
-        },
+        headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
         body: body ? JSON.stringify(body) : undefined
     });
     if(!r.ok) throw new Error(`Sheets API ${r.status}: ${await r.text()}`);
     return r.json();
 }
 
+// En-têtes du tableau lisible
+const HEADERS = [
+    'ID','Entreprise','Adresse','NEQ','Secteur','Employés','Année création',
+    'Contact','Fonction','Rôle/Propriété','Âge','Cellulaire','Téléphone','Poste','Courriel',
+    'Fumeur','Situation familiale','Enfants à charge','Associés',
+    'Suivi','Statut','Priorité',
+    'Prochaine action','Type action','Recommandations',
+    'Nb actions','Dernière action (date)','Résumé dernière action',
+    'Notes','Notes commerciales','Créé le','Créé par','Archivé'
+];
+
+// Convertir un client en ligne de tableau
+function clientToRow(c) {
+    const lastCall = c.calls?.length > 0 ? c.calls[c.calls.length - 1] : null;
+    const prio = c.priority === 'high' ? 'Haute' : c.priority === 'medium' ? 'Moyenne' : 'Basse';
+    return [
+        c.id, c.companyName||'', c.companyAddress||'', c.neq||'', c.secteur||'',
+        c.employees||'', c.companyCreationDate||'',
+        c.contactName||'', c.fonction||'', c.proprietaire||'', c.age||'',
+        c.phoneDirect||'', c.phoneMobile||'', c.phonePoste||'', c.email||'',
+        c.fumeur||'Non-fumeur', c.situationFamiliale||'', c.enfantsCharge||'0', c.nomsAssocies||'',
+        c.campaignSuivi||'', c.status||'', prio,
+        c.nextCall?.date||'', c.nextCall?.type||'', c.nextCall?.recommendations||'',
+        c.calls?.length||0,
+        lastCall?.date||'', lastCall?.summary||'',
+        c.generalNotes||'', c.commercialNotes||'',
+        c.createdAt||'', c.createdBy||'', c.archived ? 'Oui' : 'Non'
+    ];
+}
+
+// Couleur selon statut
+function statusColor(status) {
+    if(status === 'Prospect')  return { red:1,   green:0.75, blue:0.4  }; // orange
+    if(status === 'En cours')  return { red:0.53, green:0.81, blue:0.98 }; // bleu
+    if(status === 'Client')    return { red:0.6,  green:0.91, blue:0.75 }; // vert
+    return { red:1, green:1, blue:1 };
+}
+
+// Initialiser les deux onglets si nécessaire
 async function ensureSheetHeaders() {
-    try {
-        const r = await sheetsRequest('GET', `/values/${SHEET_NAME}!A1:A1`);
-        if(!r.values) {
-            // Feuille vide — créer les en-têtes
-            await sheetsRequest('PUT', `/values/${SHEET_NAME}!A1:A1?valueInputOption=RAW`, {
-                values: [['__CRM_KARIM_DATA__']]
-            });
-        }
-    } catch(e) {
-        // La feuille n'existe pas encore, on la crée
-        try {
-            await sheetsRequest('POST', ':batchUpdate', {
-                requests: [{ addSheet: { properties: { title: SHEET_NAME } } }]
-            });
-            await sheetsRequest('PUT', `/values/${SHEET_NAME}!A1:A1?valueInputOption=RAW`, {
-                values: [['__CRM_KARIM_DATA__']]
-            });
-        } catch(e2) { /* feuille existe déjà */ }
+    // Récupérer la liste des feuilles existantes
+    const meta = await sheetsRequest('GET', '');
+    const sheets = meta.sheets.map(s => s.properties.title);
+
+    const requests = [];
+
+    // Créer onglet Dossiers si absent
+    if(!sheets.includes(SHEET_NAME)) {
+        requests.push({ addSheet: { properties: { title: SHEET_NAME } } });
+    }
+    // Créer onglet Données_Brutes si absent
+    if(!sheets.includes(SHEET_BACKUP)) {
+        requests.push({ addSheet: { properties: { title: SHEET_BACKUP } } });
+    }
+    if(requests.length > 0) {
+        await sheetsRequest('POST', ':batchUpdate', { requests });
+    }
+
+    // Écrire les en-têtes dans Dossiers
+    const check = await sheetsRequest('GET', `/values/${encodeURIComponent(SHEET_NAME)}!A1:A1`);
+    if(!check.values || check.values[0][0] !== 'ID') {
+        await sheetsRequest('PUT',
+            `/values/${encodeURIComponent(SHEET_NAME)}!A1:AG1?valueInputOption=RAW`,
+            { values: [HEADERS] }
+        );
+        // Formater la ligne d'en-tête : fond violet, texte blanc, gras
+        const sheetId = meta.sheets.find(s => s.properties.title === SHEET_NAME)?.properties.sheetId || 0;
+        await sheetsRequest('POST', ':batchUpdate', { requests: [
+            // En-tête : fond couleur + gras + texte blanc
+            { repeatCell: {
+                range: { sheetId, startRowIndex:0, endRowIndex:1, startColumnIndex:0, endColumnIndex: HEADERS.length },
+                cell: { userEnteredFormat: {
+                    backgroundColor: { red:0.33, green:0.29, blue:0.72 },
+                    textFormat: { bold:true, foregroundColor:{ red:1,green:1,blue:1 }, fontSize:11 },
+                    horizontalAlignment: 'CENTER'
+                }},
+                fields: 'userEnteredFormat(backgroundColor,textFormat,horizontalAlignment)'
+            }},
+            // Figer la ligne 1
+            { updateSheetProperties: {
+                properties: { sheetId, gridProperties: { frozenRowCount:1 } },
+                fields: 'gridProperties.frozenRowCount'
+            }},
+            // Activer les filtres
+            { setBasicFilter: {
+                filter: { range: { sheetId, startRowIndex:0, startColumnIndex:0, endColumnIndex: HEADERS.length } }
+            }}
+        ]});
     }
 }
 
@@ -1195,19 +1262,19 @@ async function syncFromSheet() {
     if(!accessToken) return;
     setSyncStatus('saving', 'Chargement...');
     try {
-        const r = await sheetsRequest('GET', `/values/${SHEET_NAME}!B1:B1`);
-        if(r.values && r.values[0] && r.values[0][0]) {
+        // Lire depuis l'onglet backup JSON
+        const r = await sheetsRequest('GET', `/values/${encodeURIComponent(SHEET_BACKUP)}!A1:A1`);
+        if(r.values && r.values[0] && r.values[0][0] && r.values[0][0] !== '[]') {
             const data = JSON.parse(r.values[0][0]);
-            if(Array.isArray(data)) {
+            if(Array.isArray(data) && data.length > 0) {
                 clients = data;
                 render();
-                const lastSave = r.values[0][0] ? new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}) : '';
-                setSyncStatus('saved', `Synchro ${lastSave}`);
             }
-        } else {
-            setSyncStatus('saved', 'Prêt (vide)');
         }
+        const t = new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+        setSyncStatus('saved', `Synchro ${t}`);
     } catch(e) {
+        console.error('syncFromSheet:', e);
         setSyncStatus('error', 'Erreur sync');
         showNotification('Erreur de synchronisation','error');
     }
@@ -1216,20 +1283,53 @@ async function syncFromSheet() {
 async function saveToSheet() {
     if(!accessToken) return;
     setSyncStatus('saving', 'Sauvegarde...');
-    // Sérialiser + timestamp
     const payload = JSON.stringify(clients);
-    const ts = getCurrentDateTime();
     try {
+        // 1 — Backup JSON complet dans Données_Brutes A1
         await sheetsRequest('PUT',
-            `/values/${SHEET_NAME}!A1:C1?valueInputOption=RAW`, {
-            values: [['__CRM_KARIM_DATA__', payload, ts]]
-        });
-        setSyncStatus('saved', `Sauvegardé ${new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}`);
-        // Backup local aussi
+            `/values/${encodeURIComponent(SHEET_BACKUP)}!A1:B1?valueInputOption=RAW`,
+            { values: [[payload, getCurrentDateTime()]] }
+        );
+
+        // 2 — Tableau lisible dans Dossiers
+        // Effacer les anciennes données (garder ligne 1 = en-têtes)
+        await sheetsRequest('POST',
+            `/values/${encodeURIComponent(SHEET_NAME)}!A2:AG9999:clear`,
+            {}
+        );
+
+        if(clients.length > 0) {
+            const rows = clients.map(clientToRow);
+            await sheetsRequest('PUT',
+                `/values/${encodeURIComponent(SHEET_NAME)}!A2:AG${1+clients.length}?valueInputOption=RAW`,
+                { values: rows }
+            );
+
+            // 3 — Colorier les lignes selon le statut
+            const meta = await sheetsRequest('GET', '?fields=sheets.properties');
+            const sheetId = meta.sheets.find(s => s.properties.title === SHEET_NAME)?.properties.sheetId || 0;
+            const colorRequests = clients.map((c, i) => ({
+                repeatCell: {
+                    range: { sheetId, startRowIndex: i+1, endRowIndex: i+2, startColumnIndex:0, endColumnIndex: HEADERS.length },
+                    cell: { userEnteredFormat: {
+                        backgroundColor: statusColor(c.status),
+                        textFormat: { fontSize: 10 }
+                    }},
+                    fields: 'userEnteredFormat(backgroundColor,textFormat)'
+                }
+            }));
+            if(colorRequests.length > 0) {
+                await sheetsRequest('POST', ':batchUpdate', { requests: colorRequests });
+            }
+        }
+
+        const t = new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+        setSyncStatus('saved', `Sauvegardé ${t}`);
         localStorage.setItem('crm_karim_backup', payload);
     } catch(e) {
+        console.error('saveToSheet:', e);
         setSyncStatus('error', 'Erreur sauvegarde');
-        showNotification('❌ Sauvegarde échouée — données préservées localement','error');
+        showNotification('❌ Sauvegarde échouée — backup local créé','error');
         localStorage.setItem('crm_karim_backup', payload);
     }
 }
