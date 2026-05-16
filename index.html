@@ -1263,13 +1263,20 @@ async function syncFromSheet() {
     if(!accessToken) return;
     setSyncStatus('saving', 'Chargement...');
     try {
-        // Lire depuis l'onglet backup JSON
-        const r = await sheetsRequest('GET', `/values/${encodeURIComponent(SHEET_BACKUP)}!A1:A1`);
-        if(r.values && r.values[0] && r.values[0][0] && r.values[0][0] !== '[]') {
-            const data = JSON.parse(r.values[0][0]);
-            if(Array.isArray(data) && data.length > 0) {
-                clients = data;
-                render();
+        const r = await sheetsRequest('GET', `/values/${encodeURIComponent(SHEET_BACKUP)}!A1:A100`);
+        if(r.values && r.values.length > 0) {
+            let jsonStr = '';
+            for(const row of r.values) {
+                const v = row[0] || '';
+                if(/^\d{2}\/\d{2}\/\d{4}/.test(v)) break;
+                jsonStr += v;
+            }
+            if(jsonStr && jsonStr.startsWith('[')) {
+                const data = JSON.parse(jsonStr);
+                if(Array.isArray(data) && data.length > 0) {
+                    clients = data;
+                    render();
+                }
             }
         }
         const t = new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
@@ -1286,21 +1293,28 @@ async function saveToSheet() {
     setSyncStatus('saving', 'Sauvegarde...');
     const payload = JSON.stringify(clients);
     try {
-        // 1 — Backup JSON complet dans Données_Brutes A1
+        // 1 — Backup JSON dans Données_Brutes découpé en chunks de 40000 chars
+        const CHUNK = 40000;
+        const chunks = [];
+        for(let i = 0; i < payload.length; i += CHUNK) {
+            chunks.push([payload.slice(i, i + CHUNK)]);
+        }
+        chunks.push([getCurrentDateTime()]); // timestamp en dernière ligne
+        await sheetsRequest('POST', `/values/${encodeURIComponent(SHEET_BACKUP)}!A1:A100:clear`, null);
         await sheetsRequest('PUT',
-            `/values/${encodeURIComponent(SHEET_BACKUP)}!A1:B1?valueInputOption=RAW`,
-            { values: [[payload, getCurrentDateTime()]] }
+            `/values/${encodeURIComponent(SHEET_BACKUP)}!A1:A${chunks.length}?valueInputOption=RAW`,
+            { values: chunks }
         );
 
-        // 2 — Effacer les anciennes données (syntaxe correcte)
-        await sheetsRequest('POST',
-            `/values/${encodeURIComponent(SHEET_NAME)}!A2:AG9999:clear`,
-            null
-        );
+        // 2 — Effacer tableau lisible Dossiers
+        await sheetsRequest('POST', `/values/${encodeURIComponent(SHEET_NAME)}!A2:AG9999:clear`, null);
 
-        // 3 — Écrire les nouvelles lignes
+        // 3 — Écrire les nouvelles lignes en tronquant les champs longs
         if(clients.length > 0) {
-            const rows = clients.map(clientToRow);
+            const rows = clients.map(c => clientToRow(c).map(v => {
+                const s = String(v||'');
+                return s.length > 2000 ? s.slice(0, 2000) + '...' : s;
+            }));
             await sheetsRequest('PUT',
                 `/values/${encodeURIComponent(SHEET_NAME)}!A2:AG${1+clients.length}?valueInputOption=RAW`,
                 { values: rows }
