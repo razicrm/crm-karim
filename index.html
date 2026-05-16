@@ -1158,11 +1158,12 @@ const SHEET_BACKUP   = 'Données_Brutes'; // JSON complet
 
 async function sheetsRequest(method, path, body) {
     const base = 'https://sheets.googleapis.com/v4/spreadsheets';
-    const r = await fetch(`${base}/${SHEET_ID}${path}`, {
+    const options = {
         method,
-        headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
-        body: body ? JSON.stringify(body) : undefined
-    });
+        headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' }
+    };
+    if(body !== null && body !== undefined) options.body = JSON.stringify(body);
+    const r = await fetch(`${base}/${SHEET_ID}${path}`, options);
     if(!r.ok) throw new Error(`Sheets API ${r.status}: ${await r.text()}`);
     return r.json();
 }
@@ -1291,13 +1292,13 @@ async function saveToSheet() {
             { values: [[payload, getCurrentDateTime()]] }
         );
 
-        // 2 — Tableau lisible dans Dossiers
-        // Effacer les anciennes données (garder ligne 1 = en-têtes)
+        // 2 — Effacer les anciennes données (syntaxe correcte)
         await sheetsRequest('POST',
             `/values/${encodeURIComponent(SHEET_NAME)}!A2:AG9999:clear`,
-            {}
+            null
         );
 
+        // 3 — Écrire les nouvelles lignes
         if(clients.length > 0) {
             const rows = clients.map(clientToRow);
             await sheetsRequest('PUT',
@@ -1305,7 +1306,7 @@ async function saveToSheet() {
                 { values: rows }
             );
 
-            // 3 — Colorier les lignes selon le statut
+            // 4 — Colorier selon statut
             const meta = await sheetsRequest('GET', '?fields=sheets.properties');
             const sheetId = meta.sheets.find(s => s.properties.title === SHEET_NAME)?.properties.sheetId || 0;
             const colorRequests = clients.map((c, i) => ({
@@ -1326,6 +1327,7 @@ async function saveToSheet() {
         const t = new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
         setSyncStatus('saved', `Sauvegardé ${t}`);
         localStorage.setItem('crm_karim_backup', payload);
+        showNotification('✅ Sauvegardé dans Google Sheets', 'success');
     } catch(e) {
         console.error('saveToSheet:', e);
         setSyncStatus('error', 'Erreur sauvegarde');
