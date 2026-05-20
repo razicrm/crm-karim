@@ -362,6 +362,65 @@
         @media (max-width: 1100px) { .dash-cols { grid-template-columns: repeat(3, 1fr); } .metrics { grid-template-columns: repeat(3, 1fr); } }
         @media (max-width: 800px) { .metrics { grid-template-columns: repeat(2, 1fr); } .dash-cols { grid-template-columns: repeat(2, 1fr); } .two-col { grid-template-columns: 1fr; } .agenda-grid { grid-template-columns: 1fr; } .stats-grid { grid-template-columns: 1fr; } }
         @media (max-width: 500px) { .app { padding: 10px; } .metrics { grid-template-columns: repeat(2, 1fr); } .nav-tab span.label { display: none; } }
+    
+        /* ═══ TABBED MODAL ═══ */
+        .modal-content { padding: 0 !important; }
+        .modal-header { padding: 14px 20px; border-bottom: 0.5px solid var(--border); background: var(--bg-subtle); position: sticky; top: 0; z-index: 10; border-radius: var(--radius-xl) var(--radius-xl) 0 0; }
+        .view-header-card { background: var(--bg-subtle); border: 0.5px solid var(--border-light); border-radius: var(--radius-lg); padding: 14px 18px; margin: 14px 18px 0 18px; }
+        .entreprise-name { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+        .entreprise-address { font-size: 12px; color: var(--text-secondary); margin-top: 3px; }
+        .contact-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px 20px; margin-top: 10px; padding-top: 10px; border-top: 0.5px solid var(--border-light); }
+        .contact-item { display: flex; flex-direction: column; gap: 2px; }
+        .contact-lbl { font-size: 10px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.04em; }
+        .contact-val { font-size: 12px; }
+        .contact-val-bold { font-size: 13px; font-weight: 600; }
+        .view-tabs { display: flex; gap: 3px; background: var(--bg-subtle); padding: 7px 18px 0 18px; border-bottom: 0.5px solid var(--border-light); flex-wrap: wrap; }
+        .view-tab { padding: 8px 16px; border: none; background: transparent; font-family: 'DM Sans',sans-serif; font-size: 12px; font-weight: 500; color: var(--text-secondary); cursor: pointer; border-radius: var(--radius-md) var(--radius-md) 0 0; display:inline-flex;align-items:center;gap:6px; transition:all 0.15s; }
+        .view-tab:hover { background: var(--bg-hover); color: var(--text-primary); }
+        .view-tab.active { background: var(--bg-white); color: var(--accent); border-bottom: 2px solid var(--accent); }
+        .view-tab-content { padding: 16px 20px; min-height: 360px; }
+        .timeline-item { display:flex;gap:10px;margin-bottom:12px;padding:10px 12px;background:var(--bg-white);border-radius:var(--radius-md);border:0.5px solid var(--border-light); }
+        .timeline-marker { flex-shrink:0;width:24px;text-align:center;padding-top:3px; }
+        .timeline-dot { width:8px;height:8px;border-radius:50%;background:var(--accent);margin:0 auto; }
+        .timeline-content { flex:1; }
+        .timeline-header { display:flex;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:6px; }
+        .timeline-type { font-size:11px;font-weight:600;color:var(--accent); }
+        .timeline-date { font-size:10px;color:var(--text-tertiary);font-family:'DM Mono',monospace; }
+        .timeline-summary { font-size:12px;color:var(--text-secondary);line-height:1.5; }
+        .call-reco-view { padding:6px 8px;background:var(--orange-bg);border-radius:var(--radius-sm);font-size:11px;margin-top:6px;color:var(--orange-text); }
+        /* CONTACTS TABLE */
+        .secondary-contacts-section { margin-top:16px;background:var(--bg-white);border:0.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden; }
+        .secondary-header { background:var(--bg-subtle);padding:10px 14px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between; }
+        .secondary-header h4 { font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-secondary);margin:0; }
+        .btn-add-contact { background:var(--accent-light);color:var(--accent);border:0.5px solid var(--purple-border);border-radius:var(--radius-md);padding:5px 10px;font-size:10px;font-weight:500;cursor:pointer;font-family:inherit; }
+        .btn-add-contact:hover { background:var(--accent);color:white; }
+        .contacts-table { width:100%;border-collapse:collapse; }
+        .contacts-table th { text-align:left;padding:8px 11px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-tertiary);background:var(--bg-subtle);border-bottom:0.5px solid var(--border); }
+        .contacts-table td { padding:9px 11px;border-bottom:0.5px solid var(--border-light);font-size:12px; }
+        .contacts-table tr:last-child td { border-bottom:none; }
+        .contacts-table tr:hover td { background:var(--bg-hover); }
+        .contact-action-btn { background:none;border:none;cursor:pointer;font-size:14px;padding:3px 5px;border-radius:var(--radius-sm);transition:all 0.15s; }
+        .contact-action-btn.set-main:hover { background:var(--orange-bg); }
+        .contact-action-btn.edit-c:hover { background:var(--blue-bg); }
+        .contact-action-btn.delete-c:hover { background:var(--red-bg); }
+        .badge-main-contact { background:var(--green-bg);color:var(--green-text);font-size:9px;padding:1px 6px;border-radius:var(--radius-pill);margin-left:6px; }
+        .editable-input { padding:4px 0;background:transparent;border:none;border-bottom:1px dashed var(--border);font-family:inherit;font-size:inherit;color:inherit;width:100%; }
+        .editable-input:focus { outline:none;border-bottom-color:var(--accent); }
+        .modal-footer-bar { padding:14px 20px 20px;text-align:center;border-top:0.5px solid var(--border-light);display:flex;justify-content:center;gap:10px; }
+        /* CONTACT SUB-MODAL */
+        .contact-modal-overlay { display:none;position:fixed;z-index:2000;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.4);animation:fadeIn 0.15s; }
+        .contact-modal-box { background:var(--bg-white);margin:8% auto;width:90%;max-width:500px;border-radius:var(--radius-xl);border:0.5px solid var(--border);overflow:hidden; }
+        .contact-modal-header { display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:var(--bg-subtle);border-bottom:0.5px solid var(--border); }
+        .contact-modal-header h4 { font-size:14px;font-weight:600; }
+        .contact-form-grid { display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:18px; }
+        .contact-form-full { grid-column:span 2; }
+        .input-field-sm { display:flex;flex-direction:column;gap:4px; }
+        .input-field-sm label { font-size:10px;font-weight:500;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.04em; }
+        .input-field-sm input,.input-field-sm textarea { padding:7px 9px;border:0.5px solid var(--border);border-radius:var(--radius-md);background:var(--bg-white);font-size:12px;font-family:inherit;color:var(--text-primary); }
+        .input-field-sm input:focus,.input-field-sm textarea:focus { outline:none;border-color:var(--accent); }
+        .btn-save-contact { background:var(--green-bg);color:var(--green-text);border:0.5px solid var(--green-border);border-radius:var(--radius-md);padding:8px 16px;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit; }
+        .btn-save-contact:hover { background:var(--green-border); }
+
     </style>
 </head>
 <body>
@@ -1206,93 +1265,536 @@ function addClientB2B() {
     closeCreateModal();
 }
 
-// ══ VUE CONSULTATION ══
+
+// ══ TABBED VIEW MODAL ══
 function openViewModal(id) {
     currentViewId = id;
     const c = clients.find(x=>x.id===id);
     if(!c) return;
+    document.getElementById('viewModal').style.display='block';
+    buildViewModal(c);
+}
+
+function buildViewModal(c) {
     const ts = getTacheStatus(c);
+    const statusCls = c.status==='Prospect'?'prospect':c.status==='En cours'?'encours':'client';
     const callsSorted = [...(c.calls||[])].reverse();
     const lastCall = callsSorted[0]||null;
-    const older = callsSorted.slice(1);
-    const buildCall = (call) => `<div class="call-item"><div class="call-header"><span>${escapeHtml(call.type||'Action')}</span><span>${escapeHtml(call.date)}</span></div><div class="call-summary"><strong>Résumé :</strong><br>${escapeHtml(call.summary)}</div>${call.recommendations?`<div class="call-reco"><strong>Reco :</strong><br>${escapeHtml(call.recommendations)}</div>`:''}</div>`;
-    const statusCls = c.status==='Prospect'?'prospect':c.status==='En cours'?'encours':'client';
-    // Tache panel in view
-    const tacheColor = {
-        'En retard':['late','⚠️ Tâche EN RETARD — Action requise immédiatement'],
-        'Urgent':   ['today','🔔 À traiter AUJOURD\'HUI'],
-        'À faire':  ['future','📅 Tâche planifiée'],
-        'Fait':     ['done','✅ Tâche effectuée'],
-        'Finalisé': ['done','🏆 Dossier finalisé']
-    };
-    const [tcls, ttext] = tacheColor[ts]||['future',''];
-    let tacheHtml = '';
-    if(c.nextCall?.date||c.tacheFaite||c.closed) {
-        tacheHtml = `<div style="background:var(--purple-bg);border:0.5px solid var(--purple-border);border-radius:var(--radius-lg);padding:14px 16px;margin-bottom:14px;">
-            <h4 style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.05em;color:var(--purple-text);margin-bottom:10px;">📋 Suivi des Tâches</h4>
-            <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:8px;">
-                ${tacheStatusBadge(ts)}
-                ${c.nextCall?.type?`<span style="font-weight:500;font-size:12px;">${escapeHtml(c.nextCall.type)}</span>`:''}
-                ${c.nextCall?.date?`<span style="font-size:11px;color:var(--text-secondary);font-family:'DM Mono',monospace;">${c.nextCall.date}</span>`:''}
-            </div>
-            <div class="tache-current ${tcls}" style="font-size:12px;"><span class="tache-icon">${ts==='En retard'?'🔴':ts==='Urgent'?'🟠':ts==='Fait'?'✅':ts==='Finalisé'?'🏆':'🔵'}</span><span>${ttext}</span></div>
-            ${c.tacheFaite?`<div style="font-size:12px;color:var(--gray-text);padding:6px 0;">✓ Validée — ${escapeHtml(c.commentaireTache||'Aucun commentaire')}</div>`:''}
-            ${c.prochainesTache?`<div style="margin-top:8px;padding:8px 12px;background:var(--bg-white);border-radius:var(--radius-sm);font-size:12px;"><strong>Prochaine tâche :</strong> ${escapeHtml(c.prochainesTache)} — ${escapeHtml(c.prochainesTacheDate)}</div>`:''}
-            ${c.notePrestataire?`<div style="margin-top:8px;padding:8px 12px;background:var(--orange-bg);border-radius:var(--radius-sm);font-size:12px;color:var(--orange-text);"><strong>Note prestataire :</strong> ${escapeHtml(c.notePrestataire)}</div>`:''}
-            ${c.recoPrestataire?`<div style="margin-top:6px;padding:8px 12px;background:var(--blue-bg);border-radius:var(--radius-sm);font-size:12px;color:var(--blue-text);"><strong>Reco :</strong> ${escapeHtml(c.recoPrestataire)}</div>`:''}
-        </div>`;
+    const olderCalls = callsSorted.slice(1);
+
+    function fmtDate(d) {
+        if(!d) return '';
+        const [y,m,day]=d.split('-');
+        const ms=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+        return `${parseInt(day)} ${ms[parseInt(m)-1]} ${y}`;
     }
-    document.getElementById("viewContent").innerHTML = `
+
+    // TAB: INFOS
+    const tacheColor={'En retard':['var(--red-bg)','var(--red-text)','⚠️'],'Urgent':['var(--orange-bg)','var(--orange-text)','🔔'],'À faire':['var(--blue-bg)','var(--blue-text)','📅'],'Fait':['var(--gray-bg)','var(--gray-text)','✅'],'Finalisé':['var(--green-bg)','var(--green-text)','🏆']};
+    const [tBg,tTxt,tIcon]=tacheColor[ts]||['var(--blue-bg)','var(--blue-text)','📅'];
+
+    const infosHtml=`
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+            <div class="info-block" style="margin-bottom:0;">
+                <h4>🏢 Entreprise</h4>
+                <div class="info-row"><span class="lbl">Secteur</span><span class="val">${escapeHtml(c.secteur)||'—'}</span></div>
+                <div class="info-row"><span class="lbl">NEQ</span><span class="val">${escapeHtml(c.neq)||'—'}</span></div>
+                <div class="info-row"><span class="lbl">Employés</span><span class="val">${escapeHtml(c.employees)||'—'}</span></div>
+                <div class="info-row"><span class="lbl">Année création</span><span class="val">${escapeHtml(c.companyCreationDate)||'—'}</span></div>
+                ${c.campagne?`<div class="info-row"><span class="lbl">Campagne</span><span class="val">${escapeHtml(c.campagne)}</span></div>`:''}
+            </div>
+            <div class="info-block" style="margin-bottom:0;">
+                <h4>👤 Contact principal</h4>
+                <div class="info-row"><span class="lbl">Âge</span><span class="val">${escapeHtml(c.age)||'—'}</span></div>
+                <div class="info-row"><span class="lbl">Situation</span><span class="val">${escapeHtml(c.situationFamiliale)||'—'} ${c.enfantsCharge?'· '+c.enfantsCharge+' enfant(s)':''}</span></div>
+                <div class="info-row"><span class="lbl">Fumeur</span><span class="val">${escapeHtml(c.fumeur||'Non-fumeur')}</span></div>
+                <div class="info-row"><span class="lbl">Associés</span><span class="val">${escapeHtml(c.nomsAssocies)||'—'}</span></div>
+            </div>
+        </div>
+        <div class="info-block" style="margin-bottom:14px;">
+            <h4>📊 Suivi commercial</h4>
+            <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center;">
+                <div><span class="lbl" style="font-size:10px;color:var(--text-tertiary);display:block;margin-bottom:3px;">Étape</span><span class="badge badge-suivi">${escapeHtml(c.campaignSuivi)}</span></div>
+                <div><span class="lbl" style="font-size:10px;color:var(--text-tertiary);display:block;margin-bottom:3px;">Statut</span><span class="badge badge-${statusCls}">${escapeHtml(c.status)}</span></div>
+                <div><span class="lbl" style="font-size:10px;color:var(--text-tertiary);display:block;margin-bottom:3px;">Priorité</span><span style="font-weight:500;font-size:12px;">${c.priority==='high'?'🔴 Haute':c.priority==='medium'?'🟠 Moyenne':'🟢 Basse'}</span></div>
+                <div><span class="lbl" style="font-size:10px;color:var(--text-tertiary);display:block;margin-bottom:3px;">Statut Tâche</span>${tacheStatusBadge(ts)}</div>
+            </div>
+        </div>
+        ${c.notePrestataire||c.recoPrestataire?`
+        <div style="background:var(--orange-bg);border:0.5px solid var(--orange-border);border-radius:var(--radius-lg);padding:12px 14px;margin-bottom:14px;">
+            <h4 style="font-size:11px;font-weight:500;text-transform:uppercase;color:var(--orange-text);margin-bottom:8px;">📋 Notes Prestataire</h4>
+            ${c.date1erAppelPrevu?`<div style="font-size:11px;margin-bottom:4px;"><strong>1er appel prévu :</strong> ${escapeHtml(c.date1erAppelPrevu)}</div>`:''}
+            ${c.notePrestataire?`<div style="font-size:12px;margin-bottom:4px;">${escapeHtml(c.notePrestataire)}</div>`:''}
+            ${c.recoPrestataire?`<div style="font-size:11px;color:var(--orange-text);font-weight:500;">💡 ${escapeHtml(c.recoPrestataire)}</div>`:''}
+        </div>`:''}
+        ${c.resumeCall1?`
+        <div style="background:var(--blue-bg);border:0.5px solid var(--blue-border);border-radius:var(--radius-lg);padding:12px 14px;margin-bottom:14px;">
+            <h4 style="font-size:11px;font-weight:500;text-transform:uppercase;color:var(--blue-text);margin-bottom:6px;">📞 Résumé Call 1</h4>
+            <div style="font-size:12px;">${escapeHtml(c.resumeCall1)}</div>
+        </div>`:''}
+        <div class="secondary-contacts-section">
+            <div class="secondary-header">
+                <h4>👥 Autres contacts <span style="font-weight:400;color:var(--text-tertiary);font-size:10px;">(${(c.secondaryContacts||[]).length})</span></h4>
+                <button class="btn-add-contact" onclick="openContactSubModal(null)">+ Ajouter</button>
+            </div>
+            <div id="secondaryContactsList"></div>
+        </div>`;
+
+    // TAB: ACTIONS
+    const actionsHtml=`
+        <div class="info-block" style="background:var(--orange-bg);border-color:var(--orange-border);margin-bottom:12px;">
+            <h4 style="color:var(--orange-text);">🎯 Prochaine action</h4>
+            ${c.nextCall?.date?`
+                <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;">
+                    <div>
+                        <div style="font-size:18px;font-weight:700;color:var(--orange-text);">${fmtDate(c.nextCall.date)}</div>
+                        <span class="badge" style="background:white;margin-top:6px;">${escapeHtml(c.nextCall.type)}</span>
+                        <div style="margin-top:6px;">${tacheStatusBadge(ts)}</div>
+                    </div>
+                    ${c.nextCall.recommendations?`<div style="flex:1;min-width:160px;"><span style="font-size:10px;color:var(--text-tertiary);text-transform:uppercase;">Recommandations</span><div class="call-reco-view" style="margin-top:4px;">${escapeHtml(c.nextCall.recommendations)}</div></div>`:''}
+                </div>`
+            :'<span style="color:var(--text-tertiary);font-size:12px;">Aucune action planifiée</span>'}
+        </div>
+        ${lastCall?`
+        <div class="info-block" style="margin-bottom:12px;">
+            <h4>✅ Dernière action</h4>
+            <div class="timeline-item" style="margin-bottom:0;">
+                <div class="timeline-marker"><div class="timeline-dot" style="background:var(--green-text);"></div></div>
+                <div class="timeline-content">
+                    <div class="timeline-header"><span class="timeline-type">${escapeHtml(lastCall.type)}</span><span class="timeline-date">${fmtDate(lastCall.date)}</span></div>
+                    <div class="timeline-summary">${escapeHtml(lastCall.summary)}</div>
+                    ${lastCall.recommendations?`<div class="call-reco-view">${escapeHtml(lastCall.recommendations)}</div>`:''}
+                </div>
+            </div>
+        </div>`:''}
+        ${olderCalls.length>0?`
+        <div class="info-block" style="margin-bottom:12px;">
+            <h4>📜 Historique actions (${olderCalls.length})</h4>
+            ${olderCalls.map(call=>`
+                <div class="timeline-item">
+                    <div class="timeline-marker"><div class="timeline-dot"></div></div>
+                    <div class="timeline-content">
+                        <div class="timeline-header"><span class="timeline-type">${escapeHtml(call.type)}</span><span class="timeline-date">${fmtDate(call.date)}</span></div>
+                        <div class="timeline-summary">${escapeHtml(call.summary)}</div>
+                    </div>
+                </div>`).join('')}
+        </div>`:''}
+        <div class="action-section">
+            <h4>📅 Planifier la prochaine action</h4>
+            <div style="display:grid;grid-template-columns:1fr 2fr 2fr auto;gap:10px;align-items:end;">
+                <div><label style="font-size:10px;color:var(--text-tertiary);text-transform:uppercase;display:block;margin-bottom:4px;">Date</label><input type="date" id="planDate" style="width:100%;"></div>
+                <div><label style="font-size:10px;color:var(--text-tertiary);text-transform:uppercase;display:block;margin-bottom:4px;">Type</label><select id="planType" style="width:100%;">${tacheTypes.map(t=>`<option>${escapeHtml(t)}</option>`).join('')}</select></div>
+                <div><label style="font-size:10px;color:var(--text-tertiary);text-transform:uppercase;display:block;margin-bottom:4px;">Recommandations</label><input type="text" id="planReco" placeholder="Objectifs..." style="width:100%;"></div>
+                <button class="btn-validate" onclick="planifierDepuisView()">Planifier</button>
+            </div>
+        </div>`;
+
+    // TAB: NOTES
+    const notesHtml=`
+        <div class="note-card">
+            <div class="note-card-header"><span>📔 Notes générales</span><button class="btn-note" onclick="editNoteInline('generalNotes','viewNoteGeneral')">Éditer</button></div>
+            <div id="viewNoteGeneral" class="note-preview ${c.generalNotes?'':'empty'}">${c.generalNotes?escapeHtml(c.generalNotes):'Aucune note...'}</div>
+            <textarea id="viewNoteGeneralEdit" style="display:none;" class="note-dialog-textarea">${escapeHtml(c.generalNotes||'')}</textarea>
+        </div>
+        <div class="note-card">
+            <div class="note-card-header"><span>💼 Notes commerciales</span><button class="btn-note" onclick="editNoteInline('commercialNotes','viewNoteCommercial')">Éditer</button></div>
+            <div id="viewNoteCommercial" class="note-preview ${c.commercialNotes?'':'empty'}">${c.commercialNotes?escapeHtml(c.commercialNotes):'Aucune note commerciale...'}</div>
+            <textarea id="viewNoteCommercialEdit" style="display:none;" class="note-dialog-textarea">${escapeHtml(c.commercialNotes||'')}</textarea>
+        </div>`;
+
+    // TAB: HISTORIQUE
+    const histHtml=`
+        <div class="info-block" style="margin-bottom:0;">
+            <h4>📜 Historique des modifications</h4>
+            <div class="mod-history" style="max-height:360px;overflow-y:auto;">
+                ${(c.modificationHistory||[]).map(h=>`
+                    <div class="mod-item">
+                        <small>${escapeHtml(h.date)} · <span style="color:var(--accent);font-weight:500;">${escapeHtml(h.by)}</span></small><br>
+                        ${escapeHtml(h.action)}
+                    </div>`).join('')}
+            </div>
+        </div>`;
+
+    document.getElementById("viewContent").innerHTML=`
         <div class="view-header-card">
-            <div class="view-header-row">
-                <div class="view-header-item"><span class="view-lbl">Entreprise</span><span class="view-val-bold">${escapeHtml(c.companyName)}</span></div>
-                <div class="view-header-item"><span class="view-lbl">Campagne</span><span class="view-val">${escapeHtml(c.campagne)||'-'}</span></div>
-                <div class="view-header-item"><span class="view-lbl">Contact</span><span class="view-val-bold">${escapeHtml(c.contactName)}</span></div>
-                <div class="view-header-item"><span class="view-lbl">Cellulaire</span><span class="view-val">${escapeHtml(c.phoneDirect)||'-'}</span></div>
-                <div class="view-header-item"><span class="view-lbl">Courriel</span><span class="view-val">${escapeHtml(c.email)||'-'}</span></div>
-                <div class="view-header-item"><span class="view-lbl">Date 1er appel prévu</span><span class="view-val">${escapeHtml(c.date1erAppelPrevu)||'—'}</span></div>
+            <div class="entreprise-row">
+                <div class="entreprise-name">${escapeHtml(c.companyName)}</div>
+                <div class="entreprise-address">${escapeHtml(c.companyAddress)||''}</div>
             </div>
-            <button class="btn-toggle-details" onclick="toggleViewDetails(this)">▼ Voir plus d'informations</button>
-        </div>
-        <div class="view-details" style="display:none;margin:10px 0;">
-            <div class="info-block" style="margin-bottom:10px;">
-                <h4>Entreprise</h4>
-                <div style="display:flex;gap:20px;flex-wrap:wrap;">
-                    <div class="info-row"><span class="lbl">NEQ</span><br><span class="val">${escapeHtml(c.neq)||'-'}</span></div>
-                    <div class="info-row" style="flex:1;"><span class="lbl">Secteur</span><br><span class="val">${escapeHtml(c.secteur)||'-'}</span></div>
-                    <div class="info-row"><span class="lbl">Employés</span><br><span class="val">${escapeHtml(c.employees)||'-'}</span></div>
-                    <div class="info-row"><span class="lbl">Création</span><br><span class="val">${escapeHtml(c.companyCreationDate)||'-'}</span></div>
-                </div>
-            </div>
-            <div class="info-block" style="margin-bottom:10px;">
-                <h4>Contact</h4>
-                <div style="display:flex;gap:20px;flex-wrap:wrap;">
-                    <div class="info-row"><span class="lbl">Âge</span><br><span class="val">${escapeHtml(c.age)||'-'}</span></div>
-                    <div class="info-row"><span class="lbl">Rôle</span><br><span class="val">${escapeHtml(c.proprietaire)||'-'}</span></div>
-                    <div class="info-row"><span class="lbl">Fumeur</span><br><span class="val">${escapeHtml(c.fumeur||'Non-fumeur')}</span></div>
-                    <div class="info-row"><span class="lbl">Situation</span><br><span class="val">${escapeHtml(c.situationFamiliale)||'-'}</span></div>
-                    <div class="info-row"><span class="lbl">Enfants</span><br><span class="val">${escapeHtml(c.enfantsCharge||'0')}</span></div>
-                </div>
-            </div>
-            ${c.generalNotes?`<div class="note-card" style="margin-bottom:8px;"><div class="note-card-header"><span>Notes</span></div><div class="note-preview">${escapeHtml(c.generalNotes)}</div></div>`:''}
-            ${c.commercialNotes?`<div class="note-card" style="margin-bottom:8px;"><div class="note-card-header"><span>Notes commerciales</span></div><div class="note-preview">${escapeHtml(c.commercialNotes)}</div></div>`:''}
-            <div style="font-size:11px;font-weight:500;color:var(--text-secondary);text-transform:uppercase;margin:12px 0 6px;">Historique modifications</div>
-            <div class="mod-history">${(c.modificationHistory||[]).slice(0,5).map(m=>`<div class="mod-item"><small>${escapeHtml(m.date)} · ${escapeHtml(m.by)}</small><br>${escapeHtml(m.action)}</div>`).join('')}</div>
-        </div>
-        <div class="info-block" style="margin:12px 0;">
-            <h4>Suivi & Statut</h4>
-            <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
-                <div><span class="view-lbl" style="display:block;margin-bottom:3px;">Étape</span><span class="badge badge-suivi">${escapeHtml(c.campaignSuivi)}</span></div>
-                <div><span class="view-lbl" style="display:block;margin-bottom:3px;">Statut</span><span class="badge badge-${statusCls}">${escapeHtml(c.status)}</span></div>
-                <div><span class="view-lbl" style="display:block;margin-bottom:3px;">Priorité</span><span style="font-weight:500;font-size:12px;">${c.priority==='high'?'🔴 Haute':c.priority==='medium'?'🟠 Moyenne':'🟢 Basse'}</span></div>
-                <div><span class="view-lbl" style="display:block;margin-bottom:3px;">Campagne</span><span style="font-weight:500;font-size:12px;">${escapeHtml(c.campagne)||'—'}</span></div>
+            <div class="contact-grid">
+                <div class="contact-item"><span class="contact-lbl">Contact principal</span><span class="contact-val-bold">${escapeHtml(c.contactName)}</span></div>
+                <div class="contact-item"><span class="contact-lbl">Cellulaire</span><span class="contact-val">${escapeHtml(c.phoneDirect)||'—'}</span></div>
+                <div class="contact-item"><span class="contact-lbl">Tél / Poste</span><span class="contact-val">${escapeHtml(c.phoneMobile)||''} ${c.phonePoste?'p.'+c.phonePoste:''}</span></div>
+                <div class="contact-item"><span class="contact-lbl">Courriel</span><span class="contact-val">${escapeHtml(c.email)||'—'}</span></div>
+                <div class="contact-item"><span class="contact-lbl">Fonction</span><span class="contact-val">${escapeHtml(c.fonction)||'—'}</span></div>
+                <div class="contact-item"><span class="contact-lbl">Statut tâche</span><span class="contact-val">${tacheStatusBadge(ts)}</span></div>
             </div>
         </div>
-        ${tacheHtml}
-        ${lastCall?`<div class="info-block" style="margin-bottom:12px;"><h4>Dernière action</h4>${buildCall(lastCall)}</div>`:''}
-        ${older.length>0?`<div class="view-history-toggle"><button class="btn-toggle-history" onclick="toggleCallHistory(this)">▼ Historique des actions <span class="history-count">(${older.length})</span></button><div class="view-history-content" style="display:none;">${older.map(buildCall).join('')}</div></div>`:(!lastCall?'<div style="padding:12px;font-size:12px;color:var(--text-tertiary);font-style:italic;">Aucune action enregistrée</div>':'')}`;
-    document.getElementById("viewModal").style.display="block";
+        <div class="view-tabs" id="viewTabsBar">
+            <button class="view-tab active" data-vtab="infos">📋 Infos</button>
+            <button class="view-tab" data-vtab="actions">📞 Actions</button>
+            <button class="view-tab" data-vtab="notes">📝 Notes</button>
+            <button class="view-tab" data-vtab="historique">📜 Historique</button>
+        </div>
+        <div id="vt-infos" class="view-tab-content">${infosHtml}</div>
+        <div id="vt-actions" class="view-tab-content" style="display:none;">${actionsHtml}</div>
+        <div id="vt-notes" class="view-tab-content" style="display:none;">${notesHtml}</div>
+        <div id="vt-historique" class="view-tab-content" style="display:none;">${histHtml}</div>
+        <div class="modal-footer-bar">
+            <button class="btn-openEdit" onclick="openEditFromView()">✏️ Éditer</button>
+            <button class="btn-pdf" onclick="exportToPDF()">📄 PDF</button>
+            <button class="btn-cancel" onclick="closeViewModal()">Fermer</button>
+        </div>`;
+
+    // Tab switching
+    document.getElementById('viewTabsBar').querySelectorAll('.view-tab').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+            document.getElementById('viewTabsBar').querySelectorAll('.view-tab').forEach(b=>b.classList.remove('active'));
+            btn.classList.add('active');
+            ['infos','actions','notes','historique'].forEach(t=>{const el=document.getElementById('vt-'+t);if(el)el.style.display='none';});
+            const el=document.getElementById('vt-'+btn.dataset.vtab);
+            if(el) el.style.display='block';
+            if(btn.dataset.vtab==='infos') renderSecondaryContacts();
+        });
+    });
+    renderSecondaryContacts();
 }
+
+// ══ SECONDARY CONTACTS ══
+let currentEditContactId = null;
+
+function renderSecondaryContacts() {
+    const c = clients.find(x=>x.id===currentViewId);
+    const el = document.getElementById('secondaryContactsList');
+    if(!el||!c) return;
+    const contacts = c.secondaryContacts||[];
+    if(!contacts.length){ el.innerHTML='<div style="padding:16px;text-align:center;font-size:11px;color:var(--text-tertiary);font-style:italic;">Aucun contact secondaire</div>'; return; }
+    el.innerHTML=`<table class="contacts-table">
+        <thead><tr><th>Nom</th><th>Fonction</th><th>Téléphone</th><th>Courriel</th><th>Notes</th><th style="width:90px;">Actions</th></tr></thead>
+        <tbody>${contacts.map(ct=>`<tr>
+            <td>${escapeHtml(ct.name)}${ct.isMainContact?'<span class="badge-main-contact">⭐ Principal</span>':''}</td>
+            <td>${escapeHtml(ct.function)||'—'}</td>
+            <td>${escapeHtml(ct.phone)||'—'}</td>
+            <td>${escapeHtml(ct.email)||'—'}</td>
+            <td style="font-size:11px;color:var(--text-tertiary);">${escapeHtml(ct.notes)||''}</td>
+            <td><button class="contact-action-btn set-main" onclick="setMainContact('${ct.id}')" title="Promouvoir en principal">⭐</button><button class="contact-action-btn edit-c" onclick="openContactSubModal('${ct.id}')" title="Modifier">✏️</button><button class="contact-action-btn delete-c" onclick="deleteSecondaryContact('${ct.id}')" title="Supprimer">🗑️</button></td>
+        </tr>`).join('')}</tbody>
+    </table>`;
+}
+
+function openContactSubModal(contactId) {
+    currentEditContactId = contactId;
+    const c = clients.find(x=>x.id===currentViewId);
+    const contact = contactId ? (c.secondaryContacts||[]).find(x=>x.id===contactId) : null;
+    let overlay = document.getElementById('contactSubModalOverlay');
+    if(!overlay){ overlay=document.createElement('div'); overlay.id='contactSubModalOverlay'; overlay.className='contact-modal-overlay'; document.body.appendChild(overlay); }
+    overlay.innerHTML=`<div class="contact-modal-box">
+        <div class="contact-modal-header"><h4>${contactId?'✏️ Modifier':'➕ Ajouter'} un contact</h4><button class="close" onclick="closeContactSubModal()">✕</button></div>
+        <div class="contact-form-grid">
+            <div class="input-field-sm"><label>Nom complet *</label><input id="scName" value="${escapeHtml(contact?.name||'')}"></div>
+            <div class="input-field-sm"><label>Fonction</label><input id="scFunction" value="${escapeHtml(contact?.function||'')}"></div>
+            <div class="input-field-sm"><label>Téléphone</label><input id="scPhone" value="${escapeHtml(contact?.phone||'')}"></div>
+            <div class="input-field-sm"><label>Courriel</label><input type="email" id="scEmail" value="${escapeHtml(contact?.email||'')}"></div>
+            <div class="input-field-sm contact-form-full"><label>Notes</label><textarea id="scNotes" rows="2">${escapeHtml(contact?.notes||'')}</textarea></div>
+        </div>
+        <div style="display:flex;gap:10px;justify-content:center;padding:0 18px 18px;">
+            <button class="btn-save-contact" onclick="saveSecondaryContact()">💾 Enregistrer</button>
+            <button class="btn-cancel" onclick="closeContactSubModal()">Annuler</button>
+        </div>
+    </div>`;
+    overlay.style.display='block';
+}
+
+function closeContactSubModal() {
+    const o=document.getElementById('contactSubModalOverlay');
+    if(o) o.style.display='none';
+}
+
+function saveSecondaryContact() {
+    const name=document.getElementById('scName').value.trim();
+    if(!name){showNotification('Nom requis','error');return;}
+    const c=clients.find(x=>x.id===currentViewId);
+    if(!c.secondaryContacts) c.secondaryContacts=[];
+    const newContact={id:currentEditContactId||'sc_'+Date.now(),name,function:document.getElementById('scFunction').value,phone:document.getElementById('scPhone').value,email:document.getElementById('scEmail').value,notes:document.getElementById('scNotes').value,isMainContact:false,addedAt:getCurrentDate(),addedBy:currentUser};
+    if(currentEditContactId){ const idx=c.secondaryContacts.findIndex(x=>x.id===currentEditContactId); if(idx!==-1){newContact.isMainContact=c.secondaryContacts[idx].isMainContact;c.secondaryContacts[idx]=newContact;} }
+    else { c.secondaryContacts.push(newContact); }
+    c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:(currentEditContactId?`Contact modifié : ${name}`:`Contact ajouté : ${name}`)});
+    save(); renderSecondaryContacts(); closeContactSubModal();
+    showNotification(currentEditContactId?`Contact ${name} modifié`:`Contact ${name} ajouté`,'success');
+}
+
+function setMainContact(contactId) {
+    const c=clients.find(x=>x.id===currentViewId);
+    if(!c) return;
+    const newMain=c.secondaryContacts?.find(x=>x.id===contactId);
+    if(!newMain||!confirm(`Promouvoir "${newMain.name}" comme contact principal ?`)) return;
+    const oldMain={id:'sc_'+Date.now(),name:c.contactName,function:c.fonction||'',phone:c.phoneDirect||'',email:c.email||'',notes:`Ancien contact principal`,isMainContact:false,addedAt:getCurrentDate(),addedBy:currentUser};
+    c.contactName=newMain.name; c.fonction=newMain.function||''; c.phoneDirect=newMain.phone||''; c.email=newMain.email||'';
+    c.secondaryContacts=c.secondaryContacts.filter(x=>x.id!==contactId);
+    c.secondaryContacts.push(oldMain);
+    c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:`Contact principal changé : ${oldMain.name} → ${newMain.name}`});
+    save(); buildViewModal(c); showNotification(`💼 ${newMain.name} est maintenant le contact principal`,'success');
+}
+
+function deleteSecondaryContact(contactId) {
+    const c=clients.find(x=>x.id===currentViewId);
+    const contact=c?.secondaryContacts?.find(x=>x.id===contactId);
+    if(!contact||!confirm(`Supprimer "${contact.name}" ?`)) return;
+    c.secondaryContacts=c.secondaryContacts.filter(x=>x.id!==contactId);
+    c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:`Contact supprimé : ${contact.name}`});
+    save(); renderSecondaryContacts(); showNotification(`Contact supprimé`,'info');
+}
+
+function planifierDepuisView() {
+    const c=clients.find(x=>x.id===currentViewId);
+    if(!c) return;
+    const d=document.getElementById('planDate')?.value;
+    const t=document.getElementById('planType')?.value;
+    const r=document.getElementById('planReco')?.value||'';
+    if(!d||!t){showNotification('Date et type requis','error');return;}
+    c.nextCall={date:d,type:t,recommendations:r};
+    c.tacheFaite=false;
+    c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:`Action planifiée : ${t} le ${d}`});
+    save(); buildViewModal(c); showNotification('📅 Action planifiée','success');
+    // Switch to actions tab
+    document.getElementById('viewTabsBar').querySelectorAll('.view-tab').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.view-tab')[1]?.classList.add('active');
+}
+
+function editNoteInline(field, previewId) {
+    const c=clients.find(x=>x.id===currentViewId);
+    if(!c) return;
+    const preview=document.getElementById(previewId);
+    const editId=previewId+'Edit';
+    const editEl=document.getElementById(editId);
+    if(!editEl) return;
+    if(editEl.style.display==='none'){
+        editEl.style.display='block'; preview.style.display='none';
+        // Add save button
+        const btn=document.createElement('button');
+        btn.className='btn-validate'; btn.style.cssText='margin:8px 12px 12px;display:block;';
+        btn.textContent='💾 Enregistrer la note';
+        btn.onclick=()=>{
+            c[field]=editEl.value;
+            c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:'Note mise à jour'});
+            save();
+            preview.textContent=editEl.value||'Aucune note...';
+            preview.className='note-preview'+(editEl.value?'':' empty');
+            editEl.style.display='none'; preview.style.display='block';
+            btn.remove(); showNotification('Note sauvegardée','success');
+        };
+        editEl.parentNode.appendChild(btn);
+    }
+}
+
+// ══ TABBED EDIT MODAL ══
+function openEditModal(id) {
+    currentEditId = id;
+    const c = clients.find(x=>x.id===id);
+    if(!c) return;
+
+    function fmtDate(d) {
+        if(!d) return '';
+        const [y,m,day]=d.split('-');
+        const ms=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+        return `${parseInt(day)} ${ms[parseInt(m)-1]} ${y}`;
+    }
+
+    const ts = getTacheStatus(c);
+    const callsSorted=[...(c.calls||[])].reverse();
+    const lastCall=callsSorted[0]||null;
+    const olderCalls=callsSorted.slice(1);
+
+    // Infos tab (editable)
+    const editInfosHtml=`
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+            <div class="info-block" style="margin-bottom:0;">
+                <h4>🏢 Entreprise</h4>
+                <div class="input-field"><label>Campagne</label><input id="ei_campagne" value="${escapeHtml(c.campagne||'')}"></div>
+                <div class="input-field"><label>Secteur</label><input id="ei_secteur" value="${escapeHtml(c.secteur||'')}"></div>
+                <div class="input-field"><label>NEQ</label><input id="ei_neq" value="${escapeHtml(c.neq||'')}"></div>
+                <div class="input-field"><label>Employés</label><input id="ei_employees" value="${escapeHtml(c.employees||'')}"></div>
+                <div class="input-field"><label>Année création</label><input id="ei_creation" value="${escapeHtml(c.companyCreationDate||'')}"></div>
+            </div>
+            <div class="info-block" style="margin-bottom:0;">
+                <h4>👤 Contact principal</h4>
+                <div class="input-field"><label>Âge</label><input id="ei_age" value="${escapeHtml(c.age||'')}" ${c.birthDate?'readonly style="background:var(--bg-page);"':''}></div>
+                <div class="input-field"><label>Date naissance</label><input type="date" id="ei_birthdate" value="${c.birthDate||''}" onchange="const bd=this.value;const af=document.getElementById('ei_age');if(bd){const t=new Date(),b=new Date(bd);let a=t.getFullYear()-b.getFullYear();if(t.getMonth()-b.getMonth()<0)a--;af.value=a+' ans';af.readOnly=true;}else{af.readOnly=false;af.value='';}"></div>
+                <div class="input-field"><label>Situation familiale</label><select id="ei_situation"><option ${c.situationFamiliale==='Célibataire'?'selected':''}>Célibataire</option><option ${c.situationFamiliale==='Marié(e)'?'selected':''}>Marié(e)</option><option ${c.situationFamiliale==='Conjoint(e) de fait'?'selected':''}>Conjoint(e) de fait</option><option ${c.situationFamiliale==='Divorcé(e)'?'selected':''}>Divorcé(e)</option><option ${c.situationFamiliale==='Veuf(ve)'?'selected':''}>Veuf(ve)</option></select></div>
+                <div class="input-field"><label>Enfants à charge</label><input type="number" id="ei_enfants" value="${c.enfantsCharge||'0'}" min="0"></div>
+                <div class="input-field"><label>Fumeur</label><select id="ei_fumeur"><option ${(c.fumeur||'Non-fumeur')==='Non-fumeur'?'selected':''}>Non-fumeur</option><option ${c.fumeur==='Fumeur'?'selected':''}>Fumeur</option></select></div>
+                <div class="input-field"><label>Associés</label><input id="ei_associes" value="${escapeHtml(c.nomsAssocies||'')}"></div>
+            </div>
+        </div>
+        <div class="info-block" style="margin-bottom:14px;">
+            <h4>📊 Suivi commercial</h4>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+                <div class="input-field"><label>Étape suivi</label><select id="ei_suivi">${suiviOptions.map(o=>`<option ${c.campaignSuivi===o?'selected':''}>${escapeHtml(o)}</option>`).join('')}</select></div>
+                <div class="input-field"><label>Statut</label><select id="ei_status"><option ${c.status==='Prospect'?'selected':''}>Prospect</option><option ${c.status==='En cours'?'selected':''}>En cours</option><option ${c.status==='Client'?'selected':''}>Client</option></select></div>
+                <div class="input-field"><label>Priorité</label><select id="ei_priority"><option value="high" ${c.priority==='high'?'selected':''}>🔴 Haute</option><option value="medium" ${c.priority==='medium'?'selected':''}>🟠 Moyenne</option><option value="low" ${c.priority==='low'?'selected':''}>🟢 Basse</option></select></div>
+            </div>
+        </div>
+        <div style="background:var(--orange-bg);border:0.5px solid var(--orange-border);border-radius:var(--radius-lg);padding:14px;margin-bottom:0;">
+            <h4 style="font-size:11px;font-weight:500;text-transform:uppercase;color:var(--orange-text);margin-bottom:10px;">📞 1er Appel (Prestataire)</h4>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div class="input-field"><label>Date 1er appel prévu</label><input type="date" id="ei_date1prev" value="${c.date1erAppelPrevu||''}"></div>
+                <div class="input-field"><label>Date 1er appel réalisé</label><input type="date" id="ei_date1real" value="${c.date1erAppelRealise||''}"></div>
+            </div>
+            <div class="input-field"><label>Note prestataire</label><textarea id="ei_notePrestataire" rows="2">${escapeHtml(c.notePrestataire||'')}</textarea></div>
+            <div class="input-field"><label>Recommandations prestataire</label><input id="ei_recoPrestataire" value="${escapeHtml(c.recoPrestataire||'')}"></div>
+            <div class="input-field"><label>Résumé Call 1 (besoins détectés)</label><textarea id="ei_resumeCall1" rows="3">${escapeHtml(c.resumeCall1||'')}</textarea></div>
+        </div>`;
+
+    // Actions tab (editable)
+    const tacheClass=ts==='En retard'?'late':ts==='Urgent'?'today':'future';
+    const editActionsHtml=`
+        <div class="tache-panel" style="margin-bottom:14px;">
+            <div class="tache-panel-header"><h4>📋 Tâche en cours</h4>${tacheStatusBadge(ts)}</div>
+            <div class="tache-body">
+                ${c.nextCall?.date?`<div class="tache-current ${tacheClass}" style="margin-bottom:12px;font-size:12px;">
+                    <span class="tache-icon">${ts==='En retard'?'⚠️':ts==='Urgent'?'🔔':'📅'}</span>
+                    <div><div style="font-weight:500;">${escapeHtml(c.nextCall.type)}</div><div style="font-size:11px;">Prévue le : <strong>${c.nextCall.date}</strong></div></div>
+                </div>`:''}
+                <div class="checkbox-row">
+                    <input type="checkbox" id="ei_tacheFaite" ${c.tacheFaite?'checked':''} onchange="document.getElementById('ei_commentaireRow').style.display=this.checked?'flex':'none'">
+                    <label for="ei_tacheFaite" style="font-size:12px;font-weight:500;">Tâche effectuée ✓</label>
+                </div>
+                <div class="input-field" id="ei_commentaireRow" style="${!c.tacheFaite?'display:none':''}">
+                    <label>Commentaire</label><input id="ei_commentaire" value="${escapeHtml(c.commentaireTache||'')}">
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 2fr;gap:10px;margin-top:8px;">
+                    <div class="input-field"><label>Date tâche</label><input type="date" id="ei_tacheDate" value="${c.nextCall?.date||''}"></div>
+                    <div class="input-field"><label>Type de tâche</label><select id="ei_tacheType">${tacheTypes.map(t=>`<option ${c.nextCall?.type===t?'selected':''}>${escapeHtml(t)}</option>`).join('')}</select></div>
+                </div>
+                <div class="input-field"><label>Résumé / compte-rendu</label><textarea id="ei_tacheSummary" rows="3" placeholder="Résumé de l'échange..."></textarea></div>
+                <div class="input-field"><label>Recommandations</label><input id="ei_tacheReco" value="${escapeHtml(c.nextCall?.recommendations||'')}"></div>
+                <div style="display:flex;gap:8px;margin-top:8px;">
+                    <button class="btn-validate" onclick="validateAndPlanEdit()">✅ Valider et planifier suivante</button>
+                </div>
+            </div>
+        </div>
+        <div style="background:var(--blue-bg);border:0.5px solid var(--blue-border);border-radius:var(--radius-lg);padding:14px;">
+            <h4 style="font-size:11px;font-weight:500;text-transform:uppercase;color:var(--blue-text);margin-bottom:10px;">📅 Prochaine tâche</h4>
+            <div style="display:grid;grid-template-columns:1fr 2fr;gap:10px;">
+                <div class="input-field"><label>Date</label><input type="date" id="ei_nextDate" value="${c.nextCall?.date||getNextWeekDate()}"></div>
+                <div class="input-field"><label>Type</label><select id="ei_nextType">${tacheTypes.map(t=>`<option ${c.nextCall?.type===t?'selected':''}>${escapeHtml(t)}</option>`).join('')}</select></div>
+            </div>
+        </div>
+        <div style="margin-top:14px;">
+            <h4 style="font-size:11px;font-weight:500;text-transform:uppercase;color:var(--text-secondary);margin-bottom:8px;">📜 Historique actions</h4>
+            ${callsSorted.slice(0,5).map(call=>`<div class="call-item"><div class="call-header"><span>${escapeHtml(call.type)}</span><span>${call.date}</span></div><div class="call-summary">${escapeHtml(call.summary)}</div></div>`).join('')||'<div style="font-size:12px;color:var(--text-tertiary);font-style:italic;">Aucune action</div>'}
+        </div>`;
+
+    // Notes tab
+    const editNotesHtml=`
+        <div class="note-card">
+            <div class="note-card-header"><span>📔 Notes générales</span></div>
+            <textarea id="ei_generalNotes" class="note-dialog-textarea" style="min-height:140px;border:none;border-radius:0;">${escapeHtml(c.generalNotes||'')}</textarea>
+        </div>
+        <div class="note-card">
+            <div class="note-card-header"><span>💼 Notes commerciales</span></div>
+            <textarea id="ei_commercialNotes" class="note-dialog-textarea" style="min-height:140px;border:none;border-radius:0;">${escapeHtml(c.commercialNotes||'')}</textarea>
+        </div>`;
+
+    // Historique tab
+    const editHistHtml=`<div class="info-block" style="margin-bottom:0;"><h4>📜 Historique des modifications</h4><div class="mod-history" style="max-height:320px;overflow-y:auto;">${(c.modificationHistory||[]).map(h=>`<div class="mod-item"><small>${escapeHtml(h.date)} · <span style="color:var(--accent)">${escapeHtml(h.by)}</span></small><br>${escapeHtml(h.action)}</div>`).join('')}</div></div>`;
+
+    document.getElementById("editContent").innerHTML=`
+        <div class="view-header-card">
+            <div class="entreprise-row">
+                <input type="text" id="ei_companyName" value="${escapeHtml(c.companyName)}" style="font-size:16px;font-weight:700;width:100%;padding:4px 0;background:transparent;border:none;border-bottom:1px dashed var(--border);font-family:inherit;color:var(--text-primary);">
+                <input type="text" id="ei_address" value="${escapeHtml(c.companyAddress||'')}" style="width:100%;margin-top:4px;padding:4px 0;background:transparent;border:none;border-bottom:1px dashed var(--border);font-family:inherit;font-size:12px;color:var(--text-secondary);">
+            </div>
+            <div class="contact-grid" style="margin-top:10px;">
+                <div class="contact-item"><span class="contact-lbl">Contact</span><input type="text" id="ei_contactName" value="${escapeHtml(c.contactName)}" class="editable-input" style="font-weight:600;"></div>
+                <div class="contact-item"><span class="contact-lbl">Cellulaire</span><input type="text" id="ei_phoneDirect" value="${escapeHtml(c.phoneDirect||'')}" class="editable-input"></div>
+                <div class="contact-item"><span class="contact-lbl">Courriel</span><input type="email" id="ei_email" value="${escapeHtml(c.email||'')}" class="editable-input"></div>
+                <div class="contact-item"><span class="contact-lbl">Fonction</span><input type="text" id="ei_fonction" value="${escapeHtml(c.fonction||'')}" class="editable-input"></div>
+                <div class="contact-item"><span class="contact-lbl">Téléphone</span><input type="text" id="ei_phoneMobile" value="${escapeHtml(c.phoneMobile||'')}" class="editable-input"></div>
+                <div class="contact-item"><span class="contact-lbl">Poste</span><input type="text" id="ei_phonePoste" value="${escapeHtml(c.phonePoste||'')}" class="editable-input"></div>
+            </div>
+        </div>
+        <div class="view-tabs" id="editTabsBar">
+            <button class="view-tab active" data-etab="infos">📋 Infos</button>
+            <button class="view-tab" data-etab="actions">📞 Actions</button>
+            <button class="view-tab" data-etab="notes">📝 Notes</button>
+            <button class="view-tab" data-etab="historique">📜 Historique</button>
+        </div>
+        <div id="et-infos" class="view-tab-content">${editInfosHtml}</div>
+        <div id="et-actions" class="view-tab-content" style="display:none;">${editActionsHtml}</div>
+        <div id="et-notes" class="view-tab-content" style="display:none;">${editNotesHtml}</div>
+        <div id="et-historique" class="view-tab-content" style="display:none;">${editHistHtml}</div>
+        <div class="modal-footer-bar">
+            <button class="btn-submit" onclick="saveEditTabbed()">💾 Sauvegarder</button>
+            ${!c.closed&&!c.dossierFinalise&&c.status!=='Client'?`<button class="btn-finalize" onclick="finalizeClientFromEdit()">🏆 Finaliser</button>`:''}
+            <button class="btn-cancel" onclick="closeEditModal()">Annuler</button>
+        </div>`;
+
+    document.getElementById('editTabsBar').querySelectorAll('.view-tab').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+            document.getElementById('editTabsBar').querySelectorAll('.view-tab').forEach(b=>b.classList.remove('active'));
+            btn.classList.add('active');
+            ['infos','actions','notes','historique'].forEach(t=>{const el=document.getElementById('et-'+t);if(el)el.style.display='none';});
+            const el=document.getElementById('et-'+btn.dataset.etab);
+            if(el) el.style.display='block';
+        });
+    });
+
+    document.getElementById("editModal").style.display="block";
+}
+
+function validateAndPlanEdit() {
+    const c=clients.find(x=>x.id===currentEditId);
+    if(!c) return;
+    const summary=document.getElementById('ei_tacheSummary')?.value?.trim();
+    if(!summary){showNotification('Résumé requis','error');return;}
+    const date=document.getElementById('ei_tacheDate')?.value;
+    const type=document.getElementById('ei_tacheType')?.value;
+    const reco=document.getElementById('ei_tacheReco')?.value||'';
+    c.calls.push({date,type,summary,recommendations:reco});
+    if(c.calls.length===1&&!c.resumeCall1) c.resumeCall1=summary;
+    if(!c.date1erAppelRealise&&c.calls.length===1) c.date1erAppelRealise=date;
+    c.tacheFaite=true; c.commentaireTache=summary;
+    c.nextCall={date:'',type:'',recommendations:''};
+    if(c.status==='Prospect') c.status='En cours';
+    c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:`Action validée : ${type} le ${date}`});
+    save(); render();
+    // Refresh edit modal on actions tab
+    openEditModal(currentEditId);
+    setTimeout(()=>{const btn=document.querySelector('[data-etab="actions"]');if(btn)btn.click();},50);
+    showNotification('✅ Action validée','success');
+}
+
+function saveEditTabbed() {
+    const c=clients.find(x=>x.id===currentEditId);
+    if(!c) return;
+    // Header inline fields
+    c.companyName=document.getElementById('ei_companyName')?.value||c.companyName;
+    c.companyAddress=document.getElementById('ei_address')?.value||c.companyAddress;
+    c.contactName=document.getElementById('ei_contactName')?.value||c.contactName;
+    c.phoneDirect=document.getElementById('ei_phoneDirect')?.value||c.phoneDirect;
+    c.phoneMobile=document.getElementById('ei_phoneMobile')?.value||c.phoneMobile;
+    c.phonePoste=document.getElementById('ei_phonePoste')?.value||c.phonePoste;
+    c.email=document.getElementById('ei_email')?.value||c.email;
+    c.fonction=document.getElementById('ei_fonction')?.value||c.fonction;
+    // Infos tab
+    const fieldsMap={campagne:'ei_campagne',secteur:'ei_secteur',neq:'ei_neq',employees:'ei_employees',companyCreationDate:'ei_creation',situationFamiliale:'ei_situation',enfantsCharge:'ei_enfants',fumeur:'ei_fumeur',nomsAssocies:'ei_associes',campaignSuivi:'ei_suivi',status:'ei_status',priority:'ei_priority',date1erAppelPrevu:'ei_date1prev',date1erAppelRealise:'ei_date1real',notePrestataire:'ei_notePrestataire',recoPrestataire:'ei_recoPrestataire',resumeCall1:'ei_resumeCall1'};
+    for(const [field,domId] of Object.entries(fieldsMap)){const el=document.getElementById(domId);if(el) c[field]=el.value;}
+    const ageEl=document.getElementById('ei_age'); if(ageEl) c.age=ageEl.value;
+    const bdEl=document.getElementById('ei_birthdate'); if(bdEl) c.birthDate=bdEl.value;
+    // Actions tab
+    const tacheFaiteEl=document.getElementById('ei_tacheFaite');
+    if(tacheFaiteEl){ c.tacheFaite=tacheFaiteEl.checked; c.commentaireTache=document.getElementById('ei_commentaire')?.value||''; }
+    const nextDate=document.getElementById('ei_nextDate')?.value;
+    const nextType=document.getElementById('ei_nextType')?.value;
+    if(nextDate&&nextType){ c.nextCall={date:nextDate,type:nextType,recommendations:document.getElementById('ei_tacheReco')?.value||''}; c.tacheFaite=false; }
+    // Notes tab
+    const gn=document.getElementById('ei_generalNotes'); if(gn) c.generalNotes=gn.value;
+    const cn=document.getElementById('ei_commercialNotes'); if(cn) c.commercialNotes=cn.value;
+    c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:'Dossier mis à jour'});
+    save(); render(); showNotification('✅ Dossier sauvegardé','success'); closeEditModal();
+}
+
 function closeViewModal() { document.getElementById("viewModal").style.display="none"; }
 function toggleCallHistory(btn) {
     const content=btn.nextElementSibling;
