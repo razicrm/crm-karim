@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRM KARIM - B2B Canada v6.1</title>
+    <title>CRM KARIM - B2B Canada v6.2</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://accounts.google.com/gsi/client" async></script>
@@ -132,7 +132,6 @@
         .agenda-empty { padding: 14px; font-size: 11px; color: var(--text-tertiary); font-style: italic; text-align: center; }
 
         /* STATS TAB */
-        .stats-section { display: none; }
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
         .stats-card { background: var(--bg-white); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 16px; }
         .stats-card h4 { font-size: 11px; font-weight: 500; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
@@ -170,15 +169,19 @@
         tr:last-child td { border-bottom: none; }
         tr:hover td { background: var(--bg-subtle); }
 
-        /* ROW STATUS HIGHLIGHT - Excel-style */
-        tr.row-late td { background: #FFF5F5 !important; }
-        tr.row-late:hover td { background: #FFE8E8 !important; }
-        tr.row-today td { background: #FFFBF0 !important; }
-        tr.row-today:hover td { background: #FFF3D6 !important; }
-        tr.row-done td { background: #F8F8F8 !important; opacity: 0.8; }
-        tr.row-finalized td { background: #F2FAF0 !important; }
+        .priority-bar { width: 3px; height: 22px; border-radius: 2px; display: inline-block; }
+        .p-high   { background: #E24B4A; }
+        .p-medium { background: #EF9F27; }
+        .p-low    { background: #639922; }
 
-        /* BADGES */
+        .eye-icon { cursor: pointer; font-size: 16px; color: var(--text-tertiary); }
+        .eye-icon:hover { color: var(--accent); }
+        .action-row { display: flex; gap: 4px; }
+        .btn-icon { width: 26px; height: 26px; border-radius: var(--radius-sm); border: 0.5px solid var(--border); background: var(--bg-white); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); font-size: 13px; transition: all 0.15s; }
+        .btn-icon:hover { background: var(--bg-hover); }
+        .btn-icon.danger:hover { background: var(--red-bg); color: var(--red-text); border-color: var(--red-border); }
+        .btn-icon.restore:hover { background: var(--green-bg); color: var(--green-text); }
+
         .badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: var(--radius-pill); font-size: 10px; font-weight: 500; white-space: nowrap; }
         .badge-prospect { background: var(--orange-bg); color: var(--orange-text); }
         .badge-encours  { background: var(--blue-bg);   color: var(--blue-text); }
@@ -189,35 +192,13 @@
         .badge-ok       { background: var(--blue-bg);   color: var(--blue-text); }
         .badge-done     { background: var(--gray-bg);   color: var(--gray-text); }
         .badge-finalized{ background: var(--green-bg);  color: var(--green-text); border: 0.5px solid var(--green-border); }
-        .badge-urgent   { background: #FFF0E8; color: #C45000; border: 0.5px solid #FFBA8A; animation: urgentPulse 2s infinite; }
-        @keyframes urgentPulse { 0%,100%{border-color:#FFBA8A} 50%{border-color:#E24B4A} }
 
-        /* STATUS BADGE for tache */
         .tache-status { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: var(--radius-pill); font-size: 10px; font-weight: 500; }
         .ts-afaire   { background: var(--blue-bg); color: var(--blue-text); }
         .ts-fait     { background: var(--gray-bg); color: var(--gray-text); }
         .ts-retard   { background: var(--red-bg); color: var(--red-text); }
         .ts-urgent   { background: var(--orange-bg); color: var(--orange-text); }
         .ts-finalized{ background: var(--green-bg); color: var(--green-text); }
-
-        .priority-bar { width: 3px; height: 22px; border-radius: 2px; display: inline-block; }
-        .p-high   { background: #E24B4A; }
-        .p-medium { background: #EF9F27; }
-        .p-low    { background: #639922; }
-
-        .contact-cell { display: flex; flex-direction: column; gap: 1px; }
-        .contact-name { font-weight: 500; font-size: 12px; }
-        .contact-role { font-size: 10px; color: var(--text-tertiary); }
-        .contact-info { font-size: 10px; color: var(--text-secondary); font-family: 'DM Mono', monospace; }
-        .co-name { font-weight: 500; }
-
-        .action-row { display: flex; gap: 4px; }
-        .btn-icon { width: 26px; height: 26px; border-radius: var(--radius-sm); border: 0.5px solid var(--border); background: var(--bg-white); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); font-size: 13px; transition: all 0.15s; }
-        .btn-icon:hover { background: var(--bg-hover); }
-        .btn-icon.danger:hover { background: var(--red-bg); color: var(--red-text); border-color: var(--red-border); }
-        .btn-icon.restore:hover { background: var(--green-bg); color: var(--green-text); }
-        .eye-icon { cursor: pointer; font-size: 16px; color: var(--text-tertiary); }
-        .eye-icon:hover { color: var(--accent); }
 
         .empty-state { text-align: center; padding: 40px; color: var(--text-tertiary); font-size: 13px; }
         .bottom-bar { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; flex-wrap: wrap; gap: 8px; }
@@ -232,39 +213,43 @@
         .kanban-col-header { padding: 10px 12px; font-size: 11px; font-weight: 500; color: var(--text-secondary); background: var(--bg-subtle); border-bottom: 0.5px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
         .kanban-card { padding: 10px 12px; border-bottom: 0.5px solid var(--border-light); cursor: pointer; }
         .kanban-card:hover { background: var(--bg-hover); }
-        .kanban-card.late { border-left: 3px solid var(--red-text); }
-        .kanban-card.today-card { border-left: 3px solid var(--orange-text); }
         .kanban-card-name { font-weight: 500; font-size: 12px; margin-bottom: 3px; }
         .kanban-card-meta { font-size: 10px; color: var(--text-tertiary); display: flex; justify-content: space-between; }
 
-        /* MODALS */
+        /* MODAL FICHE UNIQUE (VUE + ÉDITION FUSIONNÉES) */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); animation: fadeIn 0.15s; }
         @keyframes fadeIn { from{opacity:0} to{opacity:1} }
-        .modal-content { background: var(--bg-white); margin: 2% auto; padding: 24px; width: 92%; max-width: 860px; border-radius: var(--radius-xl); max-height: 92vh; overflow-y: auto; border: 0.5px solid var(--border); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 0.5px solid var(--border); }
+        .modal-content { background: var(--bg-white); margin: 2% auto; width: 94%; max-width: 1100px; border-radius: var(--radius-xl); max-height: 94vh; overflow-y: auto; border: 0.5px solid var(--border); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 0.5px solid var(--border); background: var(--bg-subtle); position: sticky; top: 0; z-index: 10; border-radius: var(--radius-xl) var(--radius-xl) 0 0; }
         .modal-header h3 { font-size: 15px; font-weight: 600; }
         .modal-header-actions { display: flex; align-items: center; gap: 8px; }
         .close { font-size: 22px; cursor: pointer; color: var(--text-tertiary); background: none; border: none; font-family: inherit; }
         .close:hover { color: var(--text-primary); }
 
-        .section-card { background: var(--bg-subtle); border: 0.5px solid var(--border-light); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 14px; }
-        .section-card h4 { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 12px; }
-        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-        .input-field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
-        .input-field label { font-size: 10px; font-weight: 500; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.04em; }
-        .input-field input, .input-field select, .input-field textarea { padding: 8px 10px; border: 0.5px solid var(--border); border-radius: var(--radius-md); background: var(--bg-white); font-size: 12px; font-family: inherit; color: var(--text-primary); }
-        .input-field input:focus, .input-field select:focus, .input-field textarea:focus { outline: none; border-color: var(--accent); }
-        .input-field textarea { resize: vertical; min-height: 65px; }
-        .input-field input[readonly] { background: var(--bg-page); cursor: default; }
+        /* FICHE CLIENT - CHAMPS ÉDITABLES */
+        .fiche-section { background: var(--bg-white); border: 0.5px solid var(--border-light); border-radius: var(--radius-lg); margin-bottom: 16px; overflow: hidden; }
+        .fiche-section-header { background: var(--bg-subtle); padding: 10px 16px; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; justify-content: space-between; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); }
+        .fiche-section-body { padding: 16px; }
+        .editable-field { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+        .editable-field label { font-size: 10px; font-weight: 500; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.04em; min-width: 100px; }
+        .editable-field .field-value { flex: 1; font-size: 13px; padding: 6px 0; border-bottom: 1px dashed transparent; transition: border-color 0.2s; }
+        .editable-field .field-value.editing { border-bottom-color: var(--accent); background: var(--accent-light); padding: 6px 8px; border-radius: var(--radius-sm); }
+        .editable-field .field-value span { display: inline-block; width: 100%; }
+        .editable-field .field-value input, .editable-field .field-value select, .editable-field .field-value textarea { width: 100%; padding: 6px 8px; border: 0.5px solid var(--border); border-radius: var(--radius-md); font-size: 13px; font-family: inherit; background: var(--bg-white); }
+        .editable-field .field-value textarea { min-height: 60px; resize: vertical; }
+        .edit-btn { background: none; border: none; cursor: pointer; font-size: 14px; padding: 4px 6px; border-radius: var(--radius-sm); color: var(--text-tertiary); transition: all 0.15s; }
+        .edit-btn:hover { background: var(--accent-light); color: var(--accent); }
+        .save-btn { background: var(--green-bg); color: var(--green-text); border: 0.5px solid var(--green-border); border-radius: var(--radius-sm); padding: 4px 8px; font-size: 11px; cursor: pointer; margin-left: 4px; }
+        .save-btn:hover { background: var(--green-border); }
+        .cancel-btn { background: var(--gray-bg); color: var(--gray-text); border: 0.5px solid var(--gray-border); border-radius: var(--radius-sm); padding: 4px 8px; font-size: 11px; cursor: pointer; margin-left: 4px; }
+        .cancel-btn:hover { background: var(--gray-border); }
 
-        /* ASSOCIÉS TAGS */
-        .associes-container { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 6px; }
+        .two-col-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .associes-container { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
         .associe-tag { display: inline-flex; align-items: center; gap: 6px; background: var(--accent-light); border: 0.5px solid var(--purple-border); border-radius: var(--radius-pill); padding: 4px 10px 4px 12px; font-size: 12px; color: var(--accent-dark); }
         .associe-tag .remove-tag { background: none; border: none; cursor: pointer; font-size: 14px; color: var(--accent-dark); opacity: 0.6; padding: 0 2px; }
         .associe-tag .remove-tag:hover { opacity: 1; }
         .btn-add-associe { background: var(--accent-light); color: var(--accent); border: 0.5px solid var(--purple-border); border-radius: var(--radius-pill); padding: 4px 12px; font-size: 11px; font-weight: 500; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 4px; }
-        .btn-add-associe:hover { background: var(--accent); color: white; }
         .associe-input-group { display: flex; gap: 6px; align-items: center; margin-top: 8px; }
         .associe-input-group input { flex: 1; padding: 6px 10px; border: 0.5px solid var(--border); border-radius: var(--radius-md); font-size: 12px; }
 
@@ -282,84 +267,25 @@
         .filter-notes-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
         .btn-add-note { background: var(--green-bg); color: var(--green-text); border: 0.5px solid var(--green-border); border-radius: var(--radius-md); padding: 8px 16px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 16px; }
         .btn-add-note:hover { background: var(--green-border); }
-        .note-dialog-textarea { width: 100%; min-height: 200px; padding: 14px; font-size: 13px; font-family: inherit; line-height: 1.6; border: 0.5px solid var(--border); border-radius: var(--radius-md); resize: vertical; color: var(--text-primary); background: var(--bg-white); }
-        .note-dialog-textarea:focus { outline: none; border-color: var(--accent); }
 
-        /* RESPONSIVE */
-        @media (max-width: 1100px) { .dash-cols { grid-template-columns: repeat(3, 1fr); } .metrics { grid-template-columns: repeat(3, 1fr); } }
-        @media (max-width: 800px) { .metrics { grid-template-columns: repeat(2, 1fr); } .dash-cols { grid-template-columns: repeat(2, 1fr); } .two-col { grid-template-columns: 1fr; } .agenda-grid { grid-template-columns: 1fr; } .stats-grid { grid-template-columns: 1fr; } }
-        @media (max-width: 500px) { .app { padding: 10px; } .metrics { grid-template-columns: repeat(2, 1fr); } .nav-tab span.label { display: none; } }
-    
-        /* TABBED MODAL */
-        .modal-content { padding: 0 !important; }
-        .modal-header { padding: 14px 20px; border-bottom: 0.5px solid var(--border); background: var(--bg-subtle); position: sticky; top: 0; z-index: 10; border-radius: var(--radius-xl) var(--radius-xl) 0 0; }
-        .view-header-card { background: var(--bg-subtle); border: 0.5px solid var(--border-light); border-radius: var(--radius-lg); padding: 14px 18px; margin: 14px 18px 0 18px; }
-        .entreprise-name { font-size: 16px; font-weight: 700; color: var(--text-primary); }
-        .entreprise-address { font-size: 12px; color: var(--text-secondary); margin-top: 3px; }
-        .contact-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px 20px; margin-top: 10px; padding-top: 10px; border-top: 0.5px solid var(--border-light); }
-        .contact-item { display: flex; flex-direction: column; gap: 2px; }
-        .contact-lbl { font-size: 10px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.04em; }
-        .contact-val { font-size: 12px; }
-        .contact-val-bold { font-size: 13px; font-weight: 600; }
-        .view-tabs { display: flex; gap: 3px; background: var(--bg-subtle); padding: 7px 18px 0 18px; border-bottom: 0.5px solid var(--border-light); flex-wrap: wrap; }
-        .view-tab { padding: 8px 16px; border: none; background: transparent; font-family: 'DM Sans',sans-serif; font-size: 12px; font-weight: 500; color: var(--text-secondary); cursor: pointer; border-radius: var(--radius-md) var(--radius-md) 0 0; display:inline-flex;align-items:center;gap:6px; transition:all 0.15s; }
-        .view-tab:hover { background: var(--bg-hover); color: var(--text-primary); }
-        .view-tab.active { background: var(--bg-white); color: var(--accent); border-bottom: 2px solid var(--accent); }
-        .view-tab-content { padding: 16px 20px; min-height: 360px; }
-        .timeline-item { display:flex;gap:10px;margin-bottom:12px;padding:10px 12px;background:var(--bg-white);border-radius:var(--radius-md);border:0.5px solid var(--border-light); }
-        .timeline-marker { flex-shrink:0;width:24px;text-align:center;padding-top:3px; }
-        .timeline-dot { width:8px;height:8px;border-radius:50%;background:var(--accent);margin:0 auto; }
-        .timeline-content { flex:1; }
-        .timeline-header { display:flex;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:6px; }
-        .timeline-type { font-size:11px;font-weight:600;color:var(--accent); }
-        .timeline-date { font-size:10px;color:var(--text-tertiary);font-family:'DM Mono',monospace; }
-        .timeline-summary { font-size:12px;color:var(--text-secondary);line-height:1.5; }
-        .call-reco-view { padding:6px 8px;background:var(--orange-bg);border-radius:var(--radius-sm);font-size:11px;margin-top:6px;color:var(--orange-text); }
-        
-        /* SECONDARY CONTACTS */
-        .secondary-contacts-section { margin-top:16px;background:var(--bg-white);border:0.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden; }
-        .secondary-header { background:var(--bg-subtle);padding:10px 14px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between; }
-        .secondary-header h4 { font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-secondary);margin:0; }
-        .btn-add-contact { background:var(--accent-light);color:var(--accent);border:0.5px solid var(--purple-border);border-radius:var(--radius-md);padding:5px 10px;font-size:10px;font-weight:500;cursor:pointer;font-family:inherit; }
-        .btn-add-contact:hover { background:var(--accent);color:white; }
-        .contacts-table { width:100%;border-collapse:collapse; }
-        .contacts-table th { text-align:left;padding:8px 11px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-tertiary);background:var(--bg-subtle);border-bottom:0.5px solid var(--border); }
-        .contacts-table td { padding:9px 11px;border-bottom:0.5px solid var(--border-light);font-size:12px; }
-        .contacts-table tr:last-child td { border-bottom:none; }
-        .contacts-table tr:hover td { background:var(--bg-hover); }
-        .contact-action-btn { background:none;border:none;cursor:pointer;font-size:14px;padding:3px 5px;border-radius:var(--radius-sm);transition:all 0.15s; }
-        .contact-action-btn.set-main:hover { background:var(--orange-bg); }
-        .contact-action-btn.edit-c:hover { background:var(--blue-bg); }
-        .contact-action-btn.delete-c:hover { background:var(--red-bg); }
-        .badge-main-contact { background:var(--green-bg);color:var(--green-text);font-size:9px;padding:1px 6px;border-radius:var(--radius-pill);margin-left:6px; }
-        .editable-input { padding:4px 0;background:transparent;border:none;border-bottom:1px dashed var(--border);font-family:inherit;font-size:inherit;color:inherit;width:100%; }
-        .editable-input:focus { outline:none;border-bottom-color:var(--accent); }
-        .modal-footer-bar { padding:14px 20px 20px;text-align:center;border-top:0.5px solid var(--border-light);display:flex;justify-content:center;gap:10px; }
-        
-        /* CONTACT SUB-MODAL */
-        .contact-modal-overlay { display:none;position:fixed;z-index:2000;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.4);animation:fadeIn 0.15s; }
-        .contact-modal-box { background:var(--bg-white);margin:8% auto;width:90%;max-width:500px;border-radius:var(--radius-xl);border:0.5px solid var(--border);overflow:hidden; }
-        .contact-modal-header { display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:var(--bg-subtle);border-bottom:0.5px solid var(--border); }
-        .contact-modal-header h4 { font-size:14px;font-weight:600; }
-        .contact-form-grid { display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:18px; }
-        .contact-form-full { grid-column:span 2; }
-        .input-field-sm { display:flex;flex-direction:column;gap:4px; }
-        .input-field-sm label { font-size:10px;font-weight:500;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.04em; }
-        .input-field-sm input,.input-field-sm textarea { padding:7px 9px;border:0.5px solid var(--border);border-radius:var(--radius-md);background:var(--bg-white);font-size:12px;font-family:inherit;color:var(--text-primary); }
-        .input-field-sm input:focus,.input-field-sm textarea:focus { outline:none;border-color:var(--accent); }
-        .btn-save-contact { background:var(--green-bg);color:var(--green-text);border:0.5px solid var(--green-border);border-radius:var(--radius-md);padding:8px 16px;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit; }
-        .btn-save-contact:hover { background:var(--green-border); }
+        /* TABLEAU CONTACTS SECONDAIRES */
+        .secondary-contacts-section { background: var(--bg-white); border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-top: 16px; }
+        .secondary-header { background: var(--bg-subtle); padding: 10px 14px; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+        .secondary-header h4 { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin: 0; }
+        .btn-add-contact { background: var(--accent-light); color: var(--accent); border: 0.5px solid var(--purple-border); border-radius: var(--radius-md); padding: 5px 10px; font-size: 10px; font-weight: 500; cursor: pointer; font-family: inherit; }
+        .btn-add-contact:hover { background: var(--accent); color: white; }
+        .contacts-table { width: 100%; border-collapse: collapse; }
+        .contacts-table th { text-align: left; padding: 8px 11px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-tertiary); background: var(--bg-subtle); border-bottom: 0.5px solid var(--border); }
+        .contacts-table td { padding: 9px 11px; border-bottom: 0.5px solid var(--border-light); font-size: 12px; }
+        .contacts-table tr:last-child td { border-bottom: none; }
+        .badge-main-contact { background: var(--green-bg); color: var(--green-text); font-size: 9px; padding: 1px 6px; border-radius: var(--radius-pill); margin-left: 6px; }
 
         .info-block { background: var(--bg-subtle); border: 0.5px solid var(--border-light); border-radius: var(--radius-lg); padding: 14px; margin-bottom: 14px; }
         .info-block h4 { font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 10px; }
-        .info-row { margin-bottom: 6px; font-size: 12px; }
-        .info-row .lbl { color: var(--text-tertiary); font-size: 10px; }
-        .info-row .val { font-weight: 500; }
         .btn-validate { background: var(--green-bg); color: var(--green-text); border: 0.5px solid var(--green-border); border-radius: var(--radius-md); padding: 8px 16px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: inherit; }
-        .btn-cancel { background: none; color: var(--text-secondary); border: 0.5px solid var(--border); border-radius: var(--radius-md); padding: 8px 18px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: inherit; }
         .btn-submit { background: var(--accent); color: #fff; border: none; border-radius: var(--radius-md); padding: 11px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; margin-top: 4px; }
-        .btn-openEdit { background: var(--accent-light); color: var(--accent); border: 0.5px solid var(--purple-border); border-radius: var(--radius-md); padding: 6px 12px; font-size: 11px; font-weight: 500; cursor: pointer; font-family: inherit; }
-        .btn-pdf { background: var(--red-bg); color: var(--red-text); border: 0.5px solid var(--red-border); border-radius: var(--radius-md); padding: 6px 12px; font-size: 11px; font-weight: 500; cursor: pointer; font-family: inherit; }
+        .btn-cancel { background: none; color: var(--text-secondary); border: 0.5px solid var(--border); border-radius: var(--radius-md); padding: 8px 18px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: inherit; }
+        
         .notification { position: fixed; top: 18px; right: 18px; padding: 10px 16px; border-radius: var(--radius-md); font-size: 12px; font-weight: 500; z-index: 2000; animation: slideIn 0.2s ease-out; border: 0.5px solid transparent; }
         @keyframes slideIn { from{transform:translateX(100%);opacity:0} to{transform:translateX(0);opacity:1} }
         .notification.success { background: var(--green-bg); color: var(--green-text); border-color: var(--green-border); }
@@ -369,6 +295,9 @@
         #loginScreen { position: fixed; inset: 0; background: var(--bg-page); display: flex; align-items: center; justify-content: center; z-index: 9999; }
         .login-card { background: var(--bg-white); border: 0.5px solid var(--border); border-radius: var(--radius-xl); padding: 44px 36px; text-align: center; width: 360px; }
         .btn-google { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 11px 18px; background: var(--bg-white); border: 0.5px solid var(--border); border-radius: var(--radius-md); font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; color: var(--text-primary); }
+
+        @media (max-width: 800px) { .metrics { grid-template-columns: repeat(2, 1fr); } .dash-cols { grid-template-columns: repeat(2, 1fr); } .two-col-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 500px) { .app { padding: 10px; } .metrics { grid-template-columns: repeat(2, 1fr); } .nav-tab span.label { display: none; } }
     </style>
 </head>
 <body>
@@ -378,7 +307,7 @@
     <div class="login-card">
         <div class="logo" style="justify-content:center;margin-bottom:18px;"><div class="logo-icon">🏦</div></div>
         <div class="login-title">CRM Karim B2B</div>
-        <div class="login-sub">v6.1 · Conseiller en Sécurité Financière</div>
+        <div class="login-sub">v6.2 · Conseiller en Sécurité Financière</div>
         <button class="btn-google" onclick="signInWithGoogle()" style="margin-top:28px;">
             <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
             Se connecter avec Google
@@ -391,19 +320,8 @@
 <div class="app" id="mainApp" style="display:none;">
     <!-- TOPBAR -->
     <div class="topbar">
-        <div class="logo">
-            <div class="logo-icon">🏦</div>
-            <div>
-                <div class="logo-name">CRM Karim B2B <span style="font-size:10px;color:var(--text-tertiary);font-weight:400;">v6.1</span></div>
-                <div class="logo-sub">Canada · Sécurité Financière</div>
-            </div>
-        </div>
-        <div class="topbar-right">
-            <div class="sync-bar"><div class="sync-dot" id="syncDot"></div><span id="syncStatus">Prêt</span></div>
-            <button class="btn-sm" onclick="syncFromSheet()">🔄 Synchroniser</button>
-            <div class="user-pill"><div class="user-avatar" id="userInitials">?</div><span id="currentUserName">...</span></div>
-            <button class="btn-logout" onclick="signOut()">Déconnexion</button>
-        </div>
+        <div class="logo"><div class="logo-icon">🏦</div><div><div class="logo-name">CRM Karim B2B <span style="font-size:10px;color:var(--text-tertiary);">v6.2</span></div><div class="logo-sub">Canada · Sécurité Financière</div></div></div>
+        <div class="topbar-right"><div class="sync-bar"><div class="sync-dot" id="syncDot"></div><span id="syncStatus">Prêt</span></div><button class="btn-sm" onclick="syncFromSheet()">🔄 Synchroniser</button><div class="user-pill"><div class="user-avatar" id="userInitials">?</div><span id="currentUserName">...</span></div><button class="btn-logout" onclick="signOut()">Déconnexion</button></div>
     </div>
 
     <!-- MAIN NAVIGATION -->
@@ -451,92 +369,42 @@
     <div id="sectionStats" style="display:none;"><div class="stats-grid" id="statsGrid"></div></div>
 </div>
 
-<!-- MODAL CRÉATION -->
+<!-- MODAL CRÉATION (simplifié) -->
 <div id="createModal" class="modal" onclick="handleCreateModalClick(event)">
-    <div class="modal-content" id="createModalContent">
+    <div class="modal-content">
         <div class="modal-header"><h3>✨ Nouveau dossier</h3><button class="close" onclick="closeCreateModal()">&#x2715;</button></div>
-        <div style="padding:18px 20px;">
-            <div class="two-col" style="margin-bottom:14px;">
-                <div class="section-card" style="margin-bottom:0;">
-                    <h4>🏢 Entreprise</h4>
-                    <div class="input-field"><label>Nom entreprise *</label><input id="companyName" placeholder="Ex: ABC Inc."></div>
-                    <div class="input-field"><label>Adresse</label><input id="companyAddress" placeholder="1000 Rue McGill, Montréal"></div>
-                    <div class="input-field"><label>Campagne</label><select id="campagne"><option value="Inconnue">Inconnue</option><option>Campagne 01</option><option>Campagne 02</option><option>Campagne 03</option><option>Campagne 04</option><option>Campagne 05</option><option>Campagne 06</option><option>Campagne 07</option><option>Campagne 08</option><option>Campagne 09</option><option>Campagne 10</option></select></div>
-                    <div class="input-field"><label>NEQ</label><input id="neq" placeholder="1234567890"></div>
-                    <div class="input-field"><label>Secteur</label><input id="secteur" list="secteurList" placeholder="Sélectionner ou écrire..."><datalist id="secteurList"><option>Agriculture, foresterie, pêche</option><option>Construction</option><option>Fabrication</option><option>Commerce</option><option>Transport</option><option>Finance</option><option>Services professionnels</option><option>Technologie</option><option>Santé</option><option>Éducation</option><option>Immobilier</option><option>Restauration / Hôtellerie</option></datalist></div>
-                    <div style="display:flex;gap:8px;"><div class="input-field" style="flex:1;"><label>Employés</label><input id="employees" type="number" placeholder="Ex: 50"></div><div class="input-field" style="width:100px;"><label>Année création</label><input type="number" id="companyCreationDate" placeholder="2005" min="1800" max="2099"></div></div>
-                    <!-- ASSOCIÉS avec + Ajouter -->
-                    <div class="input-field"><label>Associés</label>
-                        <div id="associesContainer" class="associes-container"></div>
-                        <div class="associe-input-group">
-                            <input type="text" id="newAssocieInput" placeholder="Nom de l'associé..." onkeypress="if(event.key==='Enter') addAssocie()">
-                            <button type="button" class="btn-add-associe" onclick="addAssocie()">+ Ajouter</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="section-card" style="margin-bottom:0;">
-                    <h4>👤 Contact principal</h4>
-                    <div class="input-field"><label>Nom complet *</label><input id="contactName" placeholder="Ex: Jean Tremblay"></div>
-                    <div class="input-field"><label>Prénom</label><input id="contactPrenom" placeholder="Ex: Jean"></div>
-                    <div class="input-field"><label>Fonction</label><input id="fonction" placeholder="Ex: Directeur financier"></div>
-                    <div class="input-field"><label>Rôle / Propriété</label><select id="proprietaire"><option value="">Sélectionner</option><option>Propriétaire</option><option>Associé</option><option>Salarié</option><option>Actionnaire</option><option>Dirigeant</option></select></div>
-                    <div style="display:flex;gap:8px;"><div class="input-field" style="flex:1;"><label>Âge</label><input type="text" id="age" placeholder="Manuel ou auto"></div><div class="input-field" style="flex:1;"><label>Date de naissance</label><input type="date" id="birthDate" onchange="calculateAge()"></div></div>
-                    <div style="display:flex;gap:6px;"><div class="input-field" style="flex:1;"><label>Cellulaire</label><input id="phoneDirect" placeholder="+1 514 555-1234"></div><div class="input-field" style="flex:1;"><label>Téléphone</label><input id="phoneMobile" placeholder="+1 514 555-5678"></div><div class="input-field" style="width:72px;"><label>Poste</label><input id="phonePoste" placeholder="201"></div></div>
-                    <div class="input-field"><label>Courriel</label><input id="email" type="email" placeholder="nom@entreprise.ca"></div>
-                    <div style="display:flex;gap:8px;">
-                        <div class="input-field" style="flex:1;"><label>Fumeur</label><select id="fumeur"><option value="" selected>— à compléter —</option><option value="Non-fumeur">Non-fumeur</option><option value="Fumeur">Fumeur</option></select></div>
-                        <div class="input-field" style="flex:1;"><label>Situation familiale</label><select id="situationFamiliale"><option value="">Sélectionner</option><option>Célibataire</option><option>Marié(e)</option><option>Conjoint(e) de fait</option><option>Divorcé(e)</option><option>Veuf(ve)</option></select></div>
-                    </div>
-                    <div class="input-field"><label>Enfants à charge</label><input type="text" id="enfantsCharge" placeholder="— à compléter —" value=""></div>
-                </div>
+        <div style="padding:20px;">
+            <div class="two-col-grid">
+                <div><div class="input-field"><label>Entreprise *</label><input id="companyName"></div><div class="input-field"><label>Contact *</label><input id="contactName"></div><div class="input-field"><label>Cellulaire</label><input id="phoneDirect"></div><div class="input-field"><label>Courriel</label><input id="email"></div></div>
+                <div><div class="input-field"><label>Date 1er appel *</label><input type="date" id="date1erAppelPrevu"></div><div class="input-field"><label>Campagne</label><select id="campagne"><option>Inconnue</option><option>Campagne 01</option><option>Campagne 02</option><option>Campagne 03</option><option>Campagne 04</option><option>Campagne 05</option></select></div><div class="input-field"><label>Étape suivi</label><select id="campaignSuivi"><option>À relancer</option><option>Proposition envoyée</option><option>Négociation</option><option>Accord de principe</option><option>Envoi contrat</option><option>Signé - En attente</option><option>Finalisé</option><option>Perdu</option></select></div><div class="input-field"><label>Statut</label><select id="initialStatus"><option>Prospect</option><option>En cours</option></select></div></div>
             </div>
-
-            <!-- NOTES PRESTATAIRE -->
-            <div class="section-card" style="background:var(--orange-bg);border-color:var(--orange-border);margin-bottom:14px;">
-                <h4 style="color:var(--orange-text);">📋 Notes Prestataire (Campagne)</h4>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
-                    <div class="input-field" style="margin-bottom:0;"><label>Date 1er appel prévu ★</label><input type="date" id="date1erAppelPrevu"></div>
-                    <div class="input-field" style="margin-bottom:0;"><label>Type d'action</label><select id="contactType"><option value="📞 Appel découverte" selected>📞 Appel découverte</option><option value="📞 Appel qualification">📞 Appel qualification</option><option value="📞 Appel proposition">📞 Appel proposition</option><option value="🤝 Rendez-vous physique">🤝 Rendez-vous physique</option><option value="🎥 Visio-conférence">🎥 Visio-conférence</option><option value="⏰ Relance">⏰ Relance</option></select></div>
-                </div>
-                <div class="input-field"><label>Note détaillée prestataire</label><textarea id="notePrestataire" rows="3" placeholder="Résumé complet du client fourni par le prestataire..."></textarea></div>
-                <div class="input-field"><label>Recommandations prestataire</label><input id="recoPrestataire" placeholder="Ex: Priorité assurance vie + REER"></div>
-            </div>
-
-            <!-- AUTRES CONTACTS -->
-            <div style="background:var(--bg-white);border:0.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:14px;">
-                <div style="background:var(--bg-subtle);padding:10px 14px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
-                    <span style="font-size:11px;font-weight:600;text-transform:uppercase;">👥 Autres contacts</span>
-                    <button type="button" class="btn-add-contact" onclick="addCreateContact()">+ Ajouter un contact</button>
-                </div>
-                <div id="createContactsList" style="padding:10px 14px;"><div style="font-size:11px;color:var(--text-tertiary);font-style:italic;text-align:center;padding:8px 0;">Aucun contact secondaire</div></div>
-            </div>
-
-            <!-- SUIVI + PRIORITÉ -->
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px;">
-                <div class="input-field"><label>Étape suivi</label><select id="campaignSuivi"><option>À relancer</option><option>Proposition envoyée</option><option>Négociation</option><option>Accord de principe</option><option>Envoi contrat</option><option>Signé - En attente</option><option>Finalisé</option><option>Perdu</option></select></div>
-                <div class="input-field"><label>Priorité</label><select id="priority"><option value="high">🔴 Haute</option><option value="medium" selected>🟠 Moyenne</option><option value="low">🟢 Basse</option></select></div>
-                <div class="input-field"><label>Statut</label><select id="initialStatus"><option selected>Prospect</option><option>En cours</option></select></div>
-            </div>
-
-            <button class="btn-submit" onclick="addClientB2B()">✨ Créer le dossier</button>
+            <button class="btn-submit" onclick="addClientB2B()" style="width:100%;">✨ Créer le dossier</button>
             <div style="text-align:center;margin-top:10px;"><button class="btn-cancel" onclick="closeCreateModal()">Annuler</button></div>
         </div>
     </div>
 </div>
 
-<!-- MODAL CONSULTATION -->
-<div id="viewModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>Fiche dossier</h3><div class="modal-header-actions"><button class="btn-openEdit" onclick="openEditFromView()">Éditer</button><button class="btn-pdf" onclick="exportToPDF()">PDF</button><button class="close" onclick="closeViewModal()">&#x2715;</button></div></div><div id="viewContent"></div><div style="text-align:center;margin-top:16px;"><button class="btn-cancel" onclick="closeViewModal()">Fermer</button></div></div></div>
-
-<!-- MODAL ÉDITION -->
-<div id="editModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>Modifier le dossier</h3><button class="close" onclick="closeEditModal()">&#x2715;</button></div><div id="editContent"></div></div></div>
-
-<!-- MODAL NOTE DIALOG -->
-<div id="noteDialogModal" class="modal"><div class="modal-content" style="max-width:640px;"><div class="modal-header"><h3 id="noteDialogTitle">Ajouter une note</h3><button class="close" onclick="closeNoteDialog()">&#x2715;</button></div><textarea id="noteDialogTextarea" class="note-dialog-textarea" placeholder="Saisissez votre note..."></textarea><div class="dialog-buttons" style="display:flex;gap:8px;justify-content:center;margin-top:16px;"><button class="btn-validate" onclick="saveNoteFromDialog()">Valider</button><button class="btn-cancel" onclick="closeNoteDialog()">Annuler</button></div></div></div>
+<!-- MODAL FICHE UNIQUE (VUE + ÉDITION) -->
+<div id="ficheModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="ficheTitle">📄 Fiche dossier</h3>
+            <div class="modal-header-actions">
+                <button class="btn-sm" onclick="exportFichePDF()">📄 PDF</button>
+                <button class="close" onclick="closeFicheModal()">&#x2715;</button>
+            </div>
+        </div>
+        <div id="ficheContent" style="padding:20px;"></div>
+        <div class="modal-footer-bar" style="padding:16px 20px;border-top:0.5px solid var(--border);text-align:center;">
+            <button class="btn-cancel" onclick="closeFicheModal()">Fermer</button>
+        </div>
+    </div>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
 // ═══════════════════════════════════════════════════════════════════════════════════════
-// CONFIGURATION
+// CONFIGURATION ET VARIABLES GLOBALES
 // ═══════════════════════════════════════════════════════════════════════════════════════
 const SHEET_ID = '16itvJEnFxz42INaipQtaikisLooQ339oyfIW0F4-0XE';
 const CLIENT_ID = '498586951900-fpom0ad71viisb61iqv203civkci6hve.apps.googleusercontent.com';
@@ -546,14 +414,13 @@ let accessToken = null, tokenClient = null;
 let clients = [];
 let currentUser = 'Conseiller', currentUserEmail = '';
 let currentTab = 'active', currentMainNav = 'dossiers';
-let currentEditId = null, currentViewId = null;
-let currentNoteField = null, currentNotePreviewId = null;
+let currentFicheId = null;
 let currentSort = { column: 'tacheStatus', order: 'desc' };
 let searchTimeout = null;
 let saveQueue = Promise.resolve();
-let createContacts = [];
-let currentAssocies = []; // Pour le formulaire de création
-let notesFilter = 'all'; // all, week, month
+let currentAssociesTemp = [];
+let notesFilter = 'all';
+let currentEditingField = null;
 
 const suiviOptions = ["À relancer","Proposition envoyée","Négociation","Accord de principe","Envoi contrat","Signé - En attente","Finalisé","Perdu"];
 const tacheTypes = ["📞 Rappel de suivi","📞 Relance","🎥 Visio","🤝 Rendez-vous physique","📊 Préparation illustration","📄 Envoi proposition","📧 Signature contrat","🔄 Suivi post-signature","📞 Appel découverte","📞 Appel qualification","📞 Appel proposition","📞 Appel négociation","✉️ Envoyer illustration","📎 Envoyer documentation","⏰ Aucune"];
@@ -567,14 +434,12 @@ function getCurrentDateTime() { return new Date().toLocaleString('fr-FR',{day:'2
 function getCurrentISODateTime() { return new Date().toISOString().slice(0,19).replace('T',' '); }
 function addDays(n) { const d=new Date(); d.setDate(d.getDate()+n); return d.toISOString().split('T')[0]; }
 function calcAge(bd) { if(!bd) return ''; const t=new Date(),b=new Date(bd); let age=t.getFullYear()-b.getFullYear(); if(t.getMonth()-b.getMonth()<0||(t.getMonth()===b.getMonth()&&t.getDate()<b.getDate())) age--; return age+' ans'; }
-function calculateAge() { const bd=document.getElementById("birthDate").value, af=document.getElementById("age"); if(bd){ af.value=calcAge(bd); af.readOnly=true; af.style.background="var(--bg-page)"; } else { af.value=''; af.readOnly=false; af.style.background=''; } }
-
 function showNotification(msg, type) { const n=document.createElement('div'); n.className=`notification ${type}`; n.textContent=msg; document.body.appendChild(n); setTimeout(()=>n.remove(),3500); }
 function setSyncStatus(state, msg) { const dot=document.getElementById('syncDot'), txt=document.getElementById('syncStatus'); if(dot&&txt){ dot.className='sync-dot '+state; txt.textContent=msg; } }
 function debouncedRender() { clearTimeout(searchTimeout); searchTimeout=setTimeout(render,250); }
 
 // ═══════════════════════════════════════════════════════════════════════════════════════
-// GESTION DES STATUTS DE TÂCHES (logique Excel)
+// GESTION DES STATUTS DE TÂCHES
 // ═══════════════════════════════════════════════════════════════════════════════════════
 function getTacheStatus(c) {
     if(c.closed || c.dossierFinalise) return 'Finalisé';
@@ -585,146 +450,14 @@ function getTacheStatus(c) {
     if(c.nextCall.date === today) return 'Urgent';
     return 'À faire';
 }
-
 function tacheStatusBadge(status) {
     const map = { 'Finalisé': ['ts-finalized', '✅'], 'Fait': ['ts-fait', '✓'], 'En retard': ['ts-retard', '⚠'], 'Urgent': ['ts-urgent', '🔔'], 'À faire': ['ts-afaire', '○'] };
     const [cls, icon] = map[status] || ['ts-afaire', '○'];
     return `<span class="tache-status ${cls}">${icon} ${status}</span>`;
 }
 
-function getRowClass(c) {
-    if(c.archived) return '';
-    if(c.closed || c.dossierFinalise) return 'row-finalized';
-    if(c.tacheFaite) return 'row-done';
-    const s = getTacheStatus(c);
-    if(s === 'En retard') return 'row-late';
-    if(s === 'Urgent') return 'row-today';
-    return '';
-}
-
 // ═══════════════════════════════════════════════════════════════════════════════════════
-// GESTION DES ASSOCIÉS (tags)
-// ═══════════════════════════════════════════════════════════════════════════════════════
-function renderAssociesTags(containerId, associesArray, onChangeCallback) {
-    const container = document.getElementById(containerId);
-    if(!container) return;
-    if(!associesArray.length) { container.innerHTML = '<span style="font-size:11px;color:var(--text-tertiary);font-style:italic;">Aucun associé</span>'; return; }
-    container.innerHTML = associesArray.map((a,i) => `<span class="associe-tag">${escapeHtml(a)} <button class="remove-tag" onclick="removeAssocie(${i})">✕</button></span>`).join('');
-}
-
-function addAssocie() {
-    const input = document.getElementById('newAssocieInput');
-    const name = input.value.trim();
-    if(!name) return;
-    currentAssocies.push(name);
-    input.value = '';
-    renderAssociesTags('associesContainer', currentAssocies, null);
-}
-
-function removeAssocie(index) {
-    currentAssocies.splice(index,1);
-    renderAssociesTags('associesContainer', currentAssocies, null);
-}
-
-function displayAssociesList(associes) {
-    if(!associes || !associes.length) return '<span style="font-size:11px;color:var(--text-tertiary);font-style:italic;">Aucun associé</span>';
-    return `<div style="display:flex;flex-wrap:wrap;gap:6px;">${associes.map(a => `<span class="associe-tag" style="background:var(--accent-light);">${escapeHtml(a)}</span>`).join('')}</div>`;
-}
-
-// ═══════════════════════════════════════════════════════════════════════════════════════
-// NOTES JOURNAL (horodatées)
-// ═══════════════════════════════════════════════════════════════════════════════════════
-function openAddNoteDialog() {
-    document.getElementById("noteDialogTextarea").value = "";
-    document.getElementById("noteDialogTitle").textContent = "➕ Ajouter une note";
-    document.getElementById("noteDialogModal").style.display = "block";
-    currentNoteField = "addNote";
-}
-
-function saveNoteFromDialog() {
-    const content = document.getElementById("noteDialogTextarea").value.trim();
-    if(!content) { showNotification("Le contenu de la note est vide","error"); return; }
-    
-    if(currentNoteField === "addNote" && currentViewId) {
-        const c = clients.find(x => x.id === currentViewId);
-        if(c) {
-            if(!c.notesJournal) c.notesJournal = [];
-            const newNote = {
-                id: 'note_' + Date.now() + '_' + Math.random().toString(36).substr(2,6),
-                date: getCurrentDate(),
-                time: new Date().toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'}),
-                datetime: getCurrentISODateTime(),
-                author: currentUser,
-                content: content
-            };
-            c.notesJournal.unshift(newNote);
-            if(!c.modificationHistory) c.modificationHistory = [];
-            c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:`Note ajoutée : ${content.substring(0,50)}...`});
-            save();
-            renderNotesJournal(c);
-            showNotification("Note ajoutée","success");
-        }
-    }
-    closeNoteDialog();
-}
-
-function deleteNote(noteId) {
-    if(!confirm("Supprimer cette note ?")) return;
-    const c = clients.find(x => x.id === currentViewId);
-    if(c && c.notesJournal) {
-        const note = c.notesJournal.find(n => n.id === noteId);
-        c.notesJournal = c.notesJournal.filter(n => n.id !== noteId);
-        if(c.modificationHistory) c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:`Note supprimée : ${note?.content?.substring(0,50)}...`});
-        save();
-        renderNotesJournal(c);
-        showNotification("Note supprimée","info");
-    }
-}
-
-function renderNotesJournal(c) {
-    const container = document.getElementById('notesJournalContainer');
-    if(!container) return;
-    const notes = c.notesJournal || [];
-    
-    let filteredNotes = [...notes];
-    const now = new Date();
-    if(notesFilter === 'week') {
-        const weekAgo = new Date(); weekAgo.setDate(now.getDate() - 7);
-        filteredNotes = notes.filter(n => new Date(n.date) >= weekAgo);
-    } else if(notesFilter === 'month') {
-        const monthAgo = new Date(); monthAgo.setMonth(now.getMonth() - 1);
-        filteredNotes = notes.filter(n => new Date(n.date) >= monthAgo);
-    }
-    
-    if(!filteredNotes.length) {
-        container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-tertiary);font-style:italic;">Aucune note. Cliquez sur "+ Ajouter une note" pour commencer.</div>';
-        return;
-    }
-    
-    container.innerHTML = filteredNotes.map(n => `
-        <div class="note-entry">
-            <div class="note-entry-header">
-                <span class="note-entry-meta">📅 ${n.date} à ${n.time}</span>
-                <span class="note-entry-author">✍️ ${escapeHtml(n.author)}</span>
-                <button class="delete-note-btn" onclick="deleteNote('${n.id}')" title="Supprimer">🗑️</button>
-            </div>
-            <div class="note-entry-content">${escapeHtml(n.content).replace(/\n/g,'<br>')}</div>
-        </div>
-    `).join('');
-}
-
-function setNotesFilter(filter) {
-    notesFilter = filter;
-    const c = clients.find(x => x.id === currentViewId);
-    if(c) renderNotesJournal(c);
-    document.querySelectorAll('.filter-notes-btn').forEach(btn => btn.classList.remove('active'));
-    if(filter === 'all') document.getElementById('filterNotesAll')?.classList.add('active');
-    else if(filter === 'week') document.getElementById('filterNotesWeek')?.classList.add('active');
-    else if(filter === 'month') document.getElementById('filterNotesMonth')?.classList.add('active');
-}
-
-// ═══════════════════════════════════════════════════════════════════════════════════════
-// AUTHENTIFICATION GOOGLE SHEETS
+// AUTHENTIFICATION GOOGLE
 // ═══════════════════════════════════════════════════════════════════════════════════════
 function signInWithGoogle() {
     document.getElementById('loginLoading').style.display = 'block';
@@ -741,7 +474,6 @@ function signInWithGoogle() {
     }
     tokenClient.requestAccessToken({ prompt: 'consent' });
 }
-
 async function fetchUserInfo() {
     try {
         const r = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', { headers: { Authorization: `Bearer ${accessToken}` }});
@@ -750,7 +482,6 @@ async function fetchUserInfo() {
             accessToken = null;
             document.getElementById('loginLoading').style.display = 'none';
             document.getElementById('loginError').style.display = 'block';
-            document.getElementById('loginError').textContent = `❌ Accès refusé pour ${info.email}`;
             return;
         }
         currentUserEmail = info.email;
@@ -758,7 +489,6 @@ async function fetchUserInfo() {
         onLoginSuccess();
     } catch(e) { document.getElementById('loginLoading').style.display='none'; document.getElementById('loginError').style.display='block'; }
 }
-
 async function onLoginSuccess() {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('mainApp').style.display = 'block';
@@ -767,7 +497,6 @@ async function onLoginSuccess() {
     document.getElementById('userInitials').textContent = initials;
     await syncFromSheet();
 }
-
 function signOut() {
     if(!confirm('Se déconnecter ?')) return;
     accessToken = null; clients = [];
@@ -776,7 +505,7 @@ function signOut() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════════════
-// SYNCHRONISATION GOOGLE SHEETS (simplifiée)
+// SYNCHRONISATION
 // ═══════════════════════════════════════════════════════════════════════════════════════
 async function syncFromSheet() {
     if(!accessToken) return;
@@ -787,11 +516,7 @@ async function syncFromSheet() {
         setSyncStatus('saved',`Prêt ${new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}`);
     } catch(e) { setSyncStatus('error','Erreur'); }
 }
-
-function saveToLocal() {
-    localStorage.setItem('crm_karim_v6_backup', JSON.stringify(clients));
-    setSyncStatus('saved',`Sauvegardé ${new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}`);
-}
+function saveToLocal() { localStorage.setItem('crm_karim_v6_backup', JSON.stringify(clients)); setSyncStatus('saved',`Sauvegardé ${new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}`); }
 function save() { saveQueue = saveQueue.then(() => { saveToLocal(); return Promise.resolve(); }); }
 
 // ═══════════════════════════════════════════════════════════════════════════════════════
@@ -807,9 +532,8 @@ function updateDashboard() {
         {title:"J+2/J+3",     cls:"blue",   items:ac.filter(c=>c.nextCall?.date===d2||c.nextCall?.date===d3)},
         {title:"Sans action", cls:"gray",   items:ac.filter(c=>!c.nextCall?.date)}
     ];
-    document.getElementById("dashboardGrid").innerHTML=cols.map(col=>`<div class="dash-col"><div class="dash-col-header ${col.cls}"><span>${col.title}</span><span class="dash-count">${col.items.length}</span></div>${col.items.length>0?col.items.slice(0,5).map(c=>`<div class="dash-item" onclick="openViewModal(${c.id})"><span>${escapeHtml(c.companyName)}</span>${c.nextCall?.date?`<span class="dash-item-date">${c.nextCall.date.slice(5).replace('-','/')}</span>`:''}</div>`).join(''):'<div class="dash-empty">Aucune</div>'}</div>`).join('');
+    document.getElementById("dashboardGrid").innerHTML=cols.map(col=>`<div class="dash-col"><div class="dash-col-header ${col.cls}"><span>${col.title}</span><span class="dash-count">${col.items.length}</span></div>${col.items.length>0?col.items.slice(0,5).map(c=>`<div class="dash-item" onclick="openFicheModal(${c.id})"><span>${escapeHtml(c.companyName)}</span>${c.nextCall?.date?`<span class="dash-item-date">${c.nextCall.date.slice(5).replace('-','/')}</span>`:''}</div>`).join(''):'<div class="dash-empty">Aucune</div>'}</div>`).join('');
 }
-
 function renderAgenda() {
     const today=getCurrentDate(), d7=addDays(7);
     document.getElementById('agendaDatePill').textContent=new Date().toLocaleDateString('fr-CA',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
@@ -817,7 +541,7 @@ function renderAgenda() {
     const late=ac.filter(c=>c.nextCall?.date&&c.nextCall.date<today);
     const tod=ac.filter(c=>c.nextCall?.date===today);
     const soon=ac.filter(c=>c.nextCall?.date>today&&c.nextCall.date<=d7);
-    const mkItem=(c,reminder)=>`<div class="agenda-item" onclick="openViewModal(${c.id})"><div class="agenda-item-name">${escapeHtml(c.contactName||c.companyName)}</div><div class="agenda-item-task">${escapeHtml(c.nextCall?.type||'—')} · ${c.nextCall?.date||''}</div><div class="agenda-item-reminder">${reminder}</div></div>`;
+    const mkItem=(c,reminder)=>`<div class="agenda-item" onclick="openFicheModal(${c.id})"><div class="agenda-item-name">${escapeHtml(c.contactName||c.companyName)}</div><div class="agenda-item-task">${escapeHtml(c.nextCall?.type||'—')} · ${c.nextCall?.date||''}</div><div class="agenda-item-reminder">${reminder}</div></div>`;
     document.getElementById('agendaLateCount').textContent=late.length;
     document.getElementById('agendaTodayCount').textContent=tod.length;
     document.getElementById('agendaSoonCount').textContent=soon.length;
@@ -826,7 +550,6 @@ function renderAgenda() {
     document.getElementById('agendaSoonList').innerHTML=soon.length?soon.map(c=>mkItem(c,`📅 Dans ${Math.ceil((new Date(c.nextCall.date)-new Date())/(1000*60*60*24))} jour(s)`)).join(''):'<div class="agenda-empty">Aucune</div>';
     document.getElementById('navCountAgenda').textContent=late.length+tod.length;
 }
-
 function renderStats() {
     const ac=clients.filter(c=>!c.archived);
     const camps=[...new Set(ac.map(c=>c.campagne||'Sans campagne'))].filter(Boolean).sort();
@@ -835,7 +558,6 @@ function renderStats() {
     let statusRows=statuses.map(s=>{const cnt=ac.filter(c=>getTacheStatus(c)===s).length;const pct=ac.length?Math.round(cnt/ac.length*100):0;const colors={'En retard':'var(--red-text)','Urgent':'var(--orange-text)','À faire':'var(--blue-text)','Fait':'var(--gray-text)','Finalisé':'var(--green-text)'};return `<div class="stats-row"><span style="color:${colors[s]}">${s}</span><div class="stats-bar-wrap"><div class="stats-bar" style="width:${pct}px;max-width:100px;background:${colors[s]};"></div><span class="stats-num">${cnt}</span></div></div>`;}).join('');
     document.getElementById('statsGrid').innerHTML=`<div class="stats-card"><h4>Dossiers par campagne</h4>${campRows||'<div>Aucune</div>'}</div><div class="stats-card"><h4>Statut des tâches</h4>${statusRows}</div><div class="stats-card"><h4>Notes récentes</h4><div>Journal disponible dans chaque dossier</div></div>`;
 }
-
 function updateCampagneFilter() {
     const sel=document.getElementById('filterCampagne');
     if(!sel) return;
@@ -845,93 +567,43 @@ function updateCampagneFilter() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════════════
-// GESTION DES MODALS - CRÉATION
+// MODAL CRÉATION SIMPLIFIÉ
 // ═══════════════════════════════════════════════════════════════════════════════════════
-function handleCreateModalClick(event) { /* Ne rien faire - empêche la fermeture automatique */ }
-
-function openCreateModal() {
-    createContacts = [];
-    currentAssocies = [];
-    renderCreateContacts();
-    renderAssociesTags('associesContainer', currentAssocies, null);
-    document.getElementById("createModal").style.display="block";
-    document.getElementById("newAssocieInput").value = "";
-}
-
-function addCreateContact() { createContacts.push({id:'cc_'+Date.now(), name:'', function:'', phone:'', email:'', notes:''}); renderCreateContacts(); }
-function removeCreateContact(idx) { createContacts.splice(idx,1); renderCreateContacts(); }
-function renderCreateContacts() {
-    const el=document.getElementById('createContactsList');
-    if(!el) return;
-    if(!createContacts.length){ el.innerHTML='<div style="font-size:11px;color:var(--text-tertiary);font-style:italic;text-align:center;padding:8px 0;">Aucun contact secondaire — cliquez sur "+ Ajouter"</div>'; return; }
-    el.innerHTML=createContacts.map((c,i)=>`<div style="display:grid;grid-template-columns:2fr 2fr 2fr 2fr 3fr auto;gap:8px;align-items:end;margin-bottom:8px;padding-bottom:8px;border-bottom:0.5px solid var(--border-light);"><div class="input-field" style="margin-bottom:0;"><label>Nom *</label><input value="${escapeHtml(c.name)}" oninput="createContacts[${i}].name=this.value" placeholder="Prénom Nom"></div><div class="input-field" style="margin-bottom:0;"><label>Fonction</label><input value="${escapeHtml(c.function||'')}" oninput="createContacts[${i}].function=this.value" placeholder="Directeur..."></div><div class="input-field" style="margin-bottom:0;"><label>Téléphone</label><input value="${escapeHtml(c.phone||'')}" oninput="createContacts[${i}].phone=this.value" placeholder="+1 514..."></div><div class="input-field" style="margin-bottom:0;"><label>Courriel</label><input type="email" value="${escapeHtml(c.email||'')}" oninput="createContacts[${i}].email=this.value" placeholder="nom@co.ca"></div><div class="input-field" style="margin-bottom:0;"><label>Notes</label><input value="${escapeHtml(c.notes||'')}" oninput="createContacts[${i}].notes=this.value" placeholder="Notes..."></div><button type="button" onclick="removeCreateContact(${i})" style="background:var(--red-bg);color:var(--red-text);border:0.5px solid var(--red-border);border-radius:var(--radius-sm);padding:6px 8px;cursor:pointer;font-size:13px;height:34px;align-self:end;">🗑</button></div>`).join('');
-}
-
-function closeCreateModal() {
-    document.getElementById("createModal").style.display="none";
-    ["companyName","companyAddress","neq","employees","companyCreationDate","contactName","contactPrenom","fonction","birthDate","age","phoneDirect","phoneMobile","phonePoste","email","enfantsCharge","notePrestataire","recoPrestataire","date1erAppelPrevu","secteur","nomsAssocies"].forEach(id=>{const el=document.getElementById(id);if(el) el.value="";});
-    document.getElementById("proprietaire").selectedIndex=0;
-    document.getElementById("fumeur").value="";
-    document.getElementById("situationFamiliale").selectedIndex=0;
-    document.getElementById("campaignSuivi").selectedIndex=0;
-    document.getElementById("priority").value="medium";
-    document.getElementById("initialStatus").value="Prospect";
-    document.getElementById("contactType").value="📞 Appel découverte";
-    document.getElementById("campagne").value="Inconnue";
-    createContacts=[];
-    currentAssocies=[];
-    renderCreateContacts();
-    renderAssociesTags('associesContainer', currentAssocies, null);
-}
-
+function handleCreateModalClick(event) { /* Ne rien faire - empêche fermeture auto */ }
+function openCreateModal() { document.getElementById("createModal").style.display="block"; }
+function closeCreateModal() { document.getElementById("createModal").style.display="none"; }
 function addClientB2B() {
     const cn=document.getElementById("companyName").value.trim();
     const co=document.getElementById("contactName").value.trim();
     const fd=document.getElementById("date1erAppelPrevu").value;
-    if(!cn) return showNotification("Nom de l'entreprise requis","error");
-    if(!co) return showNotification("Nom du contact requis","error");
-    if(!fd) return showNotification("Date du 1er appel requis ★","error");
-    const bd=document.getElementById("birthDate").value;
-    const age=bd?calcAge(bd):document.getElementById("age").value;
+    if(!cn) return showNotification("Nom entreprise requis","error");
+    if(!co) return showNotification("Nom contact requis","error");
+    if(!fd) return showNotification("Date 1er appel requis","error");
     const client = {
         id: Date.now(),
         campagne: document.getElementById("campagne").value||'Inconnue',
         companyName: cn,
-        companyAddress: document.getElementById("companyAddress").value||'',
-        neq: document.getElementById("neq").value||'',
-        employees: document.getElementById("employees").value||'',
-        secteur: document.getElementById("secteur").value||'',
-        companyCreationDate: document.getElementById("companyCreationDate").value||'',
-        contactName: co,
-        contactPrenom: document.getElementById("contactPrenom").value||'',
-        fonction: document.getElementById("fonction").value||'',
-        proprietaire: document.getElementById("proprietaire").value||'',
-        birthDate: bd, age,
+        companyAddress: '',
+        neq: '', employees: '', secteur: '', companyCreationDate: '',
+        contactName: co, contactPrenom: '', fonction: '', proprietaire: '',
+        birthDate: '', age: '',
         phoneDirect: document.getElementById("phoneDirect").value||'',
-        phoneMobile: document.getElementById("phoneMobile").value||'',
-        phonePoste: document.getElementById("phonePoste").value||'',
+        phoneMobile: '', phonePoste: '',
         email: document.getElementById("email").value||'',
-        fumeur: document.getElementById("fumeur").value||'',
-        situationFamiliale: document.getElementById("situationFamiliale").value||'',
-        enfantsCharge: document.getElementById("enfantsCharge").value||'',
-        nomsAssocies: currentAssocies.join(', '),
-        date1erAppelPrevu: fd,
-        notePrestataire: document.getElementById("notePrestataire").value||'',
-        recoPrestataire: document.getElementById("recoPrestataire").value||'',
+        fumeur: '', situationFamiliale: '', enfantsCharge: '', nomsAssocies: '',
+        date1erAppelPrevu: fd, notePrestataire: '', recoPrestataire: '',
         date1erAppelRealise: '', resumeCall1: '',
         tacheFaite: false, commentaireTache: '',
-        prochainesTache: '', prochainesTacheDate: '',
-        dossierFinalise: false,
         campaignSuivi: document.getElementById("campaignSuivi").value,
-        status: document.getElementById("initialStatus").value||'Prospect',
-        priority: document.getElementById("priority").value,
+        status: document.getElementById("initialStatus").value,
+        priority: 'medium',
         calls: [],
-        nextCall: { date: fd, type: document.getElementById("contactType").value, recommendations: document.getElementById("recoPrestataire").value||'' },
-        secondaryContacts: createContacts.filter(c=>c.name.trim()).map(c=>({...c, id:'sc_'+Date.now()+'_'+Math.random().toString(36).slice(2,6), isMainContact:false, addedAt:getCurrentDate(), addedBy:currentUser})),
-        closed: false, archived: false, archivedDate: null,
+        nextCall: { date: fd, type: "📞 Appel découverte", recommendations: '' },
+        secondaryContacts: [],
+        closed: false, archived: false,
         createdAt: getCurrentDateTime(), createdBy: currentUser,
         notesJournal: [],
-        modificationHistory: [{date:getCurrentDateTime(),by:currentUser,action:`Dossier créé — Statut: Prospect — 1er appel: ${fd}`}]
+        modificationHistory: [{date:getCurrentDateTime(),by:currentUser,action:`Dossier créé — Statut: ${document.getElementById("initialStatus").value}`}]
     };
     clients.push(client); save(); render(); updateCampagneFilter();
     showNotification(`✅ Dossier créé — ${escapeHtml(cn)}`,"success");
@@ -939,140 +611,337 @@ function addClientB2B() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════════════
-// MODAL CONSULTATION
+// FICHE UNIQUE (VUE + ÉDITION) - AVEC BOUTONS ✏️ PAR CHAMP
 // ═══════════════════════════════════════════════════════════════════════════════════════
-function openViewModal(id) {
-    currentViewId = id;
+function openFicheModal(id) {
+    currentFicheId = id;
     const c = clients.find(x=>x.id===id);
     if(!c) return;
-    document.getElementById('viewModal').style.display='block';
-    buildViewModal(c);
+    document.getElementById('ficheTitle').textContent = `📄 ${escapeHtml(c.companyName)}`;
+    document.getElementById('ficheModal').style.display = 'block';
+    renderFicheContent(c);
 }
 
-function buildViewModal(c) {
+function renderFicheContent(c) {
     const ts = getTacheStatus(c);
     const statusCls = c.status==='Prospect'?'prospect':c.status==='En cours'?'encours':'client';
     const callsSorted = [...(c.calls||[])].reverse();
     const lastCall = callsSorted[0]||null;
-    const olderCalls = callsSorted.slice(1);
     
     function fmtDate(d) { if(!d) return ''; const [y,m,day]=d.split('-'); const ms=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre']; return `${parseInt(day)} ${ms[parseInt(m)-1]} ${y}`; }
     
-    const tacheColor={'En retard':['var(--red-bg)','var(--red-text)','⚠️'],'Urgent':['var(--orange-bg)','var(--orange-text)','🔔'],'À faire':['var(--blue-bg)','var(--blue-text)','📅'],'Fait':['var(--gray-bg)','var(--gray-text)','✅'],'Finalisé':['var(--green-bg)','var(--green-text)','🏆']};
-    const [tBg,tTxt,tIcon]=tacheColor[ts]||['var(--blue-bg)','var(--blue-text)','📅'];
+    // Génère un champ éditable inline
+    function editableField(label, fieldName, value, type='text', options=null) {
+        const displayValue = value || '—';
+        const inputHtml = type === 'select' && options 
+            ? `<select class="edit-select" data-field="${fieldName}">${options.map(opt => `<option value="${escapeHtml(opt)}" ${value===opt?'selected':''}>${escapeHtml(opt)}</option>`).join('')}</select>`
+            : type === 'textarea'
+                ? `<textarea class="edit-textarea" data-field="${fieldName}" rows="2">${escapeHtml(value||'')}</textarea>`
+                : `<input type="${type}" class="edit-input" data-field="${fieldName}" value="${escapeHtml(value||'')}">`;
+        
+        return `
+            <div class="editable-field" data-field="${fieldName}">
+                <label>${label}</label>
+                <div class="field-value">
+                    <span class="display-value">${escapeHtml(displayValue)}</span>
+                    <div class="edit-controls" style="display:none;">
+                        ${inputHtml}
+                        <button class="save-btn" onclick="saveField('${fieldName}', ${c.id})">✓</button>
+                        <button class="cancel-btn" onclick="cancelEdit('${fieldName}')">✕</button>
+                    </div>
+                </div>
+                <button class="edit-btn" onclick="startEdit('${fieldName}')">✏️</button>
+            </div>`;
+    }
     
-    // Onglet Infos
+    // Section Informations générales
     const infosHtml = `
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
-            <div class="info-block"><h4>🏢 Entreprise</h4><div class="info-row"><span class="lbl">Secteur</span><span class="val">${escapeHtml(c.secteur)||'—'}</span></div><div class="info-row"><span class="lbl">NEQ</span><span class="val">${escapeHtml(c.neq)||'—'}</span></div><div class="info-row"><span class="lbl">Employés</span><span class="val">${escapeHtml(c.employees)||'—'}</span></div><div class="info-row"><span class="lbl">Année création</span><span class="val">${escapeHtml(c.companyCreationDate)||'—'}</span></div>${c.campagne?`<div class="info-row"><span class="lbl">Campagne</span><span class="val">${escapeHtml(c.campagne)}</span></div>`:''}<div class="info-row"><span class="lbl">Associés</span><div>${displayAssociesList(c.nomsAssocies ? c.nomsAssocies.split(',').map(s=>s.trim()) : [])}</div></div></div>
-            <div class="info-block"><h4>👤 Contact principal</h4><div class="info-row"><span class="lbl">Âge</span><span class="val">${escapeHtml(c.age)||'—'}</span></div><div class="info-row"><span class="lbl">Situation</span><span class="val">${escapeHtml(c.situationFamiliale)||'—'} ${c.enfantsCharge && c.enfantsCharge !== '— à compléter —' ? '· '+c.enfantsCharge+' enfant(s)' : ''}</span></div><div class="info-row"><span class="lbl">Fumeur</span><span class="val">${escapeHtml(c.fumeur)||'— à compléter —'}</span></div></div>
+        <div class="fiche-section">
+            <div class="fiche-section-header">🏢 Entreprise</div>
+            <div class="fiche-section-body">
+                ${editableField("Nom entreprise", "companyName", c.companyName)}
+                ${editableField("Adresse", "companyAddress", c.companyAddress)}
+                ${editableField("Campagne", "campagne", c.campagne, 'select', ["Inconnue","Campagne 01","Campagne 02","Campagne 03","Campagne 04","Campagne 05","Campagne 06","Campagne 07","Campagne 08","Campagne 09","Campagne 10"])}
+                ${editableField("NEQ", "neq", c.neq)}
+                ${editableField("Secteur", "secteur", c.secteur)}
+                <div style="display:flex;gap:10px;">
+                    <div style="flex:1">${editableField("Employés", "employees", c.employees)}</div>
+                    <div style="flex:1">${editableField("Année création", "companyCreationDate", c.companyCreationDate)}</div>
+                </div>
+                ${editableField("Associés", "nomsAssocies", c.nomsAssocies, 'textarea')}
+            </div>
         </div>
-        <div class="info-block"><h4>📊 Suivi commercial</h4><div style="display:flex;gap:14px;flex-wrap:wrap;"><div><span class="lbl">Étape</span><span class="badge badge-suivi">${escapeHtml(c.campaignSuivi)}</span></div><div><span class="lbl">Statut</span><span class="badge badge-${statusCls}">${escapeHtml(c.status)}</span></div><div><span class="lbl">Priorité</span><span>${c.priority==='high'?'🔴 Haute':c.priority==='medium'?'🟠 Moyenne':'🟢 Basse'}</span></div><div><span class="lbl">Statut Tâche</span>${tacheStatusBadge(ts)}</div></div></div>
-        ${c.notePrestataire||c.recoPrestataire?`<div style="background:var(--orange-bg);border:0.5px solid var(--orange-border);border-radius:var(--radius-lg);padding:12px 14px;margin-bottom:14px;"><h4 style="font-size:11px;font-weight:500;text-transform:uppercase;color:var(--orange-text);margin-bottom:8px;">📋 Notes Prestataire</h4>${c.date1erAppelPrevu?`<div><strong>1er appel prévu :</strong> ${escapeHtml(c.date1erAppelPrevu)}</div>`:''}${c.notePrestataire?`<div>${escapeHtml(c.notePrestataire)}</div>`:''}${c.recoPrestataire?`<div style="color:var(--orange-text);">💡 ${escapeHtml(c.recoPrestataire)}</div>`:''}</div>`:''}
-        ${c.resumeCall1?`<div style="background:var(--blue-bg);border:0.5px solid var(--blue-border);border-radius:var(--radius-lg);padding:12px 14px;margin-bottom:14px;"><h4>📞 Résumé Call 1</h4><div>${escapeHtml(c.resumeCall1)}</div></div>`:''}
-        <div class="secondary-contacts-section"><div class="secondary-header"><h4>👥 Autres contacts (${(c.secondaryContacts||[]).length})</h4><button class="btn-add-contact" onclick="openContactSubModal(null)">+ Ajouter</button></div><div id="secondaryContactsList"></div></div>`;
+        <div class="fiche-section">
+            <div class="fiche-section-header">👤 Contact principal</div>
+            <div class="fiche-section-body">
+                ${editableField("Nom complet", "contactName", c.contactName)}
+                ${editableField("Prénom", "contactPrenom", c.contactPrenom)}
+                ${editableField("Fonction", "fonction", c.fonction)}
+                ${editableField("Rôle", "proprietaire", c.proprietaire, 'select', ["","Propriétaire","Associé","Salarié","Actionnaire","Dirigeant"])}
+                <div style="display:flex;gap:10px;">
+                    <div style="flex:1">${editableField("Âge", "age", c.age)}</div>
+                    <div style="flex:1">${editableField("Date naissance", "birthDate", c.birthDate, 'date')}</div>
+                </div>
+                <div style="display:flex;gap:10px;">
+                    <div style="flex:1">${editableField("Cellulaire", "phoneDirect", c.phoneDirect)}</div>
+                    <div style="flex:1">${editableField("Téléphone", "phoneMobile", c.phoneMobile)}</div>
+                    <div style="width:80px">${editableField("Poste", "phonePoste", c.phonePoste)}</div>
+                </div>
+                ${editableField("Courriel", "email", c.email, 'email')}
+                <div style="display:flex;gap:10px;">
+                    <div style="flex:1">${editableField("Fumeur", "fumeur", c.fumeur, 'select', ["","Non-fumeur","Fumeur"])}</div>
+                    <div style="flex:1">${editableField("Situation familiale", "situationFamiliale", c.situationFamiliale, 'select', ["","Célibataire","Marié(e)","Conjoint(e) de fait","Divorcé(e)","Veuf(ve)"])}</div>
+                    <div style="width:100px">${editableField("Enfants", "enfantsCharge", c.enfantsCharge)}</div>
+                </div>
+            </div>
+        </div>
+        <div class="fiche-section">
+            <div class="fiche-section-header">📊 Suivi commercial</div>
+            <div class="fiche-section-body">
+                <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                    <div style="flex:1">${editableField("Étape suivi", "campaignSuivi", c.campaignSuivi, 'select', suiviOptions)}</div>
+                    <div style="flex:1">${editableField("Statut", "status", c.status, 'select', ["Prospect","En cours","Client"])}</div>
+                    <div style="flex:1">${editableField("Priorité", "priority", c.priority, 'select', ["high","medium","low"])}</div>
+                </div>
+                ${editableField("Date 1er appel prévu", "date1erAppelPrevu", c.date1erAppelPrevu, 'date')}
+                ${editableField("Note prestataire", "notePrestataire", c.notePrestataire, 'textarea')}
+                ${editableField("Recommandations", "recoPrestataire", c.recoPrestataire)}
+                ${editableField("Résumé Call 1", "resumeCall1", c.resumeCall1, 'textarea')}
+                <div class="info-block" style="margin-top:12px;">
+                    <h4>🎯 Statut tâche</h4>
+                    <div>${tacheStatusBadge(ts)}</div>
+                    ${c.nextCall?.date ? `<div style="margin-top:8px;"><strong>Prochaine action:</strong> ${escapeHtml(c.nextCall.type)} le ${fmtDate(c.nextCall.date)}</div>` : ''}
+                    ${c.nextCall?.recommendations ? `<div><strong>Recommandations:</strong> ${escapeHtml(c.nextCall.recommendations)}</div>` : ''}
+                </div>
+            </div>
+        </div>`;
     
-    // Onglet Actions
+    // Section Actions (historique des appels)
     const actionsHtml = `
-        <div class="info-block" style="background:var(--orange-bg);border-color:var(--orange-border);"><h4>🎯 Prochaine action</h4>${c.nextCall?.date?`<div><div style="font-size:18px;font-weight:700;">${fmtDate(c.nextCall.date)}</div><span class="badge">${escapeHtml(c.nextCall.type)}</span><div>${tacheStatusBadge(ts)}</div>${c.nextCall.recommendations?`<div><span class="lbl">Recommandations</span><div class="call-reco-view">${escapeHtml(c.nextCall.recommendations)}</div></div>`:''}</div>`:'<span>Aucune action planifiée</span>'}</div>
-        ${lastCall?`<div class="info-block"><h4>✅ Dernière action</h4><div><div><span class="timeline-type">${escapeHtml(lastCall.type)}</span><span class="timeline-date">${fmtDate(lastCall.date)}</span></div><div>${escapeHtml(lastCall.summary)}</div>${lastCall.recommendations?`<div class="call-reco-view">${escapeHtml(lastCall.recommendations)}</div>`:''}</div></div>`:''}
-        ${olderCalls.length>0?`<div class="info-block"><h4>📜 Historique actions (${olderCalls.length})</h4>${olderCalls.map(call=>`<div><div><span class="timeline-type">${escapeHtml(call.type)}</span><span class="timeline-date">${fmtDate(call.date)}</span></div><div>${escapeHtml(call.summary)}</div></div>`).join('')}</div>`:''}
-        <div class="action-section" style="background:var(--blue-bg);border-radius:var(--radius-lg);padding:14px;"><h4>📅 Planifier la prochaine action</h4><div style="display:grid;grid-template-columns:1fr 2fr 2fr auto;gap:10px;"><div><label>Date</label><input type="date" id="planDate"></div><div><label>Type</label><select id="planType">${tacheTypes.map(t=>`<option>${escapeHtml(t)}</option>`).join('')}</select></div><div><label>Recommandations</label><input type="text" id="planReco"></div><button class="btn-validate" onclick="planifierDepuisView()">Planifier</button></div></div>`;
+        <div class="fiche-section">
+            <div class="fiche-section-header">📞 Historique des actions</div>
+            <div class="fiche-section-body">
+                ${lastCall ? `<div class="info-block"><h4>✅ Dernière action</h4><div><strong>${escapeHtml(lastCall.type)}</strong> - ${fmtDate(lastCall.date)}</div><div>${escapeHtml(lastCall.summary)}</div>${lastCall.recommendations?`<div class="call-reco-view" style="margin-top:6px;">${escapeHtml(lastCall.recommendations)}</div>`:''}</div>` : '<div style="color:var(--text-tertiary);">Aucune action enregistrée</div>'}
+                ${c.calls && c.calls.length > 1 ? `<details><summary style="cursor:pointer;font-size:11px;margin-top:10px;">📜 Voir toutes les actions (${c.calls.length})</summary>${c.calls.slice(0,-1).reverse().map(call => `<div style="padding:8px 0;border-bottom:0.5px solid var(--border-light);"><strong>${escapeHtml(call.type)}</strong> - ${call.date}<br>${escapeHtml(call.summary)}</div>`).join('')}</details>` : ''}
+                <div class="info-block" style="margin-top:12px;background:var(--blue-bg);">
+                    <h4>📅 Planifier la prochaine action</h4>
+                    <div style="display:grid;grid-template-columns:1fr 2fr 2fr auto;gap:10px;align-items:end;">
+                        <div><label style="font-size:10px;">Date</label><input type="date" id="planDate" style="width:100%;padding:6px;"></div>
+                        <div><label style="font-size:10px;">Type</label><select id="planType" style="width:100%;padding:6px;">${tacheTypes.map(t=>`<option>${escapeHtml(t)}</option>`).join('')}</select></div>
+                        <div><label style="font-size:10px;">Recommandations</label><input type="text" id="planReco" style="width:100%;padding:6px;"></div>
+                        <button class="btn-validate" onclick="planifierAction()" style="padding:6px 12px;">Planifier</button>
+                    </div>
+                </div>
+            </div>
+        </div>`;
     
-    // Onglet Notes (JOURNAL)
+    // Section Notes (journal horodaté)
+    const notesJournal = c.notesJournal || [];
+    let filteredNotes = [...notesJournal];
+    const now = new Date();
+    if(notesFilter === 'week') { const weekAgo = new Date(); weekAgo.setDate(now.getDate()-7); filteredNotes = notesJournal.filter(n => new Date(n.date) >= weekAgo); }
+    else if(notesFilter === 'month') { const monthAgo = new Date(); monthAgo.setMonth(now.getMonth()-1); filteredNotes = notesJournal.filter(n => new Date(n.date) >= monthAgo); }
+    
     const notesHtml = `
-        <button class="btn-add-note" onclick="openAddNoteDialog()">➕ Ajouter une note</button>
-        <div class="notes-filters">
-            <button id="filterNotesAll" class="filter-notes-btn active" onclick="setNotesFilter('all')">📋 Toutes</button>
-            <button id="filterNotesWeek" class="filter-notes-btn" onclick="setNotesFilter('week')">📅 Cette semaine</button>
-            <button id="filterNotesMonth" class="filter-notes-btn" onclick="setNotesFilter('month')">📆 Ce mois</button>
-        </div>
-        <div id="notesJournalContainer" class="notes-journal"></div>`;
+        <div class="fiche-section">
+            <div class="fiche-section-header">📝 Notes</div>
+            <div class="fiche-section-body">
+                <button class="btn-add-note" onclick="openAddNoteDialog()">➕ Ajouter une note</button>
+                <div class="notes-filters">
+                    <button id="filterNotesAll" class="filter-notes-btn ${notesFilter==='all'?'active':''}" onclick="setNotesFilter('all')">📋 Toutes</button>
+                    <button id="filterNotesWeek" class="filter-notes-btn ${notesFilter==='week'?'active':''}" onclick="setNotesFilter('week')">📅 Cette semaine</button>
+                    <button id="filterNotesMonth" class="filter-notes-btn ${notesFilter==='month'?'active':''}" onclick="setNotesFilter('month')">📆 Ce mois</button>
+                </div>
+                <div id="notesJournalContainer" class="notes-journal">
+                    ${filteredNotes.length ? filteredNotes.map(n => `
+                        <div class="note-entry">
+                            <div class="note-entry-header">
+                                <span class="note-entry-meta">📅 ${n.date} à ${n.time}</span>
+                                <span class="note-entry-author">✍️ ${escapeHtml(n.author)}</span>
+                                <button class="delete-note-btn" onclick="deleteNote('${n.id}')">🗑️</button>
+                            </div>
+                            <div class="note-entry-content">${escapeHtml(n.content).replace(/\n/g,'<br>')}</div>
+                        </div>
+                    `).join('') : '<div style="text-align:center;padding:20px;color:var(--text-tertiary);">Aucune note</div>'}
+                </div>
+            </div>
+        </div>`;
     
-    // Onglet Historique
-    const histHtml = `<div class="info-block"><h4>📜 Historique des modifications</h4><div style="max-height:360px;overflow-y:auto;">${(c.modificationHistory||[]).map(h=>`<div class="mod-item"><small>${escapeHtml(h.date)} · <span style="color:var(--accent);">${escapeHtml(h.by)}</span></small><br>${escapeHtml(h.action)}</div>`).join('')}</div></div>`;
+    // Section Contacts secondaires
+    const contacts = c.secondaryContacts || [];
+    const contactsHtml = `
+        <div class="secondary-contacts-section">
+            <div class="secondary-header"><h4>👥 Autres contacts (${contacts.length})</h4><button class="btn-add-contact" onclick="openContactSubModal()">+ Ajouter</button></div>
+            <div id="secondaryContactsList">
+                ${contacts.length ? `<table class="contacts-table"><thead><tr><th>Nom</th><th>Fonction</th><th>Téléphone</th><th>Courriel</th><th>Actions</th></tr></thead><tbody>${contacts.map(ct => `<tr><td>${escapeHtml(ct.name)}</td><td>${escapeHtml(ct.function||'—')}</td><td>${escapeHtml(ct.phone||'—')}</td><td>${escapeHtml(ct.email||'—')}</td><td><button class="contact-action-btn edit-c" onclick="editContact('${ct.id}')">✏️</button><button class="contact-action-btn delete-c" onclick="deleteContact('${ct.id}')">🗑️</button></td></tr>`).join('')}</tbody></table>` : '<div style="padding:16px;text-align:center;color:var(--text-tertiary);">Aucun contact secondaire</div>'}
+            </div>
+        </div>`;
     
-    document.getElementById("viewContent").innerHTML = `
-        <div class="view-header-card"><div class="entreprise-name">${escapeHtml(c.companyName)}</div><div class="entreprise-address">${escapeHtml(c.companyAddress)||''}</div><div class="contact-grid"><div><span class="contact-lbl">Contact principal</span><span class="contact-val-bold">${escapeHtml(c.contactName)}</span></div><div><span class="contact-lbl">Cellulaire</span><span class="contact-val">${escapeHtml(c.phoneDirect)||'—'}</span></div><div><span class="contact-lbl">Courriel</span><span class="contact-val">${escapeHtml(c.email)||'—'}</span></div><div><span class="contact-lbl">Fonction</span><span class="contact-val">${escapeHtml(c.fonction)||'—'}</span></div><div><span class="contact-lbl">Statut tâche</span>${tacheStatusBadge(ts)}</div></div></div>
-        <div class="view-tabs" id="viewTabsBar"><button class="view-tab active" data-vtab="infos">📋 Infos</button><button class="view-tab" data-vtab="actions">📞 Actions</button><button class="view-tab" data-vtab="notes">📝 Notes</button><button class="view-tab" data-vtab="historique">📜 Historique</button></div>
-        <div id="vt-infos" class="view-tab-content">${infosHtml}</div><div id="vt-actions" class="view-tab-content" style="display:none;">${actionsHtml}</div><div id="vt-notes" class="view-tab-content" style="display:none;">${notesHtml}</div><div id="vt-historique" class="view-tab-content" style="display:none;">${histHtml}</div>
-        <div class="modal-footer-bar"><button class="btn-openEdit" onclick="openEditFromView()">✏️ Éditer</button><button class="btn-pdf" onclick="exportToPDF()">📄 PDF</button><button class="btn-cancel" onclick="closeViewModal()">Fermer</button></div>`;
+    document.getElementById("ficheContent").innerHTML = `
+        <div class="two-col-grid">
+            <div>${infosHtml}</div>
+            <div>${actionsHtml}${notesHtml}${contactsHtml}</div>
+        </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════════════
+// FONCTIONS D'ÉDITION INLINE
+// ═══════════════════════════════════════════════════════════════════════════════════════
+function startEdit(fieldName) {
+    const fieldDiv = document.querySelector(`.editable-field[data-field="${fieldName}"]`);
+    if(!fieldDiv) return;
+    const displaySpan = fieldDiv.querySelector('.display-value');
+    const editControls = fieldDiv.querySelector('.edit-controls');
+    displaySpan.style.display = 'none';
+    editControls.style.display = 'block';
+    currentEditingField = fieldName;
+}
+
+function cancelEdit(fieldName) {
+    const fieldDiv = document.querySelector(`.editable-field[data-field="${fieldName}"]`);
+    if(!fieldDiv) return;
+    const displaySpan = fieldDiv.querySelector('.display-value');
+    const editControls = fieldDiv.querySelector('.edit-controls');
+    displaySpan.style.display = 'inline-block';
+    editControls.style.display = 'none';
+    currentEditingField = null;
+}
+
+function saveField(fieldName, clientId) {
+    const c = clients.find(x=>x.id===clientId);
+    if(!c) return;
+    const fieldDiv = document.querySelector(`.editable-field[data-field="${fieldName}"]`);
+    if(!fieldDiv) return;
+    let newValue = '';
+    const input = fieldDiv.querySelector('.edit-input');
+    const select = fieldDiv.querySelector('.edit-select');
+    const textarea = fieldDiv.querySelector('.edit-textarea');
+    if(input) newValue = input.value;
+    else if(select) newValue = select.value;
+    else if(textarea) newValue = textarea.value;
     
-    document.getElementById('viewTabsBar').querySelectorAll('.view-tab').forEach(btn=>{btn.addEventListener('click',()=>{document.getElementById('viewTabsBar').querySelectorAll('.view-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');['infos','actions','notes','historique'].forEach(t=>{const el=document.getElementById('vt-'+t);if(el)el.style.display='none';});const el=document.getElementById('vt-'+btn.dataset.vtab);if(el)el.style.display='block';if(btn.dataset.vtab==='notes') renderNotesJournal(c);if(btn.dataset.vtab==='infos') renderSecondaryContacts();});});
-    renderSecondaryContacts();
-    notesFilter = 'all';
-    renderNotesJournal(c);
+    // Mise à jour de l'objet client
+    if(fieldName === 'priority') {
+        c[fieldName] = newValue;
+    } else if(fieldName === 'campaignSuivi') {
+        c[fieldName] = newValue;
+    } else if(fieldName === 'status') {
+        c[fieldName] = newValue;
+    } else if(fieldName === 'nomsAssocies') {
+        c[fieldName] = newValue;
+    } else {
+        c[fieldName] = newValue;
+    }
+    
+    // Mise à jour de l'affichage
+    const displaySpan = fieldDiv.querySelector('.display-value');
+    displaySpan.textContent = newValue || '—';
+    displaySpan.style.display = 'inline-block';
+    const editControls = fieldDiv.querySelector('.edit-controls');
+    editControls.style.display = 'none';
+    
+    // Historique
+    if(!c.modificationHistory) c.modificationHistory = [];
+    c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:`Modification de ${fieldName} : ${newValue.substring(0,50)}`});
+    
+    save();
+    showNotification(`${fieldName} mis à jour`,"success");
+}
+
+function planifierAction() {
+    const c = clients.find(x=>x.id===currentFicheId);
+    if(!c) return;
+    const date = document.getElementById('planDate')?.value;
+    const type = document.getElementById('planType')?.value;
+    const reco = document.getElementById('planReco')?.value||'';
+    if(!date || !type) { showNotification("Date et type requis","error"); return; }
+    c.nextCall = { date, type, recommendations: reco };
+    c.tacheFaite = false;
+    if(!c.modificationHistory) c.modificationHistory = [];
+    c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:`Action planifiée: ${type} le ${date}`});
+    save();
+    renderFicheContent(c);
+    showNotification("✅ Action planifiée","success");
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════════════
+// NOTES JOURNAL
+// ═══════════════════════════════════════════════════════════════════════════════════════
+function openAddNoteDialog() {
+    const content = prompt("📝 Saisissez votre note :", "");
+    if(content && content.trim()) {
+        const c = clients.find(x=>x.id===currentFicheId);
+        if(c) {
+            if(!c.notesJournal) c.notesJournal = [];
+            c.notesJournal.unshift({
+                id: 'note_'+Date.now()+'_'+Math.random().toString(36).substr(2,6),
+                date: getCurrentDate(),
+                time: new Date().toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'}),
+                datetime: getCurrentISODateTime(),
+                author: currentUser,
+                content: content.trim()
+            });
+            if(!c.modificationHistory) c.modificationHistory = [];
+            c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:`Note ajoutée`});
+            save();
+            renderFicheContent(c);
+            showNotification("Note ajoutée","success");
+        }
+    }
+}
+function deleteNote(noteId) {
+    if(!confirm("Supprimer cette note ?")) return;
+    const c = clients.find(x=>x.id===currentFicheId);
+    if(c && c.notesJournal) {
+        c.notesJournal = c.notesJournal.filter(n => n.id !== noteId);
+        save();
+        renderFicheContent(c);
+        showNotification("Note supprimée","info");
+    }
+}
+function setNotesFilter(filter) {
+    notesFilter = filter;
+    const c = clients.find(x=>x.id===currentFicheId);
+    if(c) renderFicheContent(c);
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════════════
 // CONTACTS SECONDAIRES
 // ═══════════════════════════════════════════════════════════════════════════════════════
-let currentEditContactId = null;
-
-function renderSecondaryContacts() {
-    const c = clients.find(x=>x.id===currentViewId);
-    const el = document.getElementById('secondaryContactsList');
-    if(!el||!c) return;
-    const contacts = c.secondaryContacts||[];
-    if(!contacts.length){ el.innerHTML='<div style="padding:16px;text-align:center;font-size:11px;color:var(--text-tertiary);font-style:italic;">Aucun contact secondaire</div>'; return; }
-    el.innerHTML=`<table class="contacts-table"><thead><tr><th>Nom</th><th>Fonction</th><th>Téléphone</th><th>Courriel</th><th>Notes</th><th>Actions</th></tr></thead><tbody>${contacts.map(ct=>`<tr><td>${escapeHtml(ct.name)}${ct.isMainContact?'<span class="badge-main-contact">⭐ Principal</span>':''}</td><td>${escapeHtml(ct.function)||'—'}</td><td>${escapeHtml(ct.phone)||'—'}</td><td>${escapeHtml(ct.email)||'—'}</td><td style="font-size:11px;">${escapeHtml(ct.notes)||''}</td><td><button class="contact-action-btn set-main" onclick="setMainContact('${ct.id}')">⭐</button><button class="contact-action-btn edit-c" onclick="openContactSubModal('${ct.id}')">✏️</button><button class="contact-action-btn delete-c" onclick="deleteSecondaryContact('${ct.id}')">🗑️</button></td></tr>`).join('')}</tbody></table>`;
-}
-
-function openContactSubModal(contactId) {
-    currentEditContactId = contactId;
-    const c = clients.find(x=>x.id===currentViewId);
+function openContactSubModal(contactId=null) {
+    const c = clients.find(x=>x.id===currentFicheId);
     const contact = contactId ? (c.secondaryContacts||[]).find(x=>x.id===contactId) : null;
-    let overlay = document.getElementById('contactSubModalOverlay');
-    if(!overlay){ overlay=document.createElement('div'); overlay.id='contactSubModalOverlay'; overlay.className='contact-modal-overlay'; document.body.appendChild(overlay); }
-    overlay.innerHTML=`<div class="contact-modal-box"><div class="contact-modal-header"><h4>${contactId?'✏️ Modifier':'➕ Ajouter'} un contact</h4><button class="close" onclick="closeContactSubModal()">✕</button></div><div class="contact-form-grid"><div class="input-field-sm"><label>Nom complet *</label><input id="scName" value="${escapeHtml(contact?.name||'')}"></div><div class="input-field-sm"><label>Fonction</label><input id="scFunction" value="${escapeHtml(contact?.function||'')}"></div><div class="input-field-sm"><label>Téléphone</label><input id="scPhone" value="${escapeHtml(contact?.phone||'')}"></div><div class="input-field-sm"><label>Courriel</label><input type="email" id="scEmail" value="${escapeHtml(contact?.email||'')}"></div><div class="input-field-sm contact-form-full"><label>Notes</label><textarea id="scNotes" rows="2">${escapeHtml(contact?.notes||'')}</textarea></div></div><div style="display:flex;gap:10px;justify-content:center;padding:0 18px 18px;"><button class="btn-save-contact" onclick="saveSecondaryContact()">💾 Enregistrer</button><button class="btn-cancel" onclick="closeContactSubModal()">Annuler</button></div></div>`;
-    overlay.style.display='block';
+    const name = prompt("Nom du contact:", contact?.name||"");
+    if(!name) return;
+    const fonction = prompt("Fonction:", contact?.function||"");
+    const phone = prompt("Téléphone:", contact?.phone||"");
+    const email = prompt("Courriel:", contact?.email||"");
+    if(contactId) {
+        const idx = c.secondaryContacts.findIndex(x=>x.id===contactId);
+        if(idx!==-1) c.secondaryContacts[idx] = {...c.secondaryContacts[idx], name, function:fonction, phone, email};
+    } else {
+        if(!c.secondaryContacts) c.secondaryContacts = [];
+        c.secondaryContacts.push({id:'sc_'+Date.now()+'_'+Math.random().toString(36).substr(2,6), name, function:fonction, phone, email, notes:''});
+    }
+    if(!c.modificationHistory) c.modificationHistory = [];
+    c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:`Contact ${contactId?'modifié':'ajouté'}: ${name}`});
+    save();
+    renderFicheContent(c);
+    showNotification(`Contact ${contactId?'modifié':'ajouté'}`, "success");
 }
-
-function closeContactSubModal() { const o=document.getElementById('contactSubModalOverlay'); if(o) o.style.display='none'; }
-function saveSecondaryContact() { const name=document.getElementById('scName').value.trim(); if(!name){showNotification('Nom requis','error');return;} const c=clients.find(x=>x.id===currentViewId); if(!c.secondaryContacts) c.secondaryContacts=[]; const newContact={id:currentEditContactId||'sc_'+Date.now(),name,function:document.getElementById('scFunction').value,phone:document.getElementById('scPhone').value,email:document.getElementById('scEmail').value,notes:document.getElementById('scNotes').value,isMainContact:false,addedAt:getCurrentDate(),addedBy:currentUser}; if(currentEditContactId){ const idx=c.secondaryContacts.findIndex(x=>x.id===currentEditContactId); if(idx!==-1){newContact.isMainContact=c.secondaryContacts[idx].isMainContact;c.secondaryContacts[idx]=newContact;} } else { c.secondaryContacts.push(newContact); } c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:(currentEditContactId?`Contact modifié : ${name}`:`Contact ajouté : ${name}`)}); save(); renderSecondaryContacts(); closeContactSubModal(); showNotification(currentEditContactId?`Contact ${name} modifié`:`Contact ${name} ajouté`,'success'); }
-function setMainContact(contactId) { const c=clients.find(x=>x.id===currentViewId); if(!c) return; const newMain=c.secondaryContacts?.find(x=>x.id===contactId); if(!newMain||!confirm(`Promouvoir "${newMain.name}" comme contact principal ?`)) return; const oldMain={id:'sc_'+Date.now(),name:c.contactName,function:c.fonction||'',phone:c.phoneDirect||'',email:c.email||'',notes:`Ancien contact principal`,isMainContact:false,addedAt:getCurrentDate(),addedBy:currentUser}; c.contactName=newMain.name; c.fonction=newMain.function||''; c.phoneDirect=newMain.phone||''; c.email=newMain.email||''; c.secondaryContacts=c.secondaryContacts.filter(x=>x.id!==contactId); c.secondaryContacts.push(oldMain); c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:`Contact principal changé : ${oldMain.name} → ${newMain.name}`}); save(); buildViewModal(c); showNotification(`💼 ${newMain.name} est maintenant le contact principal`,'success'); }
-function deleteSecondaryContact(contactId) { const c=clients.find(x=>x.id===currentViewId); const contact=c?.secondaryContacts?.find(x=>x.id===contactId); if(!contact||!confirm(`Supprimer "${contact.name}" ?`)) return; c.secondaryContacts=c.secondaryContacts.filter(x=>x.id!==contactId); c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:`Contact supprimé : ${contact.name}`}); save(); renderSecondaryContacts(); showNotification(`Contact supprimé`,'info'); }
-
-function planifierDepuisView() {
-    const c=clients.find(x=>x.id===currentViewId);
-    if(!c) return;
-    const d=document.getElementById('planDate')?.value;
-    const t=document.getElementById('planType')?.value;
-    const r=document.getElementById('planReco')?.value||'';
-    if(!d||!t){showNotification('Date et type requis','error');return;}
-    c.nextCall={date:d,type:t,recommendations:r};
-    c.tacheFaite=false;
-    c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:`Action planifiée : ${t} le ${d}`});
-    save(); buildViewModal(c); showNotification('📅 Action planifiée','success');
+function editContact(contactId) { openContactSubModal(contactId); }
+function deleteContact(contactId) {
+    if(!confirm("Supprimer ce contact ?")) return;
+    const c = clients.find(x=>x.id===currentFicheId);
+    if(c && c.secondaryContacts) {
+        c.secondaryContacts = c.secondaryContacts.filter(x=>x.id!==contactId);
+        save();
+        renderFicheContent(c);
+        showNotification("Contact supprimé","info");
+    }
 }
-
-function openEditFromView() { if(currentViewId){closeViewModal();openEditModal(currentViewId);} }
-function closeViewModal() { document.getElementById("viewModal").style.display="none"; }
-function closeNoteDialog() { document.getElementById("noteDialogModal").style.display="none"; currentNoteField=null; }
-
-// ═══════════════════════════════════════════════════════════════════════════════════════
-// MODAL ÉDITION (simplifié)
-// ═══════════════════════════════════════════════════════════════════════════════════════
-function openEditModal(id) {
-    currentEditId = id;
-    const c = clients.find(x=>x.id===id);
-    if(!c) return;
-    document.getElementById("editModal").style.display="block";
-    document.getElementById("editContent").innerHTML=`<div style="padding:20px;"><div class="info-block"><h4>Modification rapide</h4><div class="input-field"><label>Entreprise</label><input id="editCompany" value="${escapeHtml(c.companyName)}"></div><div class="input-field"><label>Contact</label><input id="editContact" value="${escapeHtml(c.contactName)}"></div><div class="input-field"><label>Cellulaire</label><input id="editPhone" value="${escapeHtml(c.phoneDirect||'')}"></div><div class="input-field"><label>Courriel</label><input id="editEmail" value="${escapeHtml(c.email||'')}"></div><div class="input-field"><label>Étape suivi</label><select id="editSuivi">${suiviOptions.map(o=>`<option ${c.campaignSuivi===o?'selected':''}>${escapeHtml(o)}</option>`).join('')}</select></div></div><button class="btn-submit" onclick="saveEditQuick()">Sauvegarder</button><button class="btn-cancel" onclick="closeEditModal()">Annuler</button></div>`;
-}
-
-function saveEditQuick() {
-    const c=clients.find(x=>x.id===currentEditId);
-    if(!c) return;
-    c.companyName=document.getElementById('editCompany')?.value||c.companyName;
-    c.contactName=document.getElementById('editContact')?.value||c.contactName;
-    c.phoneDirect=document.getElementById('editPhone')?.value||c.phoneDirect;
-    c.email=document.getElementById('editEmail')?.value||c.email;
-    c.campaignSuivi=document.getElementById('editSuivi')?.value||c.campaignSuivi;
-    c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:"Dossier modifié"});
-    save(); render(); showNotification("Sauvegardé","success"); closeEditModal();
-}
-function closeEditModal() { document.getElementById("editModal").style.display="none"; currentEditId=null; }
+function closeFicheModal() { document.getElementById("ficheModal").style.display="none"; currentFicheId=null; }
+function exportFichePDF() { const el=document.getElementById("ficheContent"); if(el) html2pdf().set({margin:[0.5,0.5,0.5,0.5],filename:`fiche_${new Date().toISOString().slice(0,10)}.pdf`,image:{type:'jpeg',quality:0.98},html2canvas:{scale:2}}).from(el).save(); }
 
 // ═══════════════════════════════════════════════════════════════════════════════════════
 // ARCHIVAGE, KANBAN, EXPORT
@@ -1080,21 +949,12 @@ function closeEditModal() { document.getElementById("editModal").style.display="
 function archiveClient(id) { const c=clients.find(x=>x.id===id); if(confirm(`Archiver ${c.companyName} ?`)){c.archived=true;c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:"Dossier archivé"});save();render();showNotification(`${c.companyName} archivé`,"info");} }
 function restoreClient(id) { const c=clients.find(x=>x.id===id); if(confirm(`Restaurer ${c.companyName} ?`)){c.archived=false;c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:"Dossier restauré"});save();render();showNotification(`${c.companyName} restauré`,"success");} }
 function deletePermanent(id) { const c=clients.find(x=>x.id===id); if(confirm(`Supprimer définitivement ${c.companyName} ?`)){clients=clients.filter(x=>x.id!==id);save();render();showNotification(`${c.companyName} supprimé`,"error");} }
-
-function renderKanban() {
-    const today=getCurrentDate();
-    const active=clients.filter(c=>!c.archived);
-    const stages=["À relancer","Proposition envoyée","Négociation","Accord de principe","Finalisé"];
-    document.getElementById("kanbanView").innerHTML='<div class="kanban-wrap">'+stages.map(stage=>{const items=active.filter(c=>c.campaignSuivi===stage);return `<div class="kanban-col"><div class="kanban-col-header"><span>${escapeHtml(stage)}</span><span>${items.length}</span></div>${items.map(c=>{const late=c.nextCall?.date&&c.nextCall.date<today&&!c.tacheFaite;const tod=c.nextCall?.date===today;return `<div class="kanban-card ${late?'late':tod?'today-card':''}" onclick="openViewModal(${c.id})"><div class="kanban-card-name">${escapeHtml(c.companyName)}</div><div class="kanban-card-meta"><span>${escapeHtml(c.contactName||'')}</span><span>${c.nextCall?.date||'Non planifié'}</span></div><div>${tacheStatusBadge(getTacheStatus(c))}</div></div>`;}).join('')||'<div style="padding:12px;font-size:11px;color:var(--text-tertiary);font-style:italic;">Aucun</div>'}</div>`;}).join('')+'</div>';
-}
-
+function renderKanban() { const today=getCurrentDate(); const active=clients.filter(c=>!c.archived); const stages=["À relancer","Proposition envoyée","Négociation","Accord de principe","Finalisé"]; document.getElementById("kanbanView").innerHTML='<div class="kanban-wrap">'+stages.map(stage=>{const items=active.filter(c=>c.campaignSuivi===stage);return `<div class="kanban-col"><div class="kanban-col-header"><span>${escapeHtml(stage)}</span><span>${items.length}</span></div>${items.map(c=>`<div class="kanban-card" onclick="openFicheModal(${c.id})"><div class="kanban-card-name">${escapeHtml(c.companyName)}</div><div class="kanban-card-meta"><span>${escapeHtml(c.contactName||'')}</span><span>${c.nextCall?.date||'Non planifié'}</span></div><div>${tacheStatusBadge(getTacheStatus(c))}</div></div>`).join('')||'<div style="padding:12px;">Aucun</div>'}</div>`;}).join('')+'</div>'; }
 function switchTab(tab) { currentTab=tab; document.querySelectorAll('.tab').forEach((t,i)=>{t.classList.toggle('active',(tab==='active'&&i===0)||(tab==='archived'&&i===1)||(tab==='kanban'&&i===2));}); document.getElementById("tableView").style.display=tab==='kanban'?'none':'block'; document.getElementById("kanbanView").style.display=tab==='kanban'?'block':'none'; if(tab==='kanban') renderKanban(); else render(); }
 function switchMainNav(nav) { currentMainNav=nav; ['dossiers','agenda','stats'].forEach(n=>{document.getElementById(`section${n.charAt(0).toUpperCase()+n.slice(1)}`).style.display=n===nav?'block':'none';document.getElementById(`nav${n.charAt(0).toUpperCase()+n.slice(1)}`).classList.toggle('active', n===nav);}); if(nav==='agenda') renderAgenda(); if(nav==='stats') renderStats(); }
-
-function exporterVersExcel() { if(!clients.length) return alert("Aucun dossier"); const rows=clients.map(c=>({'Campagne':c.campagne||'','Entreprise':c.companyName,'Contact':c.contactName,'Cellulaire':c.phoneDirect,'Courriel':c.email,'Suivi':c.campaignSuivi,'Statut':c.status,'Statut Tâche':getTacheStatus(c),'Date Tâche':c.nextCall?.date||''})); const cols=Object.keys(rows[0]); const csv=[cols.join(';'),...rows.map(r=>cols.map(k=>String(r[k]||'').replace(/;/g,',').replace(/\n/g,' ')).join(';'))].join('\n'); const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'}));a.download=`crm_${new Date().toISOString().slice(0,10)}.csv`;a.click(); showNotification(`${clients.length} dossiers exportés`,"success"); }
+function exporterVersExcel() { if(!clients.length) return alert("Aucun dossier"); const rows=clients.map(c=>({'Campagne':c.campagne||'','Entreprise':c.companyName,'Contact':c.contactName,'Cellulaire':c.phoneDirect,'Courriel':c.email,'Suivi':c.campaignSuivi,'Statut':c.status,'Statut Tâche':getTacheStatus(c)})); const cols=Object.keys(rows[0]); const csv=[cols.join(';'),...rows.map(r=>cols.map(k=>String(r[k]||'').replace(/;/g,',').replace(/\n/g,' ')).join(';'))].join('\n'); const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'}));a.download=`crm_${new Date().toISOString().slice(0,10)}.csv`;a.click(); showNotification(`${clients.length} dossiers exportés`,"success"); }
 function exporterDonnees() { const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(clients,null,2)],{type:'application/json'}));a.download=`crm_backup_${new Date().toISOString().slice(0,10)}.json`;a.click(); showNotification("Sauvegarde JSON","success"); }
 function importerDonnees() { const inp=document.createElement('input');inp.type='file';inp.accept='.json'; inp.onchange=async e=>{ const file=e.target.files[0];if(!file) return; try{ const d=JSON.parse(await file.text()); if(!Array.isArray(d)||!d[0]?.id) throw new Error(); if(confirm(`Restaurer ${d.length} dossiers ?`)){clients=d;save();render();updateCampagneFilter();showNotification(`✅ ${clients.length} dossiers restaurés`,"success");} }catch{showNotification("Fichier invalide","error");} }; inp.click(); }
-function exportToPDF() { const el=document.getElementById("viewContent"); const c=clients.find(x=>x.id===currentViewId); html2pdf().set({margin:[0.5,0.5,0.5,0.5],filename:`fiche_${c?.companyName||'dossier'}.pdf`,image:{type:'jpeg',quality:0.98},html2canvas:{scale:2},jsPDF:{unit:'in',format:'a4',orientation:'portrait'}}).from(el).save(); showNotification("PDF généré","success"); }
 
 // ═══════════════════════════════════════════════════════════════════════════════════════
 // RENDU PRINCIPAL (TABLEAU)
@@ -1102,7 +962,6 @@ function exportToPDF() { const el=document.getElementById("viewContent"); const 
 function sortBy(col) { currentSort.order = currentSort.column===col ? (currentSort.order==='asc'?'desc':'asc') : 'asc'; currentSort.column = col; document.querySelectorAll('[id^="sort-"]').forEach(e=>e.textContent=''); const el = document.getElementById(`sort-${col}`); if(el) el.textContent = currentSort.order==='asc'?' ▲':' ▼'; render(); }
 const TACHE_ORDER = {'En retard':0,'Urgent':1,'À faire':2,'Fait':3,'Finalisé':4};
 function getSortValue(c, col) { if(col==='suivi') return c.campaignSuivi||''; if(col==='campagne') return c.campagne||''; if(col==='company') return (c.companyName||'').toLowerCase(); if(col==='contact') return (c.contactName||'').toLowerCase(); if(col==='status') return {Prospect:1,'En cours':2,Client:3}[c.status]||0; if(col==='nextCall') return c.nextCall?.date||'9999-12-31'; if(col==='tacheStatus') return TACHE_ORDER[getTacheStatus(c)]??5; return ''; }
-
 function render() {
     const search=(document.getElementById("search")?.value||'').toLowerCase();
     const fs=document.getElementById("filterStatus")?.value||'';
@@ -1125,17 +984,12 @@ function render() {
     if(!filtered.length){tbody.innerHTML=`<tr><td colspan="11" class="empty-state">Aucun dossier trouvé</td></tr>`;return;}
     tbody.innerHTML=filtered.map(c=>{const ts=getTacheStatus(c); let ncHtml=''; if(c.nextCall?.date){ if(c.nextCall.date<today&&!c.tacheFaite) ncHtml=`<span class="badge badge-retard">⚠ Retard · ${c.nextCall.date.slice(5).replace('-','/')}</span>`; else if(c.nextCall.date===today&&!c.tacheFaite) ncHtml=`<span class="badge badge-today">🔔 Aujourd'hui</span>`; else if(c.tacheFaite) ncHtml=`<span class="badge badge-done">✓ Fait</span>`; else if(c.closed||c.dossierFinalise) ncHtml=`<span class="badge badge-finalized">✅ Finalisé</span>`; else ncHtml=`<span class="badge badge-ok">${c.nextCall.date}</span>`; } else { ncHtml=`<span style="font-size:11px;color:var(--text-tertiary);">Non planifiée</span>`; }
     const statusCls=c.status==='Prospect'?'prospect':c.status==='En cours'?'encours':'client';
-    const actionBtns=currentTab==='active'?`<button class="btn-icon" onclick="openEditModal(${c.id})" title="Modifier">✏️</button><button class="btn-icon danger" onclick="archiveClient(${c.id})" title="Archiver">📦</button>`:`<button class="btn-icon restore" onclick="restoreClient(${c.id})" title="Restaurer">♻️</button><button class="btn-icon danger" onclick="deletePermanent(${c.id})" title="Supprimer">🗑️</button>`;
-    return `<tr class="${getRowClass(c)}"><td><span class="priority-bar p-${c.priority}"></span></td><td><span class="eye-icon" onclick="openViewModal(${c.id})" title="Consulter">👁</span></td><td><span class="badge badge-suivi">${escapeHtml(c.campaignSuivi)}</span></td><td><span style="font-size:11px;">${escapeHtml(c.campagne||'—')}</span></td><td><span class="co-name">${escapeHtml(c.companyName)}</span></td><td><div class="contact-cell"><span class="contact-name">${escapeHtml(c.contactName)}</span><span class="contact-role">${escapeHtml(c.fonction||'')}</span><span class="contact-info">${escapeHtml(c.phoneDirect||'')}</span></div></td><td><span class="badge badge-${statusCls}">${escapeHtml(c.status)}</span></td><td>${tacheStatusBadge(ts)}</td><td>${ncHtml}</td><td><span style="font-size:10px;">${escapeHtml(c.nextCall?.type||'—')}</span></td><td><div class="action-row">${actionBtns}</div></td></tr>`;}).join('');
+    const actionBtns=currentTab==='active'?`<button class="btn-icon" onclick="archiveClient(${c.id})" title="Archiver">📦</button>`:`<button class="btn-icon restore" onclick="restoreClient(${c.id})" title="Restaurer">♻️</button><button class="btn-icon danger" onclick="deletePermanent(${c.id})" title="Supprimer">🗑️</button>`;
+    return `<tr><td><span class="priority-bar p-${c.priority}"></span></td><td><span class="eye-icon" onclick="openFicheModal(${c.id})" title="Consulter">👁</span></td><td><span class="badge badge-suivi">${escapeHtml(c.campaignSuivi)}</span></td><td><span style="font-size:11px;">${escapeHtml(c.campagne||'—')}</span></td><td><span class="co-name">${escapeHtml(c.companyName)}</span></td><td><span class="contact-name">${escapeHtml(c.contactName)}</span><br><span class="contact-info">${escapeHtml(c.phoneDirect||'')}</span></div></td><td><span class="badge badge-${statusCls}">${escapeHtml(c.status)}</span></td><td>${tacheStatusBadge(ts)}</span></td><td>${ncHtml}</td><td><span style="font-size:10px;">${escapeHtml(c.nextCall?.type||'—')}</span></td><td><div class="action-row">${actionBtns}</div></td></tr>`;}).join('');
 }
 
-// Fermeture des modals uniquement par bouton, pas par clic overlay
-window.onclick = e => {
-    if(e.target === document.getElementById('viewModal')) closeViewModal();
-    if(e.target === document.getElementById('editModal')) closeEditModal();
-    if(e.target === document.getElementById('noteDialogModal')) closeNoteDialog();
-    if(e.target === document.getElementById('contactSubModalOverlay')) closeContactSubModal();
-};
+// Fermeture des modals
+window.onclick = e => { if(e.target === document.getElementById('ficheModal')) closeFicheModal(); if(e.target === document.getElementById('createModal')) closeCreateModal(); };
 </script>
 </body>
 </html>
