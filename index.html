@@ -612,45 +612,70 @@
 </div>
 
 <!-- MODAL CRÉATION -->
-<div id="createModal" class="modal">
-    <div class="modal-content">
+<div id="createModal" class="modal" onclick="handleCreateModalClick(event)">
+    <div class="modal-content" id="createModalContent">
         <div class="modal-header">
-            <h3>Nouveau dossier</h3>
+            <h3>✨ Nouveau dossier</h3>
             <button class="close" onclick="closeCreateModal()">&#x2715;</button>
         </div>
-        <div class="two-col">
-            <div>
-                <div class="section-card">
-                    <h4>Entreprise</h4>
-                    <div class="input-field"><label>Nom *</label><input id="companyName" placeholder="Ex: ABC Inc."></div>
+
+        <div style="padding:18px 20px;">
+
+            <!-- ROW 1: Entreprise + Contact -->
+            <div class="two-col" style="margin-bottom:14px;">
+
+                <!-- ENTREPRISE -->
+                <div class="section-card" style="margin-bottom:0;">
+                    <h4>🏢 Entreprise</h4>
+                    <div class="input-field"><label>Nom entreprise *</label><input id="companyName" placeholder="Ex: ABC Inc."></div>
                     <div class="input-field"><label>Adresse</label><input id="companyAddress" placeholder="1000 Rue McGill, Montréal"></div>
-                    <div class="input-field"><label>Campagne</label><input id="campagne" placeholder="Campagne1"></div>
+                    <div class="input-field">
+                        <label>Campagne</label>
+                        <select id="campagne">
+                            <option value="Inconnue">Inconnue</option>
+                            <option value="Campagne 01">Campagne 01</option>
+                            <option value="Campagne 02">Campagne 02</option>
+                            <option value="Campagne 03">Campagne 03</option>
+                            <option value="Campagne 04">Campagne 04</option>
+                            <option value="Campagne 05">Campagne 05</option>
+                            <option value="Campagne 06">Campagne 06</option>
+                            <option value="Campagne 07">Campagne 07</option>
+                            <option value="Campagne 08">Campagne 08</option>
+                            <option value="Campagne 09">Campagne 09</option>
+                            <option value="Campagne 10">Campagne 10</option>
+                        </select>
+                    </div>
                     <div class="input-field"><label>NEQ</label><input id="neq" placeholder="1234567890"></div>
-                    <div class="input-field"><label>Secteur</label>
-                        <input id="secteur" list="secteurList" placeholder="Sélectionner...">
-                        <datalist id="secteurList"><option>Agriculture, foresterie, pêche</option><option>Construction</option><option>Fabrication</option><option>Commerce</option><option>Transport</option><option>Finance</option><option>Services professionnels</option><option>Technologie</option><option>Santé</option><option>Éducation</option><option>Immobilier</option><option>Restauration / Hôtellerie</option></datalist>
+                    <div class="input-field">
+                        <label>Secteur</label>
+                        <input id="secteur" list="secteurList" placeholder="Sélectionner ou écrire...">
+                        <datalist id="secteurList">
+                            <option>Agriculture, foresterie, pêche</option><option>Construction</option>
+                            <option>Fabrication</option><option>Commerce</option><option>Transport</option>
+                            <option>Finance</option><option>Services professionnels</option>
+                            <option>Technologie</option><option>Santé</option><option>Éducation</option>
+                            <option>Immobilier</option><option>Restauration / Hôtellerie</option>
+                        </datalist>
                     </div>
                     <div style="display:flex;gap:8px;">
                         <div class="input-field" style="flex:1;"><label>Employés</label><input id="employees" type="number" placeholder="Ex: 50"></div>
                         <div class="input-field" style="width:100px;"><label>Année création</label><input type="number" id="companyCreationDate" placeholder="2005" min="1800" max="2099"></div>
                     </div>
                 </div>
-                <!-- SECTION EXCEL: Notes prestataire -->
-                <div class="section-card" style="background:var(--orange-bg);border-color:var(--orange-border);">
-                    <h4 style="color:var(--orange-text);">📋 Notes Prestataire (Campagne)</h4>
-                    <div class="input-field"><label>Date 1er appel prévu (prestataire)</label><input type="date" id="date1erAppelPrevu"></div>
-                    <div class="input-field"><label>Note détaillée prestataire</label><textarea id="notePrestataire" rows="3" placeholder="Note complète sur le client..."></textarea></div>
-                    <div class="input-field"><label>Recommandations prestataire</label><input id="recoPrestataire" placeholder="Ex: Priorité assurance vie + REER"></div>
-                </div>
-            </div>
-            <div>
-                <div class="section-card">
-                    <h4>Contact</h4>
+
+                <!-- CONTACT PRINCIPAL -->
+                <div class="section-card" style="margin-bottom:0;">
+                    <h4>👤 Contact principal</h4>
                     <div class="input-field"><label>Nom complet *</label><input id="contactName" placeholder="Ex: Jean Tremblay"></div>
                     <div class="input-field"><label>Prénom</label><input id="contactPrenom" placeholder="Ex: Jean"></div>
                     <div class="input-field"><label>Fonction</label><input id="fonction" placeholder="Ex: Directeur financier"></div>
-                    <div class="input-field"><label>Rôle / Propriété</label>
-                        <select id="proprietaire"><option value="">Sélectionner</option><option>Propriétaire</option><option>Associé</option><option>Salarié</option><option>Actionnaire</option><option>Dirigeant</option></select>
+                    <div class="input-field">
+                        <label>Rôle / Propriété</label>
+                        <select id="proprietaire">
+                            <option value="">Sélectionner</option>
+                            <option>Propriétaire</option><option>Associé</option><option>Salarié</option>
+                            <option>Actionnaire</option><option>Dirigeant</option>
+                        </select>
                     </div>
                     <div style="display:flex;gap:8px;">
                         <div class="input-field" style="flex:1;"><label>Âge</label><input type="text" id="age" placeholder="Manuel ou auto"></div>
@@ -659,50 +684,81 @@
                     <div style="display:flex;gap:6px;">
                         <div class="input-field" style="flex:1;"><label>Cellulaire</label><input id="phoneDirect" placeholder="+1 514 555-1234"></div>
                         <div class="input-field" style="flex:1;"><label>Téléphone</label><input id="phoneMobile" placeholder="+1 514 555-5678"></div>
-                        <div class="input-field" style="width:80px;"><label>Poste</label><input id="phonePoste" placeholder="201"></div>
+                        <div class="input-field" style="width:72px;"><label>Poste</label><input id="phonePoste" placeholder="201"></div>
                     </div>
                     <div class="input-field"><label>Courriel</label><input id="email" type="email" placeholder="nom@entreprise.ca"></div>
                     <div style="display:flex;gap:8px;">
-                        <div class="input-field" style="flex:1;"><label>Fumeur</label><select id="fumeur"><option value="Non-fumeur">Non-fumeur</option><option value="Fumeur">Fumeur</option></select></div>
-                        <div class="input-field" style="flex:1;"><label>Situation familiale</label>
+                        <div class="input-field" style="flex:1;">
+                            <label>Fumeur <span style="font-size:9px;color:var(--text-tertiary);font-weight:400;">(après 1er call)</span></label>
+                            <select id="fumeur"><option value="">— à compléter —</option><option value="Non-fumeur">Non-fumeur</option><option value="Fumeur">Fumeur</option></select>
+                        </div>
+                        <div class="input-field" style="flex:1;">
+                            <label>Situation familiale</label>
                             <select id="situationFamiliale"><option value="">Sélectionner</option><option>Célibataire</option><option>Marié(e)</option><option>Conjoint(e) de fait</option><option>Divorcé(e)</option><option>Veuf(ve)</option></select>
                         </div>
-                        <div class="input-field" style="width:80px;"><label>Enfants</label><input type="number" id="enfantsCharge" placeholder="0" min="0"></div>
+                    </div>
+                    <div class="input-field">
+                        <label>Enfants à charge <span style="font-size:9px;color:var(--text-tertiary);font-weight:400;">(après 1er call)</span></label>
+                        <input type="number" id="enfantsCharge" placeholder="— à compléter —" min="0">
                     </div>
                     <div class="input-field"><label>Associés</label><input id="nomsAssocies" placeholder="Ex: Marie Dupont, Paul Martin..."></div>
                 </div>
             </div>
-        </div>
 
-        <div class="note-card">
-            <div class="note-card-header"><span>Notes</span><button class="btn-note" onclick="openNoteDialog('generalNotes','notesPreview')">Éditer</button></div>
-            <div id="notesPreview" class="note-preview empty" onclick="openNoteDialog('generalNotes','notesPreview')">Cliquer pour rédiger une note...</div>
-            <textarea id="generalNotes" style="display:none;"></textarea>
-        </div>
-
-        <div class="three-col" style="margin-bottom:14px;">
-            <div class="input-field"><label>Suivi</label><select id="campaignSuivi"><option>À relancer</option><option>Proposition envoyée</option><option>Négociation</option><option>Accord de principe</option><option>Envoi contrat</option><option>Signé - En attente</option><option>Finalisé</option><option>Perdu</option></select></div>
-            <div class="input-field"><label>Priorité</label><select id="priority"><option value="high">Haute</option><option value="medium" selected>Moyenne</option><option value="low">Basse</option></select></div>
-            <div class="input-field"><label>Statut initial</label><select id="initialStatus"><option>Prospect</option><option>En cours</option></select></div>
-        </div>
-
-        <div class="note-card">
-            <div class="note-card-header"><span>Notes commerciales</span><button class="btn-note" onclick="openNoteDialog('commercialNotes','commercialNotesPreview')">Éditer</button></div>
-            <div id="commercialNotesPreview" class="note-preview empty" onclick="openNoteDialog('commercialNotes','commercialNotesPreview')">Cliquer pour rédiger une note...</div>
-            <textarea id="commercialNotes" style="display:none;"></textarea>
-        </div>
-
-        <div class="action-section">
-            <h4>Première action</h4>
-            <div class="two-col">
-                <div class="input-field"><label>Date *</label><input type="date" id="firstContactDate"></div>
-                <div class="input-field"><label>Type d'action *</label><select id="contactType"><option value="">Sélectionner</option><option>📞 Appel découverte</option><option>📞 Appel qualification</option><option>📞 Appel proposition</option><option>📞 Appel négociation</option><option>🤝 Rendez-vous physique</option><option>🎥 Visio-conférence</option><option>✉️ Envoyer illustration</option><option>📄 Envoyer devis</option><option>📧 Envoyer contrat</option><option>📎 Envoyer documentation</option><option>⏰ Relance</option></select></div>
+            <!-- NOTES PRESTATAIRE -->
+            <div class="section-card" style="background:var(--orange-bg);border-color:var(--orange-border);margin-bottom:14px;">
+                <h4 style="color:var(--orange-text);">📋 Notes Prestataire (Campagne)</h4>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+                    <div class="input-field" style="margin-bottom:0;">
+                        <label>Date 1er appel prévu ★</label>
+                        <input type="date" id="date1erAppelPrevu">
+                    </div>
+                    <div class="input-field" style="margin-bottom:0;">
+                        <label>Type d'action</label>
+                        <select id="contactType">
+                            <option value="📞 Appel découverte" selected>📞 Appel découverte</option>
+                            <option value="📞 Appel qualification">📞 Appel qualification</option>
+                            <option value="📞 Appel proposition">📞 Appel proposition</option>
+                            <option value="🤝 Rendez-vous physique">🤝 Rendez-vous physique</option>
+                            <option value="🎥 Visio-conférence">🎥 Visio-conférence</option>
+                            <option value="⏰ Relance">⏰ Relance</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-field"><label>Note détaillée prestataire (résumé client)</label><textarea id="notePrestataire" rows="3" placeholder="Résumé complet du client fourni par le prestataire..."></textarea></div>
+                <div class="input-field" style="margin-bottom:0;"><label>Recommandations prestataire</label><input id="recoPrestataire" placeholder="Ex: Priorité assurance vie + REER, besoins urgents..."></div>
             </div>
-            <div class="input-field"><label>Recommandations 1er contact</label><textarea id="firstContactReco" rows="2" placeholder="Objectifs, points à aborder..."></textarea></div>
-        </div>
 
-        <button class="btn-submit" onclick="addClientB2B()">Créer le dossier</button>
-        <div style="text-align:center;margin-top:8px;"><button class="btn-cancel" onclick="closeCreateModal()">Annuler</button></div>
+            <!-- AUTRES CONTACTS -->
+            <div style="background:var(--bg-white);border:0.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:14px;">
+                <div style="background:var(--bg-subtle);padding:10px 14px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+                    <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-secondary);">👥 Autres contacts</span>
+                    <button type="button" class="btn-add-contact" onclick="addCreateContact()">+ Ajouter un contact</button>
+                </div>
+                <div id="createContactsList" style="padding:10px 14px;">
+                    <div style="font-size:11px;color:var(--text-tertiary);font-style:italic;text-align:center;padding:8px 0;">Aucun contact secondaire — cliquez sur "+ Ajouter"</div>
+                </div>
+            </div>
+
+            <!-- SUIVI + PRIORITÉ -->
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px;">
+                <div class="input-field"><label>Étape suivi</label>
+                    <select id="campaignSuivi"><option>À relancer</option><option>Proposition envoyée</option><option>Négociation</option><option>Accord de principe</option><option>Envoi contrat</option><option>Signé - En attente</option><option>Finalisé</option><option>Perdu</option></select>
+                </div>
+                <div class="input-field"><label>Priorité</label>
+                    <select id="priority"><option value="high">🔴 Haute</option><option value="medium" selected>🟠 Moyenne</option><option value="low">🟢 Basse</option></select>
+                </div>
+                <div class="input-field"><label>Statut</label>
+                    <select id="initialStatus"><option selected>Prospect</option><option>En cours</option></select>
+                </div>
+            </div>
+
+            <!-- BOUTONS -->
+            <button class="btn-submit" onclick="addClientB2B()">✨ Créer le dossier</button>
+            <div style="text-align:center;margin-top:10px;">
+                <button class="btn-cancel" onclick="closeCreateModal()">Annuler</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -1213,55 +1269,137 @@ function updateCampagneFilter() {
 }
 
 // ══ CRÉATION ══
+// Track secondary contacts in create form
+let createContacts = [];
+
 function openCreateModal() {
+    createContacts = [];
     document.getElementById("createModal").style.display="block";
-    document.getElementById("firstContactDate").value = getCurrentDate();
+    renderCreateContacts();
 }
-function closeCreateModal() { document.getElementById("createModal").style.display="none"; }
+
+function handleCreateModalClick(event) {
+    // Only close if clicking the dark overlay itself, not the modal box
+    if(event.target === document.getElementById('createModal')) {
+        // Do NOT close — per spec
+    }
+}
+
+function addCreateContact() {
+    createContacts.push({id:'cc_'+Date.now(), name:'', function:'', phone:'', email:'', notes:''});
+    renderCreateContacts();
+    // Focus first input of new contact
+    setTimeout(()=>{
+        const inputs = document.querySelectorAll('.create-contact-row input');
+        if(inputs.length) inputs[inputs.length-4]?.focus();
+    }, 50);
+}
+
+function removeCreateContact(idx) {
+    createContacts.splice(idx, 1);
+    renderCreateContacts();
+}
+
+function renderCreateContacts() {
+    const el = document.getElementById('createContactsList');
+    if(!el) return;
+    if(!createContacts.length){
+        el.innerHTML='<div style="font-size:11px;color:var(--text-tertiary);font-style:italic;text-align:center;padding:8px 0;">Aucun contact secondaire — cliquez sur "+ Ajouter"</div>';
+        return;
+    }
+    el.innerHTML = createContacts.map((c,i)=>`
+        <div class="create-contact-row" style="display:grid;grid-template-columns:2fr 2fr 2fr 2fr 3fr auto;gap:8px;align-items:end;margin-bottom:8px;padding-bottom:8px;border-bottom:0.5px solid var(--border-light);">
+            <div class="input-field" style="margin-bottom:0;"><label>Nom *</label><input value="${escapeHtml(c.name)}" oninput="createContacts[${i}].name=this.value" placeholder="Prénom Nom"></div>
+            <div class="input-field" style="margin-bottom:0;"><label>Fonction</label><input value="${escapeHtml(c.function||'')}" oninput="createContacts[${i}].function=this.value" placeholder="Directeur..."></div>
+            <div class="input-field" style="margin-bottom:0;"><label>Téléphone</label><input value="${escapeHtml(c.phone||'')}" oninput="createContacts[${i}].phone=this.value" placeholder="+1 514..."></div>
+            <div class="input-field" style="margin-bottom:0;"><label>Courriel</label><input type="email" value="${escapeHtml(c.email||'')}" oninput="createContacts[${i}].email=this.value" placeholder="nom@co.ca"></div>
+            <div class="input-field" style="margin-bottom:0;"><label>Notes</label><input value="${escapeHtml(c.notes||'')}" oninput="createContacts[${i}].notes=this.value" placeholder="Notes..."></div>
+            <button type="button" onclick="removeCreateContact(${i})" style="background:var(--red-bg);color:var(--red-text);border:0.5px solid var(--red-border);border-radius:var(--radius-sm);padding:6px 8px;cursor:pointer;font-size:13px;height:34px;align-self:end;">🗑</button>
+        </div>`).join('');
+}
+function closeCreateModal() {
+    document.getElementById("createModal").style.display="none";
+    // Reset all fields
+    ["companyName","companyAddress","neq","employees","companyCreationDate",
+     "contactName","contactPrenom","fonction","birthDate","age",
+     "phoneDirect","phoneMobile","phonePoste","email","nomsAssocies",
+     "enfantsCharge","notePrestataire","recoPrestataire","date1erAppelPrevu"].forEach(id=>{
+        const el=document.getElementById(id); if(el) el.value="";
+    });
+    ["secteur"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
+    const s1=document.getElementById("proprietaire"); if(s1) s1.selectedIndex=0;
+    const s2=document.getElementById("fumeur"); if(s2) s2.value="";
+    const s3=document.getElementById("situationFamiliale"); if(s3) s3.selectedIndex=0;
+    const s4=document.getElementById("campaignSuivi"); if(s4) s4.selectedIndex=0;
+    const s5=document.getElementById("priority"); if(s5) s5.value="medium";
+    const s6=document.getElementById("initialStatus"); if(s6) s6.value="Prospect";
+    const s7=document.getElementById("contactType"); if(s7) s7.value="📞 Appel découverte";
+    const s8=document.getElementById("campagne"); if(s8) s8.value="Inconnue";
+    createContacts=[];
+    renderCreateContacts();
+}
 
 function addClientB2B() {
     const cn=document.getElementById("companyName").value.trim();
     const co=document.getElementById("contactName").value.trim();
-    const fd=document.getElementById("firstContactDate").value;
+    const fd=document.getElementById("date1erAppelPrevu").value;
     const ft=document.getElementById("contactType").value;
     if(!cn) return showNotification("Nom de l'entreprise requis","error");
     if(!co) return showNotification("Nom du contact requis","error");
-    if(!fd) return showNotification("Date requise","error");
-    if(!ft) return showNotification("Type d'action requis","error");
+    if(!fd) return showNotification("Date du 1er appel requis ★","error");
     const bd=document.getElementById("birthDate").value;
     const age=bd?calcAge(bd):document.getElementById("age").value;
     const client = {
-        id: Date.now(), campagne: document.getElementById("campagne").value||'',
-        companyName: cn, companyAddress: document.getElementById("companyAddress").value||'',
-        neq: document.getElementById("neq").value||'', employees: document.getElementById("employees").value||'',
-        secteur: document.getElementById("secteur").value||'', companyCreationDate: document.getElementById("companyCreationDate").value||'',
-        contactName: co, contactPrenom: document.getElementById("contactPrenom").value||'',
-        fonction: document.getElementById("fonction").value||'', proprietaire: document.getElementById("proprietaire").value||'',
-        birthDate: bd, age, phoneDirect: document.getElementById("phoneDirect").value||'',
-        phoneMobile: document.getElementById("phoneMobile").value||'', phonePoste: document.getElementById("phonePoste").value||'',
-        email: document.getElementById("email").value||'', fumeur: document.getElementById("fumeur").value||'Non-fumeur',
+        id: Date.now(),
+        campagne: document.getElementById("campagne").value||'Inconnue',
+        companyName: cn,
+        companyAddress: document.getElementById("companyAddress").value||'',
+        neq: document.getElementById("neq").value||'',
+        employees: document.getElementById("employees").value||'',
+        secteur: document.getElementById("secteur").value||'',
+        companyCreationDate: document.getElementById("companyCreationDate").value||'',
+        contactName: co,
+        contactPrenom: document.getElementById("contactPrenom").value||'',
+        fonction: document.getElementById("fonction").value||'',
+        proprietaire: document.getElementById("proprietaire").value||'',
+        birthDate: bd, age,
+        phoneDirect: document.getElementById("phoneDirect").value||'',
+        phoneMobile: document.getElementById("phoneMobile").value||'',
+        phonePoste: document.getElementById("phonePoste").value||'',
+        email: document.getElementById("email").value||'',
+        fumeur: document.getElementById("fumeur").value||'',
         situationFamiliale: document.getElementById("situationFamiliale").value||'',
-        enfantsCharge: document.getElementById("enfantsCharge").value||'0', nomsAssocies: document.getElementById("nomsAssocies").value||'',
-        // Excel fields
-        date1erAppelPrevu: document.getElementById("date1erAppelPrevu").value||'',
+        enfantsCharge: document.getElementById("enfantsCharge").value||'',
+        nomsAssocies: document.getElementById("nomsAssocies").value||'',
+        // Prestataire
+        date1erAppelPrevu: fd,
         notePrestataire: document.getElementById("notePrestataire").value||'',
         recoPrestataire: document.getElementById("recoPrestataire").value||'',
         date1erAppelRealise: '', resumeCall1: '',
-        tacheFaite: false, commentaireTache: '', prochainesTache: '', prochainesTacheDate: '',
+        // Task
+        tacheFaite: false, commentaireTache: '',
+        prochainesTache: '', prochainesTacheDate: '',
         dossierFinalise: false,
-        //
-        generalNotes: document.getElementById("generalNotes").value||'',
-        commercialNotes: document.getElementById("commercialNotes").value||'',
+        // Notes
+        generalNotes: '', commercialNotes: '',
+        // Suivi
         campaignSuivi: document.getElementById("campaignSuivi").value,
-        status: document.getElementById("initialStatus").value,
+        status: document.getElementById("initialStatus").value||'Prospect',
         priority: document.getElementById("priority").value,
-        calls: [], nextCall: {date:fd, type:ft, recommendations:document.getElementById("firstContactReco").value||''},
+        // Action planifiée = date 1er appel prévu
+        calls: [],
+        nextCall: { date: fd, type: ft, recommendations: document.getElementById("recoPrestataire").value||'' },
+        // Secondary contacts from form
+        secondaryContacts: createContacts.filter(c=>c.name.trim()).map(c=>({
+            ...c, id:'sc_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),
+            isMainContact:false, addedAt:getCurrentDate(), addedBy:currentUser
+        })),
         closed: false, archived: false, archivedDate: null,
         createdAt: getCurrentDateTime(), createdBy: currentUser,
-        modificationHistory: [{date:getCurrentDateTime(),by:currentUser,action:"Dossier créé"}]
+        modificationHistory: [{date:getCurrentDateTime(),by:currentUser,action:`Dossier créé — Statut: Prospect — 1er appel: ${fd}`}]
     };
     clients.push(client); save(); render(); updateCampagneFilter();
-    showNotification(`Dossier créé — ${escapeHtml(cn)}`,"success");
+    showNotification(`✅ Dossier créé — ${escapeHtml(cn)} · 1er appel le ${fd}`,"success");
     closeCreateModal();
 }
 
