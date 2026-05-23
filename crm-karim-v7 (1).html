@@ -1,0 +1,2373 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM KARIM - B2B Canada v6.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://accounts.google.com/gsi/client" async></script>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg-page:     #F5F3EE;
+            --bg-white:    #FFFFFF;
+            --bg-subtle:   #FAFAF8;
+            --bg-hover:    #F5F3EE;
+            --border:      #E4E1D9;
+            --border-light:#EEEbE4;
+            --text-primary:   #1A1915;
+            --text-secondary: #6B6860;
+            --text-tertiary:  #A09D98;
+            --accent:      #534AB7;
+            --accent-light:#EEEDFE;
+            --accent-dark: #3C3489;
+            --red-bg:      #FCEBEB;
+            --red-text:    #A32D2D;
+            --red-border:  #F7C1C1;
+            --orange-bg:   #FAEEDA;
+            --orange-text: #854F0B;
+            --orange-border:#FAC775;
+            --purple-bg:   #EEEDFE;
+            --purple-text: #3C3489;
+            --purple-border:#CECBF6;
+            --blue-bg:     #E6F1FB;
+            --blue-text:   #185FA5;
+            --blue-border: #B5D4F4;
+            --green-bg:    #EAF3DE;
+            --green-text:  #3B6D11;
+            --green-border:#C0DD97;
+            --gray-bg:     #F1EFE8;
+            --gray-text:   #5F5E5A;
+            --gray-border: #D3D1C7;
+            --radius-sm:   6px;
+            --radius-md:   8px;
+            --radius-lg:   12px;
+            --radius-xl:   16px;
+            --radius-pill: 99px;
+        }
+        body { font-family: 'DM Sans', sans-serif; background: var(--bg-page); color: var(--text-primary); font-size: 14px; line-height: 1.5; min-height: 100vh; }
+        .app { max-width: 1600px; margin: 0 auto; padding: 20px; }
+
+        /* TOPBAR */
+        .topbar { display: flex; align-items: center; justify-content: space-between; background: var(--bg-white); border: 0.5px solid var(--border); border-radius: var(--radius-xl); padding: 12px 20px; margin-bottom: 16px; }
+        .logo { display: flex; align-items: center; gap: 12px; }
+        .logo-icon { width: 36px; height: 36px; border-radius: var(--radius-md); background: var(--accent-light); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .logo-name { font-size: 15px; font-weight: 600; }
+        .logo-sub { font-size: 11px; color: var(--text-tertiary); }
+        .topbar-right { display: flex; align-items: center; gap: 10px; }
+        .user-pill { display: flex; align-items: center; gap: 8px; border: 0.5px solid var(--border); border-radius: var(--radius-pill); padding: 5px 12px 5px 6px; font-size: 12px; color: var(--text-secondary); }
+        .user-avatar { width: 24px; height: 24px; border-radius: 50%; background: var(--purple-bg); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: var(--accent); }
+        .sync-bar { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-tertiary); }
+        .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gray-border); flex-shrink: 0; transition: background 0.3s; }
+        .sync-dot.saving { background: var(--orange-text); animation: pulse 1s infinite; }
+        .sync-dot.saved { background: var(--green-text); }
+        .sync-dot.error { background: var(--red-text); }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+        .btn-sm { padding: 5px 10px; border: 0.5px solid var(--border); border-radius: var(--radius-md); background: var(--bg-white); font-size: 11px; font-family: inherit; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; gap: 4px; }
+        .btn-sm:hover { background: var(--bg-hover); }
+        .btn-logout { padding: 5px 10px; border: 0.5px solid var(--red-border); border-radius: var(--radius-md); background: var(--red-bg); font-size: 11px; font-family: inherit; color: var(--red-text); cursor: pointer; }
+        .btn-logout:hover { background: var(--red-border); }
+
+        /* NAVIGATION TABS */
+        .nav-tabs { display: flex; gap: 2px; background: var(--bg-white); border: 0.5px solid var(--border); border-radius: var(--radius-xl); padding: 5px; margin-bottom: 16px; }
+        .nav-tab { flex: 1; padding: 8px 12px; border: none; border-radius: var(--radius-lg); background: none; font-size: 12px; font-weight: 500; color: var(--text-secondary); cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.15s; }
+        .nav-tab:hover { background: var(--bg-hover); color: var(--text-primary); }
+        .nav-tab.active { background: var(--accent); color: #fff; }
+        .nav-tab .badge-count { background: rgba(255,255,255,0.3); color: #fff; border-radius: var(--radius-pill); padding: 1px 6px; font-size: 10px; }
+        .nav-tab:not(.active) .badge-count { background: var(--border); color: var(--text-secondary); }
+
+        /* METRICS */
+        .metrics { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 16px; }
+        .metric { background: var(--bg-white); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 14px 16px; cursor: pointer; transition: border-color 0.15s; }
+        .metric:hover { border-color: var(--accent); }
+        .metric-label { font-size: 11px; color: var(--text-secondary); display: flex; align-items: center; gap: 5px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em; }
+        .metric-value { font-size: 24px; font-weight: 600; }
+        .metric-sub { font-size: 10px; color: var(--text-tertiary); margin-top: 2px; }
+        .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+        .dot-red    { background: #E24B4A; }
+        .dot-orange { background: #EF9F27; }
+        .dot-purple { background: #7F77DD; }
+        .dot-green  { background: #639922; }
+        .dot-gray   { background: #B4B2A9; }
+        .dot-blue   { background: #378ADD; }
+
+        /* DASHBOARD COLUMNS */
+        .dash-section { margin-bottom: 20px; }
+        .dash-section-title { font-size: 11px; font-weight: 500; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+        .dash-cols { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+        .dash-col { background: var(--bg-white); border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+        .dash-col-header { padding: 9px 12px; font-size: 11px; font-weight: 500; display: flex; align-items: center; justify-content: space-between; border-bottom: 0.5px solid var(--border-light); }
+        .dash-col-header.red    { background: var(--red-bg);    color: var(--red-text); }
+        .dash-col-header.orange { background: var(--orange-bg); color: var(--orange-text); }
+        .dash-col-header.purple { background: var(--purple-bg); color: var(--purple-text); }
+        .dash-col-header.blue   { background: var(--blue-bg);   color: var(--blue-text); }
+        .dash-col-header.green  { background: var(--green-bg);  color: var(--green-text); }
+        .dash-col-header.gray   { background: var(--gray-bg);   color: var(--gray-text); }
+        .dash-count { font-size: 16px; font-weight: 600; }
+        .dash-item { padding: 7px 12px; font-size: 11px; color: var(--text-secondary); border-bottom: 0.5px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+        .dash-item:last-child { border-bottom: none; }
+        .dash-item:hover { background: var(--bg-hover); }
+        .dash-item-date { font-size: 10px; color: var(--text-tertiary); font-family: 'DM Mono', monospace; }
+        .dash-empty { padding: 12px; font-size: 11px; color: var(--text-tertiary); font-style: italic; text-align: center; }
+
+        /* AGENDA SECTION */
+        .agenda-section { background: var(--bg-white); border: 0.5px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 16px; overflow: hidden; }
+        .agenda-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 0.5px solid var(--border); }
+        .agenda-header h3 { font-size: 13px; font-weight: 600; }
+        .agenda-date-pill { background: var(--accent-light); color: var(--accent); border-radius: var(--radius-pill); padding: 3px 10px; font-size: 11px; font-weight: 500; font-family: 'DM Mono', monospace; }
+        .agenda-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; }
+        .agenda-col { border-right: 0.5px solid var(--border-light); }
+        .agenda-col:last-child { border-right: none; }
+        .agenda-col-header { padding: 10px 14px; font-size: 11px; font-weight: 500; border-bottom: 0.5px solid var(--border-light); display: flex; align-items: center; gap: 6px; }
+        .agenda-col-header.late { color: var(--red-text); background: var(--red-bg); }
+        .agenda-col-header.today { color: var(--orange-text); background: var(--orange-bg); }
+        .agenda-col-header.soon { color: var(--blue-text); background: var(--blue-bg); }
+        .agenda-item { padding: 10px 14px; border-bottom: 0.5px solid var(--border-light); cursor: pointer; }
+        .agenda-item:last-child { border-bottom: none; }
+        .agenda-item:hover { background: var(--bg-hover); }
+        .agenda-item-name { font-size: 12px; font-weight: 500; margin-bottom: 2px; }
+        .agenda-item-task { font-size: 11px; color: var(--text-secondary); margin-bottom: 2px; }
+        .agenda-item-reminder { font-size: 10px; color: var(--text-tertiary); font-style: italic; }
+        .agenda-empty { padding: 14px; font-size: 11px; color: var(--text-tertiary); font-style: italic; text-align: center; }
+
+        /* STATS TAB */
+        .stats-section { display: none; }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+        .stats-card { background: var(--bg-white); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 16px; }
+        .stats-card h4 { font-size: 11px; font-weight: 500; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
+        .stats-row { display: flex; align-items: center; justify-content: space-between; padding: 6px 0; border-bottom: 0.5px solid var(--border-light); font-size: 12px; }
+        .stats-row:last-child { border-bottom: none; }
+        .stats-bar-wrap { display: flex; align-items: center; gap: 8px; width: 120px; }
+        .stats-bar { height: 6px; border-radius: 3px; background: var(--accent); flex-shrink: 0; }
+        .stats-num { font-size: 11px; color: var(--text-secondary); font-family: 'DM Mono', monospace; min-width: 20px; text-align: right; }
+
+        /* TOOLBAR */
+        .toolbar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+        .search-wrap { flex: 2; position: relative; min-width: 180px; }
+        .search-wrap svg { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); color: var(--text-tertiary); width: 14px; height: 14px; }
+        .search-input { width: 100%; padding: 8px 10px 8px 30px; border: 0.5px solid var(--border); border-radius: var(--radius-md); background: var(--bg-white); font-size: 12px; font-family: inherit; color: var(--text-primary); }
+        .search-input:focus { outline: none; border-color: var(--accent); }
+        .filter-select { padding: 8px 10px; border: 0.5px solid var(--border); border-radius: var(--radius-md); background: var(--bg-white); font-size: 12px; font-family: inherit; color: var(--text-secondary); cursor: pointer; }
+        .filter-select:focus { outline: none; border-color: var(--accent); }
+        .btn-new { background: var(--accent); color: #fff; border: none; border-radius: var(--radius-md); padding: 8px 16px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+        .btn-new:hover { background: var(--accent-dark); }
+
+        /* MAIN TABLE TABS */
+        .tabs { display: flex; gap: 3px; border-bottom: 0.5px solid var(--border); margin-bottom: 12px; }
+        .tab { padding: 8px 14px; font-size: 12px; font-weight: 500; color: var(--text-secondary); background: none; border: none; cursor: pointer; font-family: inherit; border-bottom: 2px solid transparent; margin-bottom: -0.5px; transition: color 0.15s; }
+        .tab:hover { color: var(--text-primary); }
+        .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+        /* TABLE */
+        .table-wrap { background: var(--bg-white); border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        thead { background: var(--bg-subtle); }
+        th { padding: 9px 11px; text-align: left; font-size: 10px; font-weight: 500; color: var(--text-secondary); border-bottom: 0.5px solid var(--border); text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; }
+        th.sortable { cursor: pointer; user-select: none; }
+        th.sortable:hover { color: var(--text-primary); }
+        td { padding: 10px 11px; border-bottom: 0.5px solid var(--border-light); color: var(--text-primary); vertical-align: middle; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: var(--bg-subtle); }
+
+        /* ROW STATUS HIGHLIGHT - Excel-style */
+        tr.row-late td { background: #FFF5F5 !important; }
+        tr.row-late:hover td { background: #FFE8E8 !important; }
+        tr.row-today td { background: #FFFBF0 !important; }
+        tr.row-today:hover td { background: #FFF3D6 !important; }
+        tr.row-done td { background: #F8F8F8 !important; opacity: 0.8; }
+        tr.row-finalized td { background: #F2FAF0 !important; }
+
+        /* BADGES */
+        .badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: var(--radius-pill); font-size: 10px; font-weight: 500; white-space: nowrap; }
+        .badge-prospect { background: var(--orange-bg); color: var(--orange-text); }
+        .badge-encours  { background: var(--blue-bg);   color: var(--blue-text); }
+        .badge-client   { background: var(--green-bg);  color: var(--green-text); }
+        .badge-suivi    { background: var(--purple-bg); color: var(--purple-text); }
+        .badge-retard   { background: var(--red-bg);    color: var(--red-text); border: 0.5px solid var(--red-border); }
+        .badge-today    { background: var(--orange-bg); color: var(--orange-text); border: 0.5px solid var(--orange-border); }
+        .badge-ok       { background: var(--blue-bg);   color: var(--blue-text); }
+        .badge-done     { background: var(--gray-bg);   color: var(--gray-text); }
+        .badge-finalized{ background: var(--green-bg);  color: var(--green-text); border: 0.5px solid var(--green-border); }
+        .badge-urgent   { background: #FFF0E8; color: #C45000; border: 0.5px solid #FFBA8A; animation: urgentPulse 2s infinite; }
+        @keyframes urgentPulse { 0%,100%{border-color:#FFBA8A} 50%{border-color:#E24B4A} }
+
+        /* STATUS BADGE for tache */
+        .tache-status { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: var(--radius-pill); font-size: 10px; font-weight: 500; }
+        .ts-afaire   { background: var(--blue-bg); color: var(--blue-text); }
+        .ts-fait     { background: var(--gray-bg); color: var(--gray-text); }
+        .ts-retard   { background: var(--red-bg); color: var(--red-text); }
+        .ts-urgent   { background: var(--orange-bg); color: var(--orange-text); }
+        .ts-finalized{ background: var(--green-bg); color: var(--green-text); }
+
+        .priority-bar { width: 3px; height: 22px; border-radius: 2px; display: inline-block; }
+        .p-high   { background: #E24B4A; }
+        .p-medium { background: #EF9F27; }
+        .p-low    { background: #639922; }
+
+        .contact-cell { display: flex; flex-direction: column; gap: 1px; }
+        .contact-name { font-weight: 500; font-size: 12px; }
+        .contact-role { font-size: 10px; color: var(--text-tertiary); }
+        .contact-info { font-size: 10px; color: var(--text-secondary); font-family: 'DM Mono', monospace; }
+        .co-name { font-weight: 500; }
+
+        .action-row { display: flex; gap: 4px; }
+        .btn-icon { width: 26px; height: 26px; border-radius: var(--radius-sm); border: 0.5px solid var(--border); background: var(--bg-white); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); font-size: 13px; transition: all 0.15s; }
+        .btn-icon:hover { background: var(--bg-hover); }
+        .btn-icon.danger:hover { background: var(--red-bg); color: var(--red-text); border-color: var(--red-border); }
+        .btn-icon.restore:hover { background: var(--green-bg); color: var(--green-text); }
+        .eye-icon { cursor: pointer; font-size: 16px; color: var(--text-tertiary); }
+        .eye-icon:hover { color: var(--accent); }
+
+        .empty-state { text-align: center; padding: 40px; color: var(--text-tertiary); font-size: 13px; }
+        .bottom-bar { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; flex-wrap: wrap; gap: 8px; }
+        .page-info { font-size: 11px; color: var(--text-tertiary); }
+        .export-row { display: flex; gap: 6px; }
+        .btn-export { padding: 6px 10px; border: 0.5px solid var(--border); border-radius: var(--radius-md); background: var(--bg-white); font-size: 11px; font-family: inherit; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; gap: 4px; }
+        .btn-export:hover { background: var(--bg-hover); }
+
+        /* KANBAN */
+        .kanban-wrap { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 10px; }
+        .kanban-col { flex: 1; min-width: 200px; background: var(--bg-white); border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+        .kanban-col-header { padding: 10px 12px; font-size: 11px; font-weight: 500; color: var(--text-secondary); background: var(--bg-subtle); border-bottom: 0.5px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+        .kanban-card { padding: 10px 12px; border-bottom: 0.5px solid var(--border-light); cursor: pointer; }
+        .kanban-card:hover { background: var(--bg-hover); }
+        .kanban-card.late { border-left: 3px solid var(--red-text); }
+        .kanban-card.today-card { border-left: 3px solid var(--orange-text); }
+        .kanban-card-name { font-weight: 500; font-size: 12px; margin-bottom: 3px; }
+        .kanban-card-meta { font-size: 10px; color: var(--text-tertiary); display: flex; justify-content: space-between; }
+
+        /* MODALS */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); animation: fadeIn 0.15s; }
+        @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+        .modal-content { background: var(--bg-white); margin: 2% auto; padding: 24px; width: 92%; max-width: 860px; border-radius: var(--radius-xl); max-height: 92vh; overflow-y: auto; border: 0.5px solid var(--border); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 0.5px solid var(--border); }
+        .modal-header h3 { font-size: 15px; font-weight: 600; }
+        .modal-header-actions { display: flex; align-items: center; gap: 8px; }
+        .close { font-size: 22px; cursor: pointer; color: var(--text-tertiary); background: none; border: none; font-family: inherit; }
+        .close:hover { color: var(--text-primary); }
+
+        .section-card { background: var(--bg-subtle); border: 0.5px solid var(--border-light); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 14px; }
+        .section-card h4 { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 12px; }
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+        .input-field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+        .input-field label { font-size: 10px; font-weight: 500; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.04em; }
+        .input-field input, .input-field select, .input-field textarea { padding: 8px 10px; border: 0.5px solid var(--border); border-radius: var(--radius-md); background: var(--bg-white); font-size: 12px; font-family: inherit; color: var(--text-primary); }
+        .input-field input:focus, .input-field select:focus, .input-field textarea:focus { outline: none; border-color: var(--accent); }
+        .input-field textarea { resize: vertical; min-height: 65px; }
+        .input-field input[readonly] { background: var(--bg-page); cursor: default; }
+
+        .note-card { border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 14px; }
+        .note-card-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: var(--bg-subtle); border-bottom: 0.5px solid var(--border); }
+        .note-card-header span { font-size: 11px; font-weight: 500; color: var(--text-secondary); }
+        .note-preview { padding: 10px 12px; font-size: 12px; color: var(--text-secondary); min-height: 44px; cursor: pointer; white-space: pre-wrap; line-height: 1.6; }
+        .note-preview.empty { color: var(--text-tertiary); font-style: italic; }
+        .note-preview:hover { background: var(--bg-hover); }
+
+        /* TACHE PANEL - new Excel-style task tracking */
+        .tache-panel { background: var(--bg-white); border: 0.5px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 14px; overflow: hidden; }
+        .tache-panel-header { padding: 12px 16px; background: var(--purple-bg); border-bottom: 0.5px solid var(--purple-border); display: flex; align-items: center; justify-content: space-between; }
+        .tache-panel-header h4 { font-size: 12px; font-weight: 500; color: var(--purple-text); text-transform: uppercase; letter-spacing: 0.05em; }
+        .tache-body { padding: 14px 16px; }
+        .tache-row { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; margin-bottom: 10px; }
+        .tache-current { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: var(--radius-md); margin-bottom: 12px; font-size: 12px; }
+        .tache-current.late { background: var(--red-bg); border: 0.5px solid var(--red-border); color: var(--red-text); }
+        .tache-current.today { background: var(--orange-bg); border: 0.5px solid var(--orange-border); color: var(--orange-text); }
+        .tache-current.future { background: var(--blue-bg); border: 0.5px solid var(--blue-border); color: var(--blue-text); }
+        .tache-current.done { background: var(--gray-bg); border: 0.5px solid var(--gray-border); color: var(--gray-text); }
+        .tache-icon { font-size: 18px; flex-shrink: 0; }
+        .checkbox-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+        .checkbox-row input[type=checkbox] { width: 16px; height: 16px; cursor: pointer; accent-color: var(--accent); }
+        .checkbox-row label { font-size: 12px; font-weight: 500; cursor: pointer; }
+
+        .action-section { background: var(--blue-bg); border: 0.5px solid var(--blue-border); border-radius: var(--radius-lg); padding: 14px 16px; margin-bottom: 14px; }
+        .action-section h4 { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; color: var(--blue-text); margin-bottom: 12px; }
+
+        /* CALL HISTORY */
+        .call-history { margin: 10px 0; max-height: 280px; overflow-y: auto; }
+        .call-item { background: var(--bg-subtle); border: 0.5px solid var(--border-light); border-radius: var(--radius-md); padding: 10px 12px; margin-bottom: 8px; }
+        .call-header { display: flex; justify-content: space-between; font-weight: 500; font-size: 11px; color: var(--accent); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em; }
+        .call-summary { padding: 6px 8px; background: var(--bg-white); border-radius: var(--radius-sm); font-size: 12px; margin-bottom: 5px; line-height: 1.5; }
+        .call-reco { padding: 6px 8px; background: var(--orange-bg); border-radius: var(--radius-sm); font-size: 12px; line-height: 1.5; color: var(--orange-text); }
+
+        .view-history-toggle { border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 12px; }
+        .btn-toggle-history { width: 100%; background: var(--bg-subtle); border: none; cursor: pointer; font-size: 12px; font-weight: 500; color: var(--text-secondary); font-family: inherit; padding: 10px 14px; display: flex; align-items: center; gap: 5px; }
+        .btn-toggle-history:hover { background: var(--bg-hover); }
+        .history-count { color: var(--text-tertiary); font-weight: 400; }
+        .view-history-content { padding: 10px; background: var(--bg-white); }
+        .mod-history { max-height: 140px; overflow-y: auto; }
+        .mod-item { border-left: 2px solid var(--border); padding: 5px 8px; margin-bottom: 5px; font-size: 11px; }
+        .mod-item small { color: var(--text-tertiary); }
+
+        /* BUTTONS */
+        .btn-submit { width: 100%; background: var(--accent); color: #fff; border: none; border-radius: var(--radius-md); padding: 11px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; margin-top: 4px; }
+        .btn-submit:hover { background: var(--accent-dark); }
+        .btn-cancel { background: none; color: var(--text-secondary); border: 0.5px solid var(--border); border-radius: var(--radius-md); padding: 8px 18px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: inherit; }
+        .btn-cancel:hover { background: var(--bg-hover); }
+        .btn-validate { background: var(--green-bg); color: var(--green-text); border: 0.5px solid var(--green-border); border-radius: var(--radius-md); padding: 8px 16px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: inherit; }
+        .btn-validate:hover { background: var(--green-border); }
+        .btn-finalize { background: var(--orange-bg); color: var(--orange-text); border: 0.5px solid var(--orange-border); border-radius: var(--radius-md); padding: 9px 20px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: inherit; }
+        .btn-finalize:hover { background: var(--orange-border); }
+        .btn-note { background: none; color: var(--accent); border: 0.5px solid var(--accent); border-radius: var(--radius-sm); padding: 4px 9px; font-size: 10px; font-weight: 500; cursor: pointer; font-family: inherit; }
+        .btn-note:hover { background: var(--accent-light); }
+        .btn-edit-info { background: none; color: var(--text-secondary); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 4px 9px; font-size: 10px; font-weight: 500; cursor: pointer; font-family: inherit; }
+        .btn-edit-info:hover { background: var(--bg-hover); }
+        .btn-pdf { background: var(--red-bg); color: var(--red-text); border: 0.5px solid var(--red-border); border-radius: var(--radius-md); padding: 6px 12px; font-size: 11px; font-weight: 500; cursor: pointer; font-family: inherit; }
+        .btn-pdf:hover { background: var(--red-border); }
+        .btn-openEdit { background: var(--accent-light); color: var(--accent); border: 0.5px solid var(--purple-border); border-radius: var(--radius-md); padding: 6px 12px; font-size: 11px; font-weight: 500; cursor: pointer; font-family: inherit; }
+        .btn-openEdit:hover { background: var(--purple-border); }
+
+        /* NOTE DIALOG */
+        .note-dialog-textarea { width: 100%; min-height: 300px; padding: 14px; font-size: 13px; font-family: inherit; line-height: 1.6; border: 0.5px solid var(--border); border-radius: var(--radius-md); resize: vertical; color: var(--text-primary); background: var(--bg-white); }
+        .note-dialog-textarea:focus { outline: none; border-color: var(--accent); }
+        .dialog-buttons { display: flex; gap: 8px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+
+        /* VIEW MODAL */
+        .view-header-card { background: var(--bg-subtle); border: 0.5px solid var(--border-light); border-radius: var(--radius-lg); padding: 14px 16px; margin-bottom: 4px; }
+        .view-header-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px 20px; margin-bottom: 10px; }
+        .view-header-item { display: flex; flex-direction: column; gap: 2px; }
+        .view-lbl { font-size: 10px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.04em; }
+        .view-val { font-size: 12px; }
+        .view-val-bold { font-size: 14px; font-weight: 600; }
+        .btn-toggle-details { background: none; border: none; cursor: pointer; font-size: 11px; color: var(--accent); font-family: inherit; font-weight: 500; padding: 0; display: flex; align-items: center; gap: 4px; }
+        .btn-toggle-details:hover { color: var(--accent-dark); }
+        .info-block { background: var(--bg-subtle); border: 0.5px solid var(--border-light); border-radius: var(--radius-lg); padding: 14px; }
+        .info-block h4 { font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 10px; }
+        .info-row { margin-bottom: 6px; font-size: 12px; }
+        .info-row .lbl { color: var(--text-tertiary); font-size: 10px; }
+        .info-row .val { font-weight: 500; }
+
+        /* NOTIFICATION */
+        .notification { position: fixed; top: 18px; right: 18px; padding: 10px 16px; border-radius: var(--radius-md); font-size: 12px; font-weight: 500; z-index: 2000; animation: slideIn 0.2s ease-out; border: 0.5px solid transparent; }
+        @keyframes slideIn { from{transform:translateX(100%);opacity:0} to{transform:translateX(0);opacity:1} }
+        .notification.success { background: var(--green-bg); color: var(--green-text); border-color: var(--green-border); }
+        .notification.error   { background: var(--red-bg);   color: var(--red-text);   border-color: var(--red-border); }
+        .notification.info    { background: var(--blue-bg);  color: var(--blue-text);  border-color: var(--blue-border); }
+
+        /* LOGIN */
+        #loginScreen { position: fixed; inset: 0; background: var(--bg-page); display: flex; align-items: center; justify-content: center; z-index: 9999; }
+        .login-card { background: var(--bg-white); border: 0.5px solid var(--border); border-radius: var(--radius-xl); padding: 44px 36px; text-align: center; width: 360px; }
+        .login-logo { width: 52px; height: 52px; background: var(--accent-light); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; font-size: 26px; margin: 0 auto 18px; }
+        .login-title { font-size: 18px; font-weight: 600; margin-bottom: 5px; }
+        .login-sub { font-size: 12px; color: var(--text-tertiary); margin-bottom: 28px; }
+        .btn-google { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 11px 18px; background: var(--bg-white); border: 0.5px solid var(--border); border-radius: var(--radius-md); font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; color: var(--text-primary); }
+        .btn-google:hover { background: var(--bg-subtle); }
+        .btn-google svg { width: 18px; height: 18px; }
+        .login-error { color: var(--red-text); font-size: 11px; margin-top: 12px; display: none; }
+        .login-loading { color: var(--text-tertiary); font-size: 11px; margin-top: 12px; display: none; }
+
+        /* RESPONSIVE */
+        @media (max-width: 1100px) { .dash-cols { grid-template-columns: repeat(3, 1fr); } .metrics { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 800px) { .metrics { grid-template-columns: repeat(2, 1fr); } .dash-cols { grid-template-columns: repeat(2, 1fr); } .two-col { grid-template-columns: 1fr; } .agenda-grid { grid-template-columns: 1fr; } .stats-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 500px) { .app { padding: 10px; } .metrics { grid-template-columns: repeat(2, 1fr); } .nav-tab span.label { display: none; } }
+    
+        /* ═══ TABBED MODAL ═══ */
+        .modal-content { padding: 0 !important; }
+        .modal-header { padding: 14px 20px; border-bottom: 0.5px solid var(--border); background: var(--bg-subtle); position: sticky; top: 0; z-index: 10; border-radius: var(--radius-xl) var(--radius-xl) 0 0; }
+        .view-header-card { background: var(--bg-subtle); border: 0.5px solid var(--border-light); border-radius: var(--radius-lg); padding: 14px 18px; margin: 14px 18px 0 18px; }
+        .entreprise-name { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+        .entreprise-address { font-size: 12px; color: var(--text-secondary); margin-top: 3px; }
+        .contact-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px 20px; margin-top: 10px; padding-top: 10px; border-top: 0.5px solid var(--border-light); }
+        .contact-item { display: flex; flex-direction: column; gap: 2px; }
+        .contact-lbl { font-size: 10px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.04em; }
+        .contact-val { font-size: 12px; }
+        .contact-val-bold { font-size: 13px; font-weight: 600; }
+        .view-tabs { display: flex; gap: 3px; background: var(--bg-subtle); padding: 7px 18px 0 18px; border-bottom: 0.5px solid var(--border-light); flex-wrap: wrap; }
+        .view-tab { padding: 8px 16px; border: none; background: transparent; font-family: 'DM Sans',sans-serif; font-size: 12px; font-weight: 500; color: var(--text-secondary); cursor: pointer; border-radius: var(--radius-md) var(--radius-md) 0 0; display:inline-flex;align-items:center;gap:6px; transition:all 0.15s; }
+        .view-tab:hover { background: var(--bg-hover); color: var(--text-primary); }
+        .view-tab.active { background: var(--bg-white); color: var(--accent); border-bottom: 2px solid var(--accent); }
+        .view-tab-content { padding: 16px 20px; min-height: 360px; }
+        .timeline-item { display:flex;gap:10px;margin-bottom:12px;padding:10px 12px;background:var(--bg-white);border-radius:var(--radius-md);border:0.5px solid var(--border-light); }
+        .timeline-marker { flex-shrink:0;width:24px;text-align:center;padding-top:3px; }
+        .timeline-dot { width:8px;height:8px;border-radius:50%;background:var(--accent);margin:0 auto; }
+        .timeline-content { flex:1; }
+        .timeline-header { display:flex;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:6px; }
+        .timeline-type { font-size:11px;font-weight:600;color:var(--accent); }
+        .timeline-date { font-size:10px;color:var(--text-tertiary);font-family:'DM Mono',monospace; }
+        .timeline-summary { font-size:12px;color:var(--text-secondary);line-height:1.5; }
+        .call-reco-view { padding:6px 8px;background:var(--orange-bg);border-radius:var(--radius-sm);font-size:11px;margin-top:6px;color:var(--orange-text); }
+        /* CONTACTS TABLE */
+        .secondary-contacts-section { margin-top:16px;background:var(--bg-white);border:0.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden; }
+        .secondary-header { background:var(--bg-subtle);padding:10px 14px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between; }
+        .secondary-header h4 { font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-secondary);margin:0; }
+        .btn-add-contact { background:var(--accent-light);color:var(--accent);border:0.5px solid var(--purple-border);border-radius:var(--radius-md);padding:5px 10px;font-size:10px;font-weight:500;cursor:pointer;font-family:inherit; }
+        .btn-add-contact:hover { background:var(--accent);color:white; }
+        .contacts-table { width:100%;border-collapse:collapse; }
+        .contacts-table th { text-align:left;padding:8px 11px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-tertiary);background:var(--bg-subtle);border-bottom:0.5px solid var(--border); }
+        .contacts-table td { padding:9px 11px;border-bottom:0.5px solid var(--border-light);font-size:12px; }
+        .contacts-table tr:last-child td { border-bottom:none; }
+        .contacts-table tr:hover td { background:var(--bg-hover); }
+        .contact-action-btn { background:none;border:none;cursor:pointer;font-size:14px;padding:3px 5px;border-radius:var(--radius-sm);transition:all 0.15s; }
+        .contact-action-btn.set-main:hover { background:var(--orange-bg); }
+        .contact-action-btn.edit-c:hover { background:var(--blue-bg); }
+        .contact-action-btn.delete-c:hover { background:var(--red-bg); }
+        .badge-main-contact { background:var(--green-bg);color:var(--green-text);font-size:9px;padding:1px 6px;border-radius:var(--radius-pill);margin-left:6px; }
+        .editable-input { padding:4px 0;background:transparent;border:none;border-bottom:1px dashed var(--border);font-family:inherit;font-size:inherit;color:inherit;width:100%; }
+        .editable-input:focus { outline:none;border-bottom-color:var(--accent); }
+        .modal-footer-bar { padding:14px 20px 20px;text-align:center;border-top:0.5px solid var(--border-light);display:flex;justify-content:center;gap:10px; }
+        /* CONTACT SUB-MODAL */
+        .contact-modal-overlay { display:none;position:fixed;z-index:2000;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.4);animation:fadeIn 0.15s; }
+        .contact-modal-box { background:var(--bg-white);margin:8% auto;width:90%;max-width:500px;border-radius:var(--radius-xl);border:0.5px solid var(--border);overflow:hidden; }
+        .contact-modal-header { display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:var(--bg-subtle);border-bottom:0.5px solid var(--border); }
+        .contact-modal-header h4 { font-size:14px;font-weight:600; }
+        .contact-form-grid { display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:18px; }
+        .contact-form-full { grid-column:span 2; }
+        .input-field-sm { display:flex;flex-direction:column;gap:4px; }
+        .input-field-sm label { font-size:10px;font-weight:500;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.04em; }
+        .input-field-sm input,.input-field-sm textarea { padding:7px 9px;border:0.5px solid var(--border);border-radius:var(--radius-md);background:var(--bg-white);font-size:12px;font-family:inherit;color:var(--text-primary); }
+        .input-field-sm input:focus,.input-field-sm textarea:focus { outline:none;border-color:var(--accent); }
+        .btn-save-contact { background:var(--green-bg);color:var(--green-text);border:0.5px solid var(--green-border);border-radius:var(--radius-md);padding:8px 16px;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit; }
+        .btn-save-contact:hover { background:var(--green-border); }
+
+    </style>
+</head>
+<body>
+
+<!-- ÉCRAN DE CONNEXION -->
+<div id="loginScreen">
+    <div class="login-card">
+        <div class="login-logo">🏦</div>
+        <div class="login-title">CRM Karim B2B</div>
+        <div class="login-sub">v6.0 · Conseiller en Sécurité Financière</div>
+        <button class="btn-google" onclick="signInWithGoogle()">
+            <svg viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+            Se connecter avec Google
+        </button>
+        <div class="login-loading" id="loginLoading">⏳ Connexion en cours...</div>
+        <div class="login-error" id="loginError">❌ Erreur — vérifiez que votre compte est autorisé.</div>
+    </div>
+</div>
+
+<div class="app" id="mainApp" style="display:none;">
+    <!-- TOPBAR -->
+    <div class="topbar">
+        <div class="logo">
+            <div class="logo-icon">🏦</div>
+            <div>
+                <div class="logo-name">CRM Karim B2B <span style="font-size:10px;color:var(--text-tertiary);font-weight:400;">v6.0</span></div>
+                <div class="logo-sub">Canada · Sécurité Financière</div>
+            </div>
+        </div>
+        <div class="topbar-right">
+            <div class="sync-bar">
+                <div class="sync-dot" id="syncDot"></div>
+                <span id="syncStatus">Prêt</span>
+            </div>
+            <button class="btn-sm" onclick="syncFromSheet()">🔄 Synchroniser</button>
+            <div class="user-pill">
+                <div class="user-avatar" id="userInitials">?</div>
+                <span id="currentUserName">...</span>
+            </div>
+            <button class="btn-logout" onclick="signOut()">Déconnexion</button>
+        </div>
+    </div>
+
+    <!-- MAIN NAVIGATION -->
+    <div class="nav-tabs">
+        <button class="nav-tab active" id="navDossiers" onclick="switchMainNav('dossiers')">📁 <span class="label">Dossiers</span> <span class="badge-count" id="navCountDossiers">0</span></button>
+        <button class="nav-tab" id="navAgenda" onclick="switchMainNav('agenda')">📅 <span class="label">Agenda</span> <span class="badge-count" id="navCountAgenda">0</span></button>
+        <button class="nav-tab" id="navStats" onclick="switchMainNav('stats')">📊 <span class="label">Statistiques</span></button>
+    </div>
+
+    <!-- MÉTRIQUES -->
+    <div class="metrics">
+        <div class="metric" onclick="switchMainNav('dossiers')">
+            <div class="metric-label"><span class="dot dot-purple"></span>Prospects</div>
+            <div class="metric-value" id="prospects">0</div>
+            <div class="metric-sub">dossiers actifs</div>
+        </div>
+        <div class="metric" onclick="switchMainNav('dossiers')">
+            <div class="metric-label"><span class="dot dot-orange"></span>En cours</div>
+            <div class="metric-value" id="encours">0</div>
+            <div class="metric-sub">en négociation</div>
+        </div>
+        <div class="metric" onclick="switchMainNav('dossiers')">
+            <div class="metric-label"><span class="dot dot-green"></span>Clients</div>
+            <div class="metric-value" id="clients">0</div>
+            <div class="metric-sub">finalisés</div>
+        </div>
+        <div class="metric" onclick="switchMainNav('agenda')">
+            <div class="metric-label"><span class="dot dot-red"></span>En retard</div>
+            <div class="metric-value" id="countRetard">0</div>
+            <div class="metric-sub">tâches dépassées</div>
+        </div>
+        <div class="metric" onclick="switchMainNav('agenda')">
+            <div class="metric-label"><span class="dot dot-orange"></span>Aujourd'hui</div>
+            <div class="metric-value" id="callsToday">0</div>
+            <div class="metric-sub">à traiter</div>
+        </div>
+    </div>
+
+    <!-- SECTION DOSSIERS -->
+    <div id="sectionDossiers">
+        <!-- DASHBOARD BOARD -->
+        <div class="dash-section">
+            <div class="dash-section-title">⏱ Tableau de bord</div>
+            <div class="dash-cols" id="dashboardGrid"></div>
+        </div>
+
+        <!-- TOOLBAR -->
+        <div class="toolbar">
+            <button class="btn-new" onclick="openCreateModal()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Nouveau dossier
+            </button>
+            <div class="search-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input class="search-input" id="search" onkeyup="debouncedRender()" placeholder="Rechercher entreprise, contact, email...">
+            </div>
+            <select class="filter-select" id="filterSuivi" onchange="render()">
+                <option value="">Tous suivis</option>
+                <option>À relancer</option><option>Proposition envoyée</option><option>Négociation</option>
+                <option>Accord de principe</option><option>Envoi contrat</option><option>Signé - En attente</option>
+                <option>Finalisé</option><option>Perdu</option>
+            </select>
+            <select class="filter-select" id="filterStatus" onchange="render()">
+                <option value="">Tous statuts</option>
+                <option>Prospect</option><option>En cours</option><option>Client</option>
+            </select>
+            <select class="filter-select" id="filterTache" onchange="render()">
+                <option value="">Tous statuts tâche</option>
+                <option value="En retard">🔴 En retard</option>
+                <option value="Urgent">🟠 Urgent</option>
+                <option value="À faire">🔵 À faire</option>
+                <option value="Fait">✅ Fait</option>
+            </select>
+            <select class="filter-select" id="filterCampagne" onchange="render()">
+                <option value="">Toutes campagnes</option>
+            </select>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('active')">Dossiers actifs</button>
+            <button class="tab" onclick="switchTab('archived')">Corbeille</button>
+            <button class="tab" onclick="switchTab('kanban')">Vue Kanban</button>
+        </div>
+
+        <div id="tableView">
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:26px"></th>
+                            <th style="width:24px"></th>
+                            <th class="sortable" onclick="sortBy('suivi')">Suivi <span id="sort-suivi"></span></th>
+                            <th class="sortable" onclick="sortBy('campagne')">Campagne <span id="sort-campagne"></span></th>
+                            <th class="sortable" onclick="sortBy('company')">Entreprise <span id="sort-company"></span></th>
+                            <th class="sortable" onclick="sortBy('contact')">Contact <span id="sort-contact"></span></th>
+                            <th class="sortable" onclick="sortBy('status')">Statut <span id="sort-status"></span></th>
+                            <th class="sortable" onclick="sortBy('tacheStatus')">Statut Tâche <span id="sort-tacheStatus"></span></th>
+                            <th class="sortable" onclick="sortBy('nextCall')">Prochaine action <span id="sort-nextCall"></span></th>
+                            <th>Type</th>
+                            <th style="width:88px"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="table"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="kanbanView" style="display:none;"></div>
+
+        <div class="bottom-bar">
+            <span class="page-info" id="pageInfo"></span>
+            <div class="export-row">
+                <button class="btn-export" onclick="exporterVersExcel()">📊 CSV</button>
+                <button class="btn-export" onclick="exporterDonnees()">💾 JSON</button>
+                <button class="btn-export" onclick="importerDonnees()">📂 Restaurer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION AGENDA -->
+    <div id="sectionAgenda" style="display:none;">
+        <div class="agenda-section">
+            <div class="agenda-header">
+                <h3>📅 Agenda du jour — Rappels & Tâches</h3>
+                <span class="agenda-date-pill" id="agendaDatePill"></span>
+            </div>
+            <div class="agenda-grid">
+                <div class="agenda-col">
+                    <div class="agenda-col-header late">🔴 En retard <span id="agendaLateCount" style="margin-left:auto;font-weight:600;"></span></div>
+                    <div id="agendaLateList"></div>
+                </div>
+                <div class="agenda-col">
+                    <div class="agenda-col-header today">🟠 Aujourd'hui <span id="agendaTodayCount" style="margin-left:auto;font-weight:600;"></span></div>
+                    <div id="agendaTodayList"></div>
+                </div>
+                <div class="agenda-col">
+                    <div class="agenda-col-header soon">🔵 7 prochains jours <span id="agendaSoonCount" style="margin-left:auto;font-weight:600;"></span></div>
+                    <div id="agendaSoonList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION STATISTIQUES -->
+    <div id="sectionStats" style="display:none;">
+        <div class="stats-grid" id="statsGrid"></div>
+    </div>
+</div>
+
+<!-- MODAL CRÉATION -->
+<div id="createModal" class="modal" onclick="handleCreateModalClick(event)">
+    <div class="modal-content" id="createModalContent">
+        <div class="modal-header">
+            <h3>✨ Nouveau dossier</h3>
+            <button class="close" onclick="closeCreateModal()">&#x2715;</button>
+        </div>
+
+        <div style="padding:18px 20px;">
+
+            <!-- ROW 1: Entreprise + Contact -->
+            <div class="two-col" style="margin-bottom:14px;">
+
+                <!-- ENTREPRISE -->
+                <div class="section-card" style="margin-bottom:0;">
+                    <h4>🏢 Entreprise</h4>
+                    <div class="input-field"><label>Nom entreprise *</label><input id="companyName" placeholder="Ex: ABC Inc."></div>
+                    <div class="input-field"><label>Adresse</label><input id="companyAddress" placeholder="1000 Rue McGill, Montréal"></div>
+                    <div class="input-field">
+                        <label>Campagne</label>
+                        <select id="campagne">
+                            <option value="Inconnue">Inconnue</option>
+                            <option value="Campagne 01">Campagne 01</option>
+                            <option value="Campagne 02">Campagne 02</option>
+                            <option value="Campagne 03">Campagne 03</option>
+                            <option value="Campagne 04">Campagne 04</option>
+                            <option value="Campagne 05">Campagne 05</option>
+                            <option value="Campagne 06">Campagne 06</option>
+                            <option value="Campagne 07">Campagne 07</option>
+                            <option value="Campagne 08">Campagne 08</option>
+                            <option value="Campagne 09">Campagne 09</option>
+                            <option value="Campagne 10">Campagne 10</option>
+                        </select>
+                    </div>
+                    <div class="input-field"><label>NEQ</label><input id="neq" placeholder="1234567890"></div>
+                    <div class="input-field">
+                        <label>Secteur</label>
+                        <input id="secteur" list="secteurList" placeholder="Sélectionner ou écrire...">
+                        <datalist id="secteurList">
+                            <option>Agriculture, foresterie, pêche</option><option>Construction</option>
+                            <option>Fabrication</option><option>Commerce</option><option>Transport</option>
+                            <option>Finance</option><option>Services professionnels</option>
+                            <option>Technologie</option><option>Santé</option><option>Éducation</option>
+                            <option>Immobilier</option><option>Restauration / Hôtellerie</option>
+                        </datalist>
+                    </div>
+                    <div style="display:flex;gap:8px;">
+                        <div class="input-field" style="flex:1;"><label>Employés</label><input id="employees" type="number" placeholder="Ex: 50"></div>
+                        <div class="input-field" style="width:100px;"><label>Année création</label><input type="number" id="companyCreationDate" placeholder="2005" min="1800" max="2099"></div>
+                    </div>
+                </div>
+
+                <!-- CONTACT PRINCIPAL -->
+                <div class="section-card" style="margin-bottom:0;">
+                    <h4>👤 Contact principal</h4>
+                    <div class="input-field"><label>Nom complet *</label><input id="contactName" placeholder="Ex: Jean Tremblay"></div>
+                    <div class="input-field"><label>Prénom</label><input id="contactPrenom" placeholder="Ex: Jean"></div>
+                    <div class="input-field"><label>Fonction</label><input id="fonction" placeholder="Ex: Directeur financier"></div>
+                    <div class="input-field">
+                        <label>Rôle / Propriété</label>
+                        <select id="proprietaire">
+                            <option value="">Sélectionner</option>
+                            <option>Propriétaire</option><option>Associé</option><option>Salarié</option>
+                            <option>Actionnaire</option><option>Dirigeant</option>
+                        </select>
+                    </div>
+                    <div style="display:flex;gap:8px;">
+                        <div class="input-field" style="flex:1;"><label>Âge</label><input type="text" id="age" placeholder="Manuel ou auto"></div>
+                        <div class="input-field" style="flex:1;"><label>Date de naissance</label><input type="date" id="birthDate" onchange="calculateAge()"></div>
+                    </div>
+                    <div style="display:flex;gap:6px;">
+                        <div class="input-field" style="flex:1;"><label>Cellulaire</label><input id="phoneDirect" placeholder="+1 514 555-1234"></div>
+                        <div class="input-field" style="flex:1;"><label>Téléphone</label><input id="phoneMobile" placeholder="+1 514 555-5678"></div>
+                        <div class="input-field" style="width:72px;"><label>Poste</label><input id="phonePoste" placeholder="201"></div>
+                    </div>
+                    <div class="input-field"><label>Courriel</label><input id="email" type="email" placeholder="nom@entreprise.ca"></div>
+                    <div style="display:flex;gap:8px;">
+                        <div class="input-field" style="flex:1;">
+                            <label>Fumeur <span style="font-size:9px;color:var(--text-tertiary);font-weight:400;">(après 1er call)</span></label>
+                            <select id="fumeur"><option value="">— à compléter —</option><option value="Non-fumeur">Non-fumeur</option><option value="Fumeur">Fumeur</option></select>
+                        </div>
+                        <div class="input-field" style="flex:1;">
+                            <label>Situation familiale</label>
+                            <select id="situationFamiliale"><option value="">Sélectionner</option><option>Célibataire</option><option>Marié(e)</option><option>Conjoint(e) de fait</option><option>Divorcé(e)</option><option>Veuf(ve)</option></select>
+                        </div>
+                    </div>
+                    <div class="input-field">
+                        <label>Enfants à charge <span style="font-size:9px;color:var(--text-tertiary);font-weight:400;">(après 1er call)</span></label>
+                        <input type="number" id="enfantsCharge" placeholder="— à compléter —" min="0">
+                    </div>
+                    <div class="input-field"><label>Associés</label><input id="nomsAssocies" placeholder="Ex: Marie Dupont, Paul Martin..."></div>
+                </div>
+            </div>
+
+            <!-- NOTES PRESTATAIRE -->
+            <div class="section-card" style="background:var(--orange-bg);border-color:var(--orange-border);margin-bottom:14px;">
+                <h4 style="color:var(--orange-text);">📋 Notes Prestataire (Campagne)</h4>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+                    <div class="input-field" style="margin-bottom:0;">
+                        <label>Date 1er appel prévu ★</label>
+                        <input type="date" id="date1erAppelPrevu">
+                    </div>
+                    <div class="input-field" style="margin-bottom:0;">
+                        <label>Type d'action</label>
+                        <select id="contactType">
+                            <option value="📞 Appel découverte" selected>📞 Appel découverte</option>
+                            <option value="📞 Appel qualification">📞 Appel qualification</option>
+                            <option value="📞 Appel proposition">📞 Appel proposition</option>
+                            <option value="🤝 Rendez-vous physique">🤝 Rendez-vous physique</option>
+                            <option value="🎥 Visio-conférence">🎥 Visio-conférence</option>
+                            <option value="⏰ Relance">⏰ Relance</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-field"><label>Note détaillée prestataire (résumé client)</label><textarea id="notePrestataire" rows="3" placeholder="Résumé complet du client fourni par le prestataire..."></textarea></div>
+                <div class="input-field" style="margin-bottom:0;"><label>Recommandations prestataire</label><input id="recoPrestataire" placeholder="Ex: Priorité assurance vie + REER, besoins urgents..."></div>
+            </div>
+
+            <!-- AUTRES CONTACTS -->
+            <div style="background:var(--bg-white);border:0.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:14px;">
+                <div style="background:var(--bg-subtle);padding:10px 14px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+                    <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-secondary);">👥 Autres contacts</span>
+                    <button type="button" class="btn-add-contact" onclick="addCreateContact()">+ Ajouter un contact</button>
+                </div>
+                <div id="createContactsList" style="padding:10px 14px;">
+                    <div style="font-size:11px;color:var(--text-tertiary);font-style:italic;text-align:center;padding:8px 0;">Aucun contact secondaire — cliquez sur "+ Ajouter"</div>
+                </div>
+            </div>
+
+            <!-- SUIVI + PRIORITÉ -->
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px;">
+                <div class="input-field"><label>Étape suivi</label>
+                    <select id="campaignSuivi"><option>À relancer</option><option>Proposition envoyée</option><option>Négociation</option><option>Accord de principe</option><option>Envoi contrat</option><option>Signé - En attente</option><option>Finalisé</option><option>Perdu</option></select>
+                </div>
+                <div class="input-field"><label>Priorité</label>
+                    <select id="priority"><option value="high">🔴 Haute</option><option value="medium" selected>🟠 Moyenne</option><option value="low">🟢 Basse</option></select>
+                </div>
+                <div class="input-field"><label>Statut</label>
+                    <select id="initialStatus"><option selected>Prospect</option><option>En cours</option></select>
+                </div>
+            </div>
+
+            <!-- BOUTONS -->
+            <button class="btn-submit" onclick="addClientB2B()">✨ Créer le dossier</button>
+            <div style="text-align:center;margin-top:10px;">
+                <button class="btn-cancel" onclick="closeCreateModal()">Annuler</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL CONSULTATION -->
+<div id="viewModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Fiche dossier</h3>
+            <div class="modal-header-actions">
+                <button class="btn-openEdit" onclick="openEditFromView()">Éditer</button>
+                <button class="btn-pdf" onclick="exportToPDF()">PDF</button>
+                <button class="close" onclick="closeViewModal()">&#x2715;</button>
+            </div>
+        </div>
+        <div id="viewContent"></div>
+        <div style="text-align:center;margin-top:16px;"><button class="btn-cancel" onclick="closeViewModal()">Fermer</button></div>
+    </div>
+</div>
+
+<!-- MODAL ÉDITION -->
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Modifier le dossier</h3>
+            <button class="close" onclick="closeEditModal()">&#x2715;</button>
+        </div>
+        <div id="editContent"></div>
+    </div>
+</div>
+
+<!-- MODAL INFO EDIT -->
+<div id="infoEditModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Modifier les informations</h3>
+            <button class="close" onclick="closeInfoEditModal()">&#x2715;</button>
+        </div>
+        <div id="infoEditContent"></div>
+        <div style="margin-top:16px;display:flex;gap:8px;justify-content:center;">
+            <button class="btn-submit" style="width:auto;padding:9px 24px;" onclick="saveInfoEdit()">Sauvegarder</button>
+            <button class="btn-cancel" onclick="closeInfoEditModal()">Annuler</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL NOTE -->
+<div id="noteDialogModal" class="modal">
+    <div class="modal-content" style="max-width:640px;">
+        <div class="modal-header">
+            <h3 id="noteDialogTitle">Rédaction des notes</h3>
+            <button class="close" onclick="closeNoteDialog()">&#x2715;</button>
+        </div>
+        <textarea id="noteDialogTextarea" class="note-dialog-textarea" placeholder="Saisissez ou collez votre texte ici..."></textarea>
+        <div class="dialog-buttons">
+            <button class="btn-cancel" onclick="importNoteFromTxt()">📂 Importer .txt</button>
+            <button class="btn-cancel" onclick="exportNoteToTxt()">💾 Exporter .txt</button>
+            <button class="btn-validate" onclick="saveNoteFromDialog()">Valider</button>
+            <button class="btn-cancel" onclick="closeNoteDialog()">Annuler</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+// ══ CONFIG ══
+const SHEET_ID   = '16itvJEnFxz42INaipQtaikisLooQ339oyfIW0F4-0XE';
+const CLIENT_ID  = '498586951900-fpom0ad71viisb61iqv203civkci6hve.apps.googleusercontent.com';
+const ALLOWED_EMAILS = [];
+
+let accessToken = null, tokenClient = null;
+let clients = [];
+let currentUser = 'Conseiller', currentUserEmail = '';
+let currentTab = 'active', currentMainNav = 'dossiers';
+let currentEditId = null, currentViewId = null, currentInfoEditId = null;
+let currentNoteField = null, currentNotePreviewId = null;
+let currentSort = { column: 'tacheStatus', order: 'desc' };
+let searchTimeout = null;
+let saveQueue = Promise.resolve();
+
+const suiviOptions = ["À relancer","Proposition envoyée","Négociation","Accord de principe","Envoi contrat","Signé - En attente","Finalisé","Perdu"];
+const tacheTypes   = ["📞 Rappel de suivi","📞 Relance","🎥 Visio","🤝 Rendez-vous physique","📊 Préparation illustration","📄 Envoi proposition","📧 Signature contrat","🔄 Suivi post-signature","📞 Appel découverte","📞 Appel qualification","📞 Appel proposition","📞 Appel négociation","✉️ Envoyer illustration","📎 Envoyer documentation","⏰ Aucune"];
+
+// ══ UTILS ══
+function escapeHtml(s) { if(!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function getCurrentDate() { return new Date().toISOString().split('T')[0]; }
+function getTomorrowDate() { const d=new Date(); d.setDate(d.getDate()+1); return d.toISOString().split('T')[0]; }
+function getNextWeekDate() { const d=new Date(); d.setDate(d.getDate()+7); return d.toISOString().split('T')[0]; }
+function getCurrentDateTime() { return new Date().toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}); }
+function addDays(n) { const d=new Date(); d.setDate(d.getDate()+n); return d.toISOString().split('T')[0]; }
+
+// ══ STATUT TÂCHE — Logique Excel ══
+// Finalisé > Fait > En retard (date < today) > Urgent (today) > À faire
+function getTacheStatus(c) {
+    if(c.closed || c.dossierFinalise) return 'Finalisé';
+    if(c.tacheFaite) return 'Fait';
+    if(!c.nextCall?.date) return 'À faire';
+    const today = getCurrentDate();
+    if(c.nextCall.date < today) return 'En retard';
+    if(c.nextCall.date === today) return 'Urgent';
+    return 'À faire';
+}
+
+function tacheStatusBadge(status) {
+    const map = {
+        'Finalisé': ['ts-finalized', '✅'],
+        'Fait':     ['ts-fait', '✓'],
+        'En retard':['ts-retard', '⚠'],
+        'Urgent':   ['ts-urgent', '🔔'],
+        'À faire':  ['ts-afaire', '○']
+    };
+    const [cls, icon] = map[status] || ['ts-afaire', '○'];
+    return `<span class="tache-status ${cls}">${icon} ${status}</span>`;
+}
+
+function getRowClass(c) {
+    if(c.archived) return '';
+    if(c.closed || c.dossierFinalise) return 'row-finalized';
+    if(c.tacheFaite) return 'row-done';
+    const s = getTacheStatus(c);
+    if(s === 'En retard') return 'row-late';
+    if(s === 'Urgent') return 'row-today';
+    return '';
+}
+
+// ══ NOTIFICATIONS ══
+function showNotification(msg, type) {
+    const n = document.createElement('div');
+    n.className = `notification ${type}`;
+    n.textContent = msg;
+    document.body.appendChild(n);
+    setTimeout(() => n.remove(), 3500);
+}
+
+// ══ SYNC ══
+function setSyncStatus(state, msg) {
+    const dot = document.getElementById('syncDot'), txt = document.getElementById('syncStatus');
+    if(!dot || !txt) return;
+    dot.className = 'sync-dot ' + state;
+    txt.textContent = msg;
+}
+
+// ══ GOOGLE AUTH ══
+function signInWithGoogle() {
+    document.getElementById('loginLoading').style.display = 'block';
+    document.getElementById('loginError').style.display = 'none';
+    if(!tokenClient) {
+        tokenClient = google.accounts.oauth2.initTokenClient({
+            client_id: CLIENT_ID,
+            scope: 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
+            callback: async (resp) => {
+                if(resp.error) { document.getElementById('loginLoading').style.display='none'; document.getElementById('loginError').style.display='block'; return; }
+                accessToken = resp.access_token;
+                await fetchUserInfo();
+            }
+        });
+    }
+    tokenClient.requestAccessToken({ prompt: 'consent' });
+}
+
+async function fetchUserInfo() {
+    try {
+        const r = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', { headers: { Authorization: `Bearer ${accessToken}` }});
+        const info = await r.json();
+        if(ALLOWED_EMAILS.length > 0 && !ALLOWED_EMAILS.includes(info.email)) {
+            accessToken = null;
+            document.getElementById('loginLoading').style.display = 'none';
+            document.getElementById('loginError').style.display = 'block';
+            document.getElementById('loginError').textContent = `❌ Accès refusé pour ${info.email}`;
+            return;
+        }
+        currentUserEmail = info.email;
+        currentUser = info.name || info.email;
+        onLoginSuccess();
+    } catch(e) { document.getElementById('loginLoading').style.display='none'; document.getElementById('loginError').style.display='block'; }
+}
+
+async function onLoginSuccess() {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('mainApp').style.display = 'block';
+    const initials = currentUser.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+    document.getElementById('currentUserName').textContent = currentUser;
+    document.getElementById('userInitials').textContent = initials;
+    await ensureSheetHeaders();
+    await syncFromSheet();
+}
+
+function signOut() {
+    if(!confirm('Se déconnecter ?')) return;
+    accessToken = null; clients = [];
+    document.getElementById('mainApp').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('loginLoading').style.display = 'none';
+    document.getElementById('loginError').style.display = 'none';
+}
+
+// ══ GOOGLE SHEETS ══
+const SHEET_NAME = 'Dossiers', SHEET_BACKUP = 'Données_Brutes';
+const HEADERS = ['ID','Campagne','Entreprise','Adresse','NEQ','Secteur','Employés','Année création','Contact','Prénom','Fonction','Rôle','Âge','Cellulaire','Téléphone','Poste','Courriel','Fumeur','Situation familiale','Enfants','Associés','Suivi','Statut','Priorité','Date 1er Appel Prévu','Note Prestataire','Reco Prestataire','Date 1er Appel Réalisé','Résumé Call 1','Dernière Tâche','Date Tâche','Statut Tâche','Tâche Faite ?','Commentaire Tâche','Prochaine Tâche','Prochaine Date Tâche','Dossier Finalisé ?','Date Finalisation','Nb actions','Dernière action','Notes','Notes commerciales','Créé le','Créé par','Archivé'];
+
+async function sheetsRequest(method, path, body) {
+    const options = { method, headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' }};
+    if(body !== null && body !== undefined) options.body = JSON.stringify(body);
+    const r = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}${path}`, options);
+    if(!r.ok) throw new Error(`Sheets ${r.status}`);
+    return r.json();
+}
+
+function clientToRow(c) {
+    const lastCall = c.calls?.length > 0 ? c.calls[c.calls.length-1] : null;
+    const prio = c.priority==='high'?'Haute':c.priority==='medium'?'Moyenne':'Basse';
+    const ts = getTacheStatus(c);
+    return [
+        c.id, c.campagne||'', c.companyName||'', c.companyAddress||'', c.neq||'', c.secteur||'',
+        c.employees||'', c.companyCreationDate||'',
+        c.contactName||'', c.contactPrenom||'', c.fonction||'', c.proprietaire||'',
+        c.age||'', c.phoneDirect||'', c.phoneMobile||'', c.phonePoste||'', c.email||'',
+        c.fumeur||'Non-fumeur', c.situationFamiliale||'', c.enfantsCharge||'0', c.nomsAssocies||'',
+        c.campaignSuivi||'', c.status||'', prio,
+        c.date1erAppelPrevu||'', c.notePrestataire||'', c.recoPrestataire||'',
+        c.date1erAppelRealise||'', c.resumeCall1||'',
+        c.nextCall?.type||'', c.nextCall?.date||'',
+        ts, c.tacheFaite?'Oui':'Non', c.commentaireTache||'',
+        c.prochainesTache||'', c.prochainesTacheDate||'',
+        (c.closed||c.dossierFinalise)?'Oui':'Non', c.closingDate||'',
+        c.calls?.length||0, lastCall?.date||'',
+        c.generalNotes||'', c.commercialNotes||'',
+        c.createdAt||'', c.createdBy||'', c.archived?'Oui':'Non'
+    ];
+}
+
+function statusColor(s) {
+    if(s==='Prospect') return {red:1,green:0.75,blue:0.4};
+    if(s==='En cours') return {red:0.53,green:0.81,blue:0.98};
+    if(s==='Client')   return {red:0.6,green:0.91,blue:0.75};
+    return {red:1,green:1,blue:1};
+}
+
+async function ensureSheetHeaders() {
+    const meta = await sheetsRequest('GET','');
+    const sheets = meta.sheets.map(s=>s.properties.title);
+    const requests = [];
+    if(!sheets.includes(SHEET_NAME)) requests.push({addSheet:{properties:{title:SHEET_NAME}}});
+    if(!sheets.includes(SHEET_BACKUP)) requests.push({addSheet:{properties:{title:SHEET_BACKUP}}});
+    if(requests.length>0) await sheetsRequest('POST',':batchUpdate',{requests});
+    const check = await sheetsRequest('GET',`/values/${encodeURIComponent(SHEET_NAME)}!A1:A1`);
+    if(!check.values||check.values[0]?.[0]!=='ID') {
+        await sheetsRequest('PUT',`/values/${encodeURIComponent(SHEET_NAME)}!A1:AS1?valueInputOption=RAW`,{values:[HEADERS]});
+        const sid = meta.sheets.find(s=>s.properties.title===SHEET_NAME)?.properties.sheetId||0;
+        await sheetsRequest('POST',':batchUpdate',{requests:[
+            {repeatCell:{range:{sheetId:sid,startRowIndex:0,endRowIndex:1,startColumnIndex:0,endColumnIndex:HEADERS.length},cell:{userEnteredFormat:{backgroundColor:{red:0.33,green:0.29,blue:0.72},textFormat:{bold:true,foregroundColor:{red:1,green:1,blue:1},fontSize:10},horizontalAlignment:'CENTER'}},fields:'userEnteredFormat(backgroundColor,textFormat,horizontalAlignment)'}},
+            {updateSheetProperties:{properties:{sheetId:sid,gridProperties:{frozenRowCount:1}},fields:'gridProperties.frozenRowCount'}},
+            {setBasicFilter:{filter:{range:{sheetId:sid,startRowIndex:0,startColumnIndex:0,endColumnIndex:HEADERS.length}}}}
+        ]});
+    }
+}
+
+async function syncFromSheet() {
+    if(!accessToken) return;
+    setSyncStatus('saving','Chargement...');
+    try {
+        const r = await sheetsRequest('GET',`/values/${encodeURIComponent(SHEET_BACKUP)}!A1:A100`);
+        if(r.values?.length>0) {
+            let json='';
+            for(const row of r.values) {
+                const v=row[0]||'';
+                if(/^\d{2}\/\d{2}\/\d{4}/.test(v)) break;
+                json+=v;
+            }
+            if(json&&json.startsWith('[')) {
+                const data=JSON.parse(json);
+                if(Array.isArray(data)&&data.length>0) { clients=data; render(); }
+            }
+        }
+        setSyncStatus('saved',`Synchro ${new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}`);
+    } catch(e) { setSyncStatus('error','Erreur sync'); showNotification('Erreur de synchronisation','error'); }
+}
+
+async function saveToSheet() {
+    if(!accessToken) return;
+    setSyncStatus('saving','Sauvegarde...');
+    const payload = JSON.stringify(clients);
+    try {
+        const CHUNK=40000, chunks=[];
+        for(let i=0;i<payload.length;i+=CHUNK) chunks.push([payload.slice(i,i+CHUNK)]);
+        chunks.push([getCurrentDateTime()]);
+        await sheetsRequest('POST',`/values/${encodeURIComponent(SHEET_BACKUP)}!A1:A100:clear`,null);
+        await sheetsRequest('PUT',`/values/${encodeURIComponent(SHEET_BACKUP)}!A1:A${chunks.length}?valueInputOption=RAW`,{values:chunks});
+        await sheetsRequest('POST',`/values/${encodeURIComponent(SHEET_NAME)}!A2:AS9999:clear`,null);
+        if(clients.length>0) {
+            const rows = clients.map(c=>clientToRow(c).map(v=>{const s=String(v||'');return s.length>2000?s.slice(0,2000)+'...':s;}));
+            await sheetsRequest('PUT',`/values/${encodeURIComponent(SHEET_NAME)}!A2:AS${1+clients.length}?valueInputOption=RAW`,{values:rows});
+            const meta=await sheetsRequest('GET','?fields=sheets.properties');
+            const sid=meta.sheets.find(s=>s.properties.title===SHEET_NAME)?.properties.sheetId||0;
+            // Color rows by tache status
+            const colorReqs = clients.map((c,i)=>{
+                const ts = getTacheStatus(c);
+                let bg = {red:1,green:1,blue:1};
+                if(ts==='En retard')  bg={red:1,green:0.8,blue:0.8};
+                else if(ts==='Urgent') bg={red:1,green:0.92,blue:0.8};
+                else if(ts==='Finalisé') bg={red:0.88,green:0.96,blue:0.87};
+                else if(ts==='Fait') bg={red:0.95,green:0.95,blue:0.95};
+                return {repeatCell:{range:{sheetId:sid,startRowIndex:i+1,endRowIndex:i+2,startColumnIndex:0,endColumnIndex:HEADERS.length},cell:{userEnteredFormat:{backgroundColor:bg,textFormat:{fontSize:10}}},fields:'userEnteredFormat(backgroundColor,textFormat)'}};
+            });
+            if(colorReqs.length>0) await sheetsRequest('POST',':batchUpdate',{requests:colorReqs});
+        }
+        setSyncStatus('saved',`Sauvegardé ${new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}`);
+        localStorage.setItem('crm_karim_v6_backup', payload);
+        showNotification('✅ Sauvegardé dans Google Sheets','success');
+    } catch(e) {
+        setSyncStatus('error','Erreur sauvegarde');
+        showNotification('❌ Erreur — backup local créé','error');
+        localStorage.setItem('crm_karim_v6_backup', payload);
+    }
+}
+
+function save() { saveQueue = saveQueue.then(() => saveToSheet()); }
+
+// ══ SORT ══
+function sortBy(col) {
+    currentSort.order = currentSort.column===col ? (currentSort.order==='asc'?'desc':'asc') : 'asc';
+    currentSort.column = col;
+    document.querySelectorAll('[id^="sort-"]').forEach(e=>e.textContent='');
+    const el = document.getElementById(`sort-${col}`);
+    if(el) el.textContent = currentSort.order==='asc'?' ▲':' ▼';
+    render();
+}
+
+const TACHE_ORDER = {'En retard':0,'Urgent':1,'À faire':2,'Fait':3,'Finalisé':4};
+function getSortValue(c, col) {
+    if(col==='suivi')       return c.campaignSuivi||'';
+    if(col==='campagne')    return c.campagne||'';
+    if(col==='company')     return (c.companyName||'').toLowerCase();
+    if(col==='contact')     return (c.contactName||'').toLowerCase();
+    if(col==='status')      return {Prospect:1,'En cours':2,Client:3}[c.status]||0;
+    if(col==='nextCall')    return c.nextCall?.date||'9999-12-31';
+    if(col==='tacheStatus') return TACHE_ORDER[getTacheStatus(c)]??5;
+    return '';
+}
+
+// ══ ÂGE ══
+function calculateAge() {
+    const bd=document.getElementById("birthDate").value, af=document.getElementById("age");
+    if(bd){ af.value=calcAge(bd); af.readOnly=true; af.style.background="var(--bg-page)"; }
+    else  { af.value=''; af.readOnly=false; af.style.background=''; }
+}
+function calcAge(bd) {
+    if(!bd) return '';
+    const t=new Date(),b=new Date(bd); let age=t.getFullYear()-b.getFullYear();
+    if(t.getMonth()-b.getMonth()<0||(t.getMonth()===b.getMonth()&&t.getDate()<b.getDate())) age--;
+    return age+' ans';
+}
+
+// ══ NOTES ══
+function updateNotePreview(tid,pid) {
+    const t=document.getElementById(tid),p=document.getElementById(pid); if(!t||!p) return;
+    const v=t.value.trim();
+    if(v){ p.textContent=v; p.classList.remove('empty'); } else { p.textContent='Cliquer pour rédiger une note...'; p.classList.add('empty'); }
+}
+function openNoteDialog(tid,pid) {
+    currentNoteField=tid; currentNotePreviewId=pid;
+    document.getElementById("noteDialogTextarea").value=document.getElementById(tid).value;
+    document.getElementById("noteDialogTitle").textContent=tid.includes('commercial')?'Notes commerciales':'Notes';
+    document.getElementById("noteDialogModal").style.display='block';
+}
+function closeNoteDialog() { document.getElementById("noteDialogModal").style.display='none'; currentNoteField=null; currentNotePreviewId=null; }
+function saveNoteFromDialog() {
+    if(currentNoteField&&currentNotePreviewId) {
+        document.getElementById(currentNoteField).value=document.getElementById("noteDialogTextarea").value;
+        updateNotePreview(currentNoteField,currentNotePreviewId);
+        closeNoteDialog(); showNotification("Note enregistrée","success");
+    }
+}
+function importNoteFromTxt() {
+    const inp=document.createElement("input"); inp.type="file"; inp.accept=".txt";
+    inp.onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{document.getElementById("noteDialogTextarea").value=ev.target.result;showNotification("Fichier importé","success");};r.readAsText(f,"UTF-8");};
+    inp.click();
+}
+function exportNoteToTxt() {
+    const blob=new Blob([document.getElementById("noteDialogTextarea").value],{type:"text/plain;charset=utf-8"});
+    const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=`note_${new Date().toISOString().slice(0,10)}.txt`; a.click();
+}
+
+function debouncedRender() { clearTimeout(searchTimeout); searchTimeout=setTimeout(render,250); }
+
+// ══ NAVIGATION ══
+function switchMainNav(nav) {
+    currentMainNav = nav;
+    ['dossiers','agenda','stats'].forEach(n => {
+        document.getElementById(`section${n.charAt(0).toUpperCase()+n.slice(1)}`).style.display = n===nav?'block':'none';
+        document.getElementById(`nav${n.charAt(0).toUpperCase()+n.slice(1)}`).classList.toggle('active', n===nav);
+    });
+    if(nav==='agenda') renderAgenda();
+    if(nav==='stats')  renderStats();
+}
+
+// ══ DASHBOARD ══
+function updateDashboard() {
+    const today=getCurrentDate(), tom=getTomorrowDate();
+    const d2=addDays(2), d3=addDays(3);
+    const ac=clients.filter(c=>!c.archived&&!c.closed&&!c.dossierFinalise);
+    const cols=[
+        {title:"En retard",   cls:"red",    items:ac.filter(c=>c.nextCall?.date&&c.nextCall.date<today&&!c.tacheFaite)},
+        {title:"Aujourd'hui", cls:"orange", items:ac.filter(c=>c.nextCall?.date===today&&!c.tacheFaite)},
+        {title:"Demain",      cls:"purple", items:ac.filter(c=>c.nextCall?.date===tom)},
+        {title:"J+2/J+3",     cls:"blue",   items:ac.filter(c=>c.nextCall?.date===d2||c.nextCall?.date===d3)},
+        {title:"Sans action", cls:"gray",   items:ac.filter(c=>!c.nextCall?.date)}
+    ];
+    document.getElementById("dashboardGrid").innerHTML=cols.map(col=>`
+        <div class="dash-col">
+            <div class="dash-col-header ${col.cls}"><span>${col.title}</span><span class="dash-count">${col.items.length}</span></div>
+            ${col.items.length>0
+                ?col.items.slice(0,5).map(c=>`<div class="dash-item" onclick="openViewModal(${c.id})"><span>${escapeHtml(c.companyName)}</span>${c.nextCall?.date?`<span class="dash-item-date">${c.nextCall.date.slice(5).replace('-','/')}</span>`:''}</div>`).join('')
+                :`<div class="dash-empty">Aucune</div>`}
+        </div>`).join('');
+}
+
+// ══ AGENDA ══
+function renderAgenda() {
+    const today = getCurrentDate();
+    const d7 = addDays(7);
+    document.getElementById('agendaDatePill').textContent = new Date().toLocaleDateString('fr-CA',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+    const ac = clients.filter(c=>!c.archived&&!c.tacheFaite&&!c.closed&&!c.dossierFinalise);
+    const late   = ac.filter(c=>c.nextCall?.date&&c.nextCall.date<today);
+    const tod    = ac.filter(c=>c.nextCall?.date===today);
+    const soon   = ac.filter(c=>c.nextCall?.date>today&&c.nextCall.date<=d7);
+
+    const mkItem = (c, reminder) => `
+        <div class="agenda-item" onclick="openViewModal(${c.id})">
+            <div class="agenda-item-name">${escapeHtml(c.contactName||c.companyName)}</div>
+            <div class="agenda-item-task">${escapeHtml(c.nextCall?.type||'—')} · <span style="font-family:'DM Mono',monospace;font-size:10px;">${c.nextCall?.date||''}</span></div>
+            <div class="agenda-item-reminder">${reminder}</div>
+        </div>`;
+
+    document.getElementById('agendaLateCount').textContent = late.length;
+    document.getElementById('agendaTodayCount').textContent = tod.length;
+    document.getElementById('agendaSoonCount').textContent = soon.length;
+    document.getElementById('agendaLateList').innerHTML = late.length
+        ? late.map(c=>mkItem(c,`⚠️ Relancer ${escapeHtml(c.companyName)}`)).join('')
+        : '<div class="agenda-empty">Aucune tâche en retard</div>';
+    document.getElementById('agendaTodayList').innerHTML = tod.length
+        ? tod.map(c=>mkItem(c,`📞 Appeler ${escapeHtml(c.contactName||c.companyName)} aujourd'hui`)).join('')
+        : '<div class="agenda-empty">Aucune tâche aujourd\'hui</div>';
+    document.getElementById('agendaSoonList').innerHTML = soon.length
+        ? soon.map(c=>mkItem(c,`📅 Prévoir dans ${Math.ceil((new Date(c.nextCall.date)-new Date())/(1000*60*60*24))} jour(s)`)).join('')
+        : '<div class="agenda-empty">Aucune tâche à venir</div>';
+
+    // Update nav badge
+    document.getElementById('navCountAgenda').textContent = late.length + tod.length;
+}
+
+// ══ STATISTIQUES ══
+function renderStats() {
+    const ac = clients.filter(c=>!c.archived);
+    const camps = [...new Set(ac.map(c=>c.campagne||'Sans campagne'))].filter(Boolean).sort();
+    const statuses = ['En retard','Urgent','À faire','Fait','Finalisé'];
+
+    // By campaign
+    let campRows = camps.map(camp=>{
+        const items = ac.filter(c=>(c.campagne||'Sans campagne')===camp);
+        const total = items.length;
+        const late = items.filter(c=>getTacheStatus(c)==='En retard').length;
+        const done = items.filter(c=>getTacheStatus(c)==='Finalisé'||getTacheStatus(c)==='Fait').length;
+        const pct = total ? Math.round(done/total*100) : 0;
+        return `<div class="stats-row">
+            <span>${escapeHtml(camp)}</span>
+            <div class="stats-bar-wrap">
+                <div class="stats-bar" style="width:${pct}px;max-width:100px;background:${late>0?'var(--red-text)':'var(--accent)'};"></div>
+                <span class="stats-num">${total}</span>
+            </div>
+        </div>`;
+    }).join('');
+
+    // By task type
+    const tTypes = [...new Set(ac.map(c=>c.nextCall?.type).filter(Boolean))];
+    let taskRows = tTypes.map(t=>{
+        const cnt = ac.filter(c=>c.nextCall?.type===t&&getTacheStatus(c)==='En retard').length;
+        return cnt>0?`<div class="stats-row"><span>${escapeHtml(t)}</span><span class="stats-num" style="color:var(--red-text);">${cnt}</span></div>`:'';
+    }).filter(Boolean).join('') || '<div class="stats-row"><span style="color:var(--text-tertiary);font-style:italic;">Aucun retard</span></div>';
+
+    // Status summary
+    let statusRows = statuses.map(s=>{
+        const cnt = ac.filter(c=>getTacheStatus(c)===s).length;
+        const pct = ac.length ? Math.round(cnt/ac.length*100) : 0;
+        const colors = {'En retard':'var(--red-text)','Urgent':'var(--orange-text)','À faire':'var(--blue-text)','Fait':'var(--gray-text)','Finalisé':'var(--green-text)'};
+        return `<div class="stats-row">
+            <span style="color:${colors[s]}">${s}</span>
+            <div class="stats-bar-wrap">
+                <div class="stats-bar" style="width:${pct}px;max-width:100px;background:${colors[s]};"></div>
+                <span class="stats-num">${cnt}</span>
+            </div>
+        </div>`;
+    }).join('');
+
+    document.getElementById('statsGrid').innerHTML = `
+        <div class="stats-card"><h4>Dossiers par campagne</h4>${campRows||'<div class="stats-row"><span style="color:var(--text-tertiary);">Aucune campagne</span></div>'}</div>
+        <div class="stats-card"><h4>Statut des tâches</h4>${statusRows}</div>
+        <div class="stats-card"><h4>Tâches en retard par type</h4>${taskRows}</div>`;
+}
+
+// ══ CAMPAGNE FILTER ══
+function updateCampagneFilter() {
+    const sel = document.getElementById('filterCampagne');
+    if(!sel) return;
+    const current = sel.value;
+    const camps = [...new Set(clients.map(c=>c.campagne).filter(Boolean))].sort();
+    sel.innerHTML = '<option value="">Toutes campagnes</option>' + camps.map(c=>`<option value="${escapeHtml(c)}" ${c===current?'selected':''}>${escapeHtml(c)}</option>`).join('');
+    document.getElementById('navCountDossiers').textContent = clients.filter(c=>!c.archived).length;
+}
+
+// ══ CRÉATION ══
+// Track secondary contacts in create form
+let createContacts = [];
+
+function openCreateModal() {
+    createContacts = [];
+    document.getElementById("createModal").style.display="block";
+    renderCreateContacts();
+}
+
+function handleCreateModalClick(event) {
+    // Only close if clicking the dark overlay itself, not the modal box
+    if(event.target === document.getElementById('createModal')) {
+        // Do NOT close — per spec
+    }
+}
+
+function addCreateContact() {
+    createContacts.push({id:'cc_'+Date.now(), name:'', function:'', phone:'', email:'', notes:''});
+    renderCreateContacts();
+    // Focus first input of new contact
+    setTimeout(()=>{
+        const inputs = document.querySelectorAll('.create-contact-row input');
+        if(inputs.length) inputs[inputs.length-4]?.focus();
+    }, 50);
+}
+
+function removeCreateContact(idx) {
+    createContacts.splice(idx, 1);
+    renderCreateContacts();
+}
+
+function renderCreateContacts() {
+    const el = document.getElementById('createContactsList');
+    if(!el) return;
+    if(!createContacts.length){
+        el.innerHTML='<div style="font-size:11px;color:var(--text-tertiary);font-style:italic;text-align:center;padding:8px 0;">Aucun contact secondaire — cliquez sur "+ Ajouter"</div>';
+        return;
+    }
+    el.innerHTML = createContacts.map((c,i)=>`
+        <div class="create-contact-row" style="display:grid;grid-template-columns:2fr 2fr 2fr 2fr 3fr auto;gap:8px;align-items:end;margin-bottom:8px;padding-bottom:8px;border-bottom:0.5px solid var(--border-light);">
+            <div class="input-field" style="margin-bottom:0;"><label>Nom *</label><input value="${escapeHtml(c.name)}" oninput="createContacts[${i}].name=this.value" placeholder="Prénom Nom"></div>
+            <div class="input-field" style="margin-bottom:0;"><label>Fonction</label><input value="${escapeHtml(c.function||'')}" oninput="createContacts[${i}].function=this.value" placeholder="Directeur..."></div>
+            <div class="input-field" style="margin-bottom:0;"><label>Téléphone</label><input value="${escapeHtml(c.phone||'')}" oninput="createContacts[${i}].phone=this.value" placeholder="+1 514..."></div>
+            <div class="input-field" style="margin-bottom:0;"><label>Courriel</label><input type="email" value="${escapeHtml(c.email||'')}" oninput="createContacts[${i}].email=this.value" placeholder="nom@co.ca"></div>
+            <div class="input-field" style="margin-bottom:0;"><label>Notes</label><input value="${escapeHtml(c.notes||'')}" oninput="createContacts[${i}].notes=this.value" placeholder="Notes..."></div>
+            <button type="button" onclick="removeCreateContact(${i})" style="background:var(--red-bg);color:var(--red-text);border:0.5px solid var(--red-border);border-radius:var(--radius-sm);padding:6px 8px;cursor:pointer;font-size:13px;height:34px;align-self:end;">🗑</button>
+        </div>`).join('');
+}
+function closeCreateModal() {
+    document.getElementById("createModal").style.display="none";
+    // Reset all fields
+    ["companyName","companyAddress","neq","employees","companyCreationDate",
+     "contactName","contactPrenom","fonction","birthDate","age",
+     "phoneDirect","phoneMobile","phonePoste","email","nomsAssocies",
+     "enfantsCharge","notePrestataire","recoPrestataire","date1erAppelPrevu"].forEach(id=>{
+        const el=document.getElementById(id); if(el) el.value="";
+    });
+    ["secteur"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
+    const s1=document.getElementById("proprietaire"); if(s1) s1.selectedIndex=0;
+    const s2=document.getElementById("fumeur"); if(s2) s2.value="";
+    const s3=document.getElementById("situationFamiliale"); if(s3) s3.selectedIndex=0;
+    const s4=document.getElementById("campaignSuivi"); if(s4) s4.selectedIndex=0;
+    const s5=document.getElementById("priority"); if(s5) s5.value="medium";
+    const s6=document.getElementById("initialStatus"); if(s6) s6.value="Prospect";
+    const s7=document.getElementById("contactType"); if(s7) s7.value="📞 Appel découverte";
+    const s8=document.getElementById("campagne"); if(s8) s8.value="Inconnue";
+    createContacts=[];
+    renderCreateContacts();
+}
+
+function addClientB2B() {
+    const cn=document.getElementById("companyName").value.trim();
+    const co=document.getElementById("contactName").value.trim();
+    const fd=document.getElementById("date1erAppelPrevu").value;
+    const ft=document.getElementById("contactType").value;
+    if(!cn) return showNotification("Nom de l'entreprise requis","error");
+    if(!co) return showNotification("Nom du contact requis","error");
+    if(!fd) return showNotification("Date du 1er appel requis ★","error");
+    const bd=document.getElementById("birthDate").value;
+    const age=bd?calcAge(bd):document.getElementById("age").value;
+    const client = {
+        id: Date.now(),
+        campagne: document.getElementById("campagne").value||'Inconnue',
+        companyName: cn,
+        companyAddress: document.getElementById("companyAddress").value||'',
+        neq: document.getElementById("neq").value||'',
+        employees: document.getElementById("employees").value||'',
+        secteur: document.getElementById("secteur").value||'',
+        companyCreationDate: document.getElementById("companyCreationDate").value||'',
+        contactName: co,
+        contactPrenom: document.getElementById("contactPrenom").value||'',
+        fonction: document.getElementById("fonction").value||'',
+        proprietaire: document.getElementById("proprietaire").value||'',
+        birthDate: bd, age,
+        phoneDirect: document.getElementById("phoneDirect").value||'',
+        phoneMobile: document.getElementById("phoneMobile").value||'',
+        phonePoste: document.getElementById("phonePoste").value||'',
+        email: document.getElementById("email").value||'',
+        fumeur: document.getElementById("fumeur").value||'',
+        situationFamiliale: document.getElementById("situationFamiliale").value||'',
+        enfantsCharge: document.getElementById("enfantsCharge").value||'',
+        nomsAssocies: document.getElementById("nomsAssocies").value||'',
+        // Prestataire
+        date1erAppelPrevu: fd,
+        notePrestataire: document.getElementById("notePrestataire").value||'',
+        recoPrestataire: document.getElementById("recoPrestataire").value||'',
+        date1erAppelRealise: '', resumeCall1: '',
+        // Task
+        tacheFaite: false, commentaireTache: '',
+        prochainesTache: '', prochainesTacheDate: '',
+        dossierFinalise: false,
+        // Notes
+        generalNotes: '', commercialNotes: '',
+        // Suivi
+        campaignSuivi: document.getElementById("campaignSuivi").value,
+        status: document.getElementById("initialStatus").value||'Prospect',
+        priority: document.getElementById("priority").value,
+        // Action planifiée = date 1er appel prévu
+        calls: [],
+        nextCall: { date: fd, type: ft, recommendations: document.getElementById("recoPrestataire").value||'' },
+        // Secondary contacts from form
+        secondaryContacts: createContacts.filter(c=>c.name.trim()).map(c=>({
+            ...c, id:'sc_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),
+            isMainContact:false, addedAt:getCurrentDate(), addedBy:currentUser
+        })),
+        closed: false, archived: false, archivedDate: null,
+        createdAt: getCurrentDateTime(), createdBy: currentUser,
+        modificationHistory: [{date:getCurrentDateTime(),by:currentUser,action:`Dossier créé — Statut: Prospect — 1er appel: ${fd}`}]
+    };
+    clients.push(client); save(); render(); updateCampagneFilter();
+    showNotification(`✅ Dossier créé — ${escapeHtml(cn)} · 1er appel le ${fd}`,"success");
+    closeCreateModal();
+}
+
+
+// ══ TABBED VIEW MODAL ══
+function openViewModal(id) {
+    currentViewId = id;
+    const c = clients.find(x=>x.id===id);
+    if(!c) return;
+    document.getElementById('viewModal').style.display='block';
+    buildViewModal(c);
+}
+
+function buildViewModal(c) {
+    const ts = getTacheStatus(c);
+    const statusCls = c.status==='Prospect'?'prospect':c.status==='En cours'?'encours':'client';
+    const callsSorted = [...(c.calls||[])].reverse();
+    const lastCall = callsSorted[0]||null;
+    const olderCalls = callsSorted.slice(1);
+
+    function fmtDate(d) {
+        if(!d) return '';
+        const [y,m,day]=d.split('-');
+        const ms=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+        return `${parseInt(day)} ${ms[parseInt(m)-1]} ${y}`;
+    }
+
+    // TAB: INFOS
+    const tacheColor={'En retard':['var(--red-bg)','var(--red-text)','⚠️'],'Urgent':['var(--orange-bg)','var(--orange-text)','🔔'],'À faire':['var(--blue-bg)','var(--blue-text)','📅'],'Fait':['var(--gray-bg)','var(--gray-text)','✅'],'Finalisé':['var(--green-bg)','var(--green-text)','🏆']};
+    const [tBg,tTxt,tIcon]=tacheColor[ts]||['var(--blue-bg)','var(--blue-text)','📅'];
+
+    const infosHtml=`
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+            <div class="info-block" style="margin-bottom:0;">
+                <h4>🏢 Entreprise</h4>
+                <div class="info-row"><span class="lbl">Secteur</span><span class="val">${escapeHtml(c.secteur)||'—'}</span></div>
+                <div class="info-row"><span class="lbl">NEQ</span><span class="val">${escapeHtml(c.neq)||'—'}</span></div>
+                <div class="info-row"><span class="lbl">Employés</span><span class="val">${escapeHtml(c.employees)||'—'}</span></div>
+                <div class="info-row"><span class="lbl">Année création</span><span class="val">${escapeHtml(c.companyCreationDate)||'—'}</span></div>
+                ${c.campagne?`<div class="info-row"><span class="lbl">Campagne</span><span class="val">${escapeHtml(c.campagne)}</span></div>`:''}
+            </div>
+            <div class="info-block" style="margin-bottom:0;">
+                <h4>👤 Contact principal</h4>
+                <div class="info-row"><span class="lbl">Âge</span><span class="val">${escapeHtml(c.age)||'—'}</span></div>
+                <div class="info-row"><span class="lbl">Situation</span><span class="val">${escapeHtml(c.situationFamiliale)||'—'} ${c.enfantsCharge?'· '+c.enfantsCharge+' enfant(s)':''}</span></div>
+                <div class="info-row"><span class="lbl">Fumeur</span><span class="val">${escapeHtml(c.fumeur||'Non-fumeur')}</span></div>
+                <div class="info-row"><span class="lbl">Associés</span><span class="val">${escapeHtml(c.nomsAssocies)||'—'}</span></div>
+            </div>
+        </div>
+        <div class="info-block" style="margin-bottom:14px;">
+            <h4>📊 Suivi commercial</h4>
+            <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center;">
+                <div><span class="lbl" style="font-size:10px;color:var(--text-tertiary);display:block;margin-bottom:3px;">Étape</span><span class="badge badge-suivi">${escapeHtml(c.campaignSuivi)}</span></div>
+                <div><span class="lbl" style="font-size:10px;color:var(--text-tertiary);display:block;margin-bottom:3px;">Statut</span><span class="badge badge-${statusCls}">${escapeHtml(c.status)}</span></div>
+                <div><span class="lbl" style="font-size:10px;color:var(--text-tertiary);display:block;margin-bottom:3px;">Priorité</span><span style="font-weight:500;font-size:12px;">${c.priority==='high'?'🔴 Haute':c.priority==='medium'?'🟠 Moyenne':'🟢 Basse'}</span></div>
+                <div><span class="lbl" style="font-size:10px;color:var(--text-tertiary);display:block;margin-bottom:3px;">Statut Tâche</span>${tacheStatusBadge(ts)}</div>
+            </div>
+        </div>
+        ${c.notePrestataire||c.recoPrestataire?`
+        <div style="background:var(--orange-bg);border:0.5px solid var(--orange-border);border-radius:var(--radius-lg);padding:12px 14px;margin-bottom:14px;">
+            <h4 style="font-size:11px;font-weight:500;text-transform:uppercase;color:var(--orange-text);margin-bottom:8px;">📋 Notes Prestataire</h4>
+            ${c.date1erAppelPrevu?`<div style="font-size:11px;margin-bottom:4px;"><strong>1er appel prévu :</strong> ${escapeHtml(c.date1erAppelPrevu)}</div>`:''}
+            ${c.notePrestataire?`<div style="font-size:12px;margin-bottom:4px;">${escapeHtml(c.notePrestataire)}</div>`:''}
+            ${c.recoPrestataire?`<div style="font-size:11px;color:var(--orange-text);font-weight:500;">💡 ${escapeHtml(c.recoPrestataire)}</div>`:''}
+        </div>`:''}
+        ${c.resumeCall1?`
+        <div style="background:var(--blue-bg);border:0.5px solid var(--blue-border);border-radius:var(--radius-lg);padding:12px 14px;margin-bottom:14px;">
+            <h4 style="font-size:11px;font-weight:500;text-transform:uppercase;color:var(--blue-text);margin-bottom:6px;">📞 Résumé Call 1</h4>
+            <div style="font-size:12px;">${escapeHtml(c.resumeCall1)}</div>
+        </div>`:''}
+        <div class="secondary-contacts-section">
+            <div class="secondary-header">
+                <h4>👥 Autres contacts <span style="font-weight:400;color:var(--text-tertiary);font-size:10px;">(${(c.secondaryContacts||[]).length})</span></h4>
+                <button class="btn-add-contact" onclick="openContactSubModal(null)">+ Ajouter</button>
+            </div>
+            <div id="secondaryContactsList"></div>
+        </div>`;
+
+    // TAB: ACTIONS
+    const actionsHtml=`
+        <div class="info-block" style="background:var(--orange-bg);border-color:var(--orange-border);margin-bottom:12px;">
+            <h4 style="color:var(--orange-text);">🎯 Prochaine action</h4>
+            ${c.nextCall?.date?`
+                <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;">
+                    <div>
+                        <div style="font-size:18px;font-weight:700;color:var(--orange-text);">${fmtDate(c.nextCall.date)}</div>
+                        <span class="badge" style="background:white;margin-top:6px;">${escapeHtml(c.nextCall.type)}</span>
+                        <div style="margin-top:6px;">${tacheStatusBadge(ts)}</div>
+                    </div>
+                    ${c.nextCall.recommendations?`<div style="flex:1;min-width:160px;"><span style="font-size:10px;color:var(--text-tertiary);text-transform:uppercase;">Recommandations</span><div class="call-reco-view" style="margin-top:4px;">${escapeHtml(c.nextCall.recommendations)}</div></div>`:''}
+                </div>`
+            :'<span style="color:var(--text-tertiary);font-size:12px;">Aucune action planifiée</span>'}
+        </div>
+        ${lastCall?`
+        <div class="info-block" style="margin-bottom:12px;">
+            <h4>✅ Dernière action</h4>
+            <div class="timeline-item" style="margin-bottom:0;">
+                <div class="timeline-marker"><div class="timeline-dot" style="background:var(--green-text);"></div></div>
+                <div class="timeline-content">
+                    <div class="timeline-header"><span class="timeline-type">${escapeHtml(lastCall.type)}</span><span class="timeline-date">${fmtDate(lastCall.date)}</span></div>
+                    <div class="timeline-summary">${escapeHtml(lastCall.summary)}</div>
+                    ${lastCall.recommendations?`<div class="call-reco-view">${escapeHtml(lastCall.recommendations)}</div>`:''}
+                </div>
+            </div>
+        </div>`:''}
+        ${olderCalls.length>0?`
+        <div class="info-block" style="margin-bottom:12px;">
+            <h4>📜 Historique actions (${olderCalls.length})</h4>
+            ${olderCalls.map(call=>`
+                <div class="timeline-item">
+                    <div class="timeline-marker"><div class="timeline-dot"></div></div>
+                    <div class="timeline-content">
+                        <div class="timeline-header"><span class="timeline-type">${escapeHtml(call.type)}</span><span class="timeline-date">${fmtDate(call.date)}</span></div>
+                        <div class="timeline-summary">${escapeHtml(call.summary)}</div>
+                    </div>
+                </div>`).join('')}
+        </div>`:''}
+        <div class="action-section">
+            <h4>📅 Planifier la prochaine action</h4>
+            <div style="display:grid;grid-template-columns:1fr 2fr 2fr auto;gap:10px;align-items:end;">
+                <div><label style="font-size:10px;color:var(--text-tertiary);text-transform:uppercase;display:block;margin-bottom:4px;">Date</label><input type="date" id="planDate" style="width:100%;"></div>
+                <div><label style="font-size:10px;color:var(--text-tertiary);text-transform:uppercase;display:block;margin-bottom:4px;">Type</label><select id="planType" style="width:100%;">${tacheTypes.map(t=>`<option>${escapeHtml(t)}</option>`).join('')}</select></div>
+                <div><label style="font-size:10px;color:var(--text-tertiary);text-transform:uppercase;display:block;margin-bottom:4px;">Recommandations</label><input type="text" id="planReco" placeholder="Objectifs..." style="width:100%;"></div>
+                <button class="btn-validate" onclick="planifierDepuisView()">Planifier</button>
+            </div>
+        </div>`;
+
+    // TAB: NOTES
+    const notesHtml=`
+        <div class="note-card">
+            <div class="note-card-header"><span>📔 Notes générales</span><button class="btn-note" onclick="editNoteInline('generalNotes','viewNoteGeneral')">Éditer</button></div>
+            <div id="viewNoteGeneral" class="note-preview ${c.generalNotes?'':'empty'}">${c.generalNotes?escapeHtml(c.generalNotes):'Aucune note...'}</div>
+            <textarea id="viewNoteGeneralEdit" style="display:none;" class="note-dialog-textarea">${escapeHtml(c.generalNotes||'')}</textarea>
+        </div>
+        <div class="note-card">
+            <div class="note-card-header"><span>💼 Notes commerciales</span><button class="btn-note" onclick="editNoteInline('commercialNotes','viewNoteCommercial')">Éditer</button></div>
+            <div id="viewNoteCommercial" class="note-preview ${c.commercialNotes?'':'empty'}">${c.commercialNotes?escapeHtml(c.commercialNotes):'Aucune note commerciale...'}</div>
+            <textarea id="viewNoteCommercialEdit" style="display:none;" class="note-dialog-textarea">${escapeHtml(c.commercialNotes||'')}</textarea>
+        </div>`;
+
+    // TAB: HISTORIQUE
+    const histHtml=`
+        <div class="info-block" style="margin-bottom:0;">
+            <h4>📜 Historique des modifications</h4>
+            <div class="mod-history" style="max-height:360px;overflow-y:auto;">
+                ${(c.modificationHistory||[]).map(h=>`
+                    <div class="mod-item">
+                        <small>${escapeHtml(h.date)} · <span style="color:var(--accent);font-weight:500;">${escapeHtml(h.by)}</span></small><br>
+                        ${escapeHtml(h.action)}
+                    </div>`).join('')}
+            </div>
+        </div>`;
+
+    document.getElementById("viewContent").innerHTML=`
+        <div class="view-header-card">
+            <div class="entreprise-row">
+                <div class="entreprise-name">${escapeHtml(c.companyName)}</div>
+                <div class="entreprise-address">${escapeHtml(c.companyAddress)||''}</div>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-item"><span class="contact-lbl">Contact principal</span><span class="contact-val-bold">${escapeHtml(c.contactName)}</span></div>
+                <div class="contact-item"><span class="contact-lbl">Cellulaire</span><span class="contact-val">${escapeHtml(c.phoneDirect)||'—'}</span></div>
+                <div class="contact-item"><span class="contact-lbl">Tél / Poste</span><span class="contact-val">${escapeHtml(c.phoneMobile)||''} ${c.phonePoste?'p.'+c.phonePoste:''}</span></div>
+                <div class="contact-item"><span class="contact-lbl">Courriel</span><span class="contact-val">${escapeHtml(c.email)||'—'}</span></div>
+                <div class="contact-item"><span class="contact-lbl">Fonction</span><span class="contact-val">${escapeHtml(c.fonction)||'—'}</span></div>
+                <div class="contact-item"><span class="contact-lbl">Statut tâche</span><span class="contact-val">${tacheStatusBadge(ts)}</span></div>
+            </div>
+        </div>
+        <div class="view-tabs" id="viewTabsBar">
+            <button class="view-tab active" data-vtab="infos">📋 Infos</button>
+            <button class="view-tab" data-vtab="actions">📞 Actions</button>
+            <button class="view-tab" data-vtab="notes">📝 Notes</button>
+            <button class="view-tab" data-vtab="historique">📜 Historique</button>
+        </div>
+        <div id="vt-infos" class="view-tab-content">${infosHtml}</div>
+        <div id="vt-actions" class="view-tab-content" style="display:none;">${actionsHtml}</div>
+        <div id="vt-notes" class="view-tab-content" style="display:none;">${notesHtml}</div>
+        <div id="vt-historique" class="view-tab-content" style="display:none;">${histHtml}</div>
+        <div class="modal-footer-bar">
+            <button class="btn-openEdit" onclick="openEditFromView()">✏️ Éditer</button>
+            <button class="btn-pdf" onclick="exportToPDF()">📄 PDF</button>
+            <button class="btn-cancel" onclick="closeViewModal()">Fermer</button>
+        </div>`;
+
+    // Tab switching
+    document.getElementById('viewTabsBar').querySelectorAll('.view-tab').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+            document.getElementById('viewTabsBar').querySelectorAll('.view-tab').forEach(b=>b.classList.remove('active'));
+            btn.classList.add('active');
+            ['infos','actions','notes','historique'].forEach(t=>{const el=document.getElementById('vt-'+t);if(el)el.style.display='none';});
+            const el=document.getElementById('vt-'+btn.dataset.vtab);
+            if(el) el.style.display='block';
+            if(btn.dataset.vtab==='infos') renderSecondaryContacts();
+        });
+    });
+    renderSecondaryContacts();
+}
+
+// ══ SECONDARY CONTACTS ══
+let currentEditContactId = null;
+
+function renderSecondaryContacts() {
+    const c = clients.find(x=>x.id===currentViewId);
+    const el = document.getElementById('secondaryContactsList');
+    if(!el||!c) return;
+    const contacts = c.secondaryContacts||[];
+    if(!contacts.length){ el.innerHTML='<div style="padding:16px;text-align:center;font-size:11px;color:var(--text-tertiary);font-style:italic;">Aucun contact secondaire</div>'; return; }
+    el.innerHTML=`<table class="contacts-table">
+        <thead><tr><th>Nom</th><th>Fonction</th><th>Téléphone</th><th>Courriel</th><th>Notes</th><th style="width:90px;">Actions</th></tr></thead>
+        <tbody>${contacts.map(ct=>`<tr>
+            <td>${escapeHtml(ct.name)}${ct.isMainContact?'<span class="badge-main-contact">⭐ Principal</span>':''}</td>
+            <td>${escapeHtml(ct.function)||'—'}</td>
+            <td>${escapeHtml(ct.phone)||'—'}</td>
+            <td>${escapeHtml(ct.email)||'—'}</td>
+            <td style="font-size:11px;color:var(--text-tertiary);">${escapeHtml(ct.notes)||''}</td>
+            <td><button class="contact-action-btn set-main" onclick="setMainContact('${ct.id}')" title="Promouvoir en principal">⭐</button><button class="contact-action-btn edit-c" onclick="openContactSubModal('${ct.id}')" title="Modifier">✏️</button><button class="contact-action-btn delete-c" onclick="deleteSecondaryContact('${ct.id}')" title="Supprimer">🗑️</button></td>
+        </tr>`).join('')}</tbody>
+    </table>`;
+}
+
+function openContactSubModal(contactId) {
+    currentEditContactId = contactId;
+    const c = clients.find(x=>x.id===currentViewId);
+    const contact = contactId ? (c.secondaryContacts||[]).find(x=>x.id===contactId) : null;
+    let overlay = document.getElementById('contactSubModalOverlay');
+    if(!overlay){ overlay=document.createElement('div'); overlay.id='contactSubModalOverlay'; overlay.className='contact-modal-overlay'; document.body.appendChild(overlay); }
+    overlay.innerHTML=`<div class="contact-modal-box">
+        <div class="contact-modal-header"><h4>${contactId?'✏️ Modifier':'➕ Ajouter'} un contact</h4><button class="close" onclick="closeContactSubModal()">✕</button></div>
+        <div class="contact-form-grid">
+            <div class="input-field-sm"><label>Nom complet *</label><input id="scName" value="${escapeHtml(contact?.name||'')}"></div>
+            <div class="input-field-sm"><label>Fonction</label><input id="scFunction" value="${escapeHtml(contact?.function||'')}"></div>
+            <div class="input-field-sm"><label>Téléphone</label><input id="scPhone" value="${escapeHtml(contact?.phone||'')}"></div>
+            <div class="input-field-sm"><label>Courriel</label><input type="email" id="scEmail" value="${escapeHtml(contact?.email||'')}"></div>
+            <div class="input-field-sm contact-form-full"><label>Notes</label><textarea id="scNotes" rows="2">${escapeHtml(contact?.notes||'')}</textarea></div>
+        </div>
+        <div style="display:flex;gap:10px;justify-content:center;padding:0 18px 18px;">
+            <button class="btn-save-contact" onclick="saveSecondaryContact()">💾 Enregistrer</button>
+            <button class="btn-cancel" onclick="closeContactSubModal()">Annuler</button>
+        </div>
+    </div>`;
+    overlay.style.display='block';
+}
+
+function closeContactSubModal() {
+    const o=document.getElementById('contactSubModalOverlay');
+    if(o) o.style.display='none';
+}
+
+function saveSecondaryContact() {
+    const name=document.getElementById('scName').value.trim();
+    if(!name){showNotification('Nom requis','error');return;}
+    const c=clients.find(x=>x.id===currentViewId);
+    if(!c.secondaryContacts) c.secondaryContacts=[];
+    const newContact={id:currentEditContactId||'sc_'+Date.now(),name,function:document.getElementById('scFunction').value,phone:document.getElementById('scPhone').value,email:document.getElementById('scEmail').value,notes:document.getElementById('scNotes').value,isMainContact:false,addedAt:getCurrentDate(),addedBy:currentUser};
+    if(currentEditContactId){ const idx=c.secondaryContacts.findIndex(x=>x.id===currentEditContactId); if(idx!==-1){newContact.isMainContact=c.secondaryContacts[idx].isMainContact;c.secondaryContacts[idx]=newContact;} }
+    else { c.secondaryContacts.push(newContact); }
+    c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:(currentEditContactId?`Contact modifié : ${name}`:`Contact ajouté : ${name}`)});
+    save(); renderSecondaryContacts(); closeContactSubModal();
+    showNotification(currentEditContactId?`Contact ${name} modifié`:`Contact ${name} ajouté`,'success');
+}
+
+function setMainContact(contactId) {
+    const c=clients.find(x=>x.id===currentViewId);
+    if(!c) return;
+    const newMain=c.secondaryContacts?.find(x=>x.id===contactId);
+    if(!newMain||!confirm(`Promouvoir "${newMain.name}" comme contact principal ?`)) return;
+    const oldMain={id:'sc_'+Date.now(),name:c.contactName,function:c.fonction||'',phone:c.phoneDirect||'',email:c.email||'',notes:`Ancien contact principal`,isMainContact:false,addedAt:getCurrentDate(),addedBy:currentUser};
+    c.contactName=newMain.name; c.fonction=newMain.function||''; c.phoneDirect=newMain.phone||''; c.email=newMain.email||'';
+    c.secondaryContacts=c.secondaryContacts.filter(x=>x.id!==contactId);
+    c.secondaryContacts.push(oldMain);
+    c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:`Contact principal changé : ${oldMain.name} → ${newMain.name}`});
+    save(); buildViewModal(c); showNotification(`💼 ${newMain.name} est maintenant le contact principal`,'success');
+}
+
+function deleteSecondaryContact(contactId) {
+    const c=clients.find(x=>x.id===currentViewId);
+    const contact=c?.secondaryContacts?.find(x=>x.id===contactId);
+    if(!contact||!confirm(`Supprimer "${contact.name}" ?`)) return;
+    c.secondaryContacts=c.secondaryContacts.filter(x=>x.id!==contactId);
+    c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:`Contact supprimé : ${contact.name}`});
+    save(); renderSecondaryContacts(); showNotification(`Contact supprimé`,'info');
+}
+
+function planifierDepuisView() {
+    const c=clients.find(x=>x.id===currentViewId);
+    if(!c) return;
+    const d=document.getElementById('planDate')?.value;
+    const t=document.getElementById('planType')?.value;
+    const r=document.getElementById('planReco')?.value||'';
+    if(!d||!t){showNotification('Date et type requis','error');return;}
+    c.nextCall={date:d,type:t,recommendations:r};
+    c.tacheFaite=false;
+    c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:`Action planifiée : ${t} le ${d}`});
+    save(); buildViewModal(c); showNotification('📅 Action planifiée','success');
+    // Switch to actions tab
+    document.getElementById('viewTabsBar').querySelectorAll('.view-tab').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.view-tab')[1]?.classList.add('active');
+}
+
+function editNoteInline(field, previewId) {
+    const c=clients.find(x=>x.id===currentViewId);
+    if(!c) return;
+    const preview=document.getElementById(previewId);
+    const editId=previewId+'Edit';
+    const editEl=document.getElementById(editId);
+    if(!editEl) return;
+    if(editEl.style.display==='none'){
+        editEl.style.display='block'; preview.style.display='none';
+        // Add save button
+        const btn=document.createElement('button');
+        btn.className='btn-validate'; btn.style.cssText='margin:8px 12px 12px;display:block;';
+        btn.textContent='💾 Enregistrer la note';
+        btn.onclick=()=>{
+            c[field]=editEl.value;
+            c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:'Note mise à jour'});
+            save();
+            preview.textContent=editEl.value||'Aucune note...';
+            preview.className='note-preview'+(editEl.value?'':' empty');
+            editEl.style.display='none'; preview.style.display='block';
+            btn.remove(); showNotification('Note sauvegardée','success');
+        };
+        editEl.parentNode.appendChild(btn);
+    }
+}
+
+// ══ TABBED EDIT MODAL ══
+function openEditModal(id) {
+    currentEditId = id;
+    const c = clients.find(x=>x.id===id);
+    if(!c) return;
+
+    function fmtDate(d) {
+        if(!d) return '';
+        const [y,m,day]=d.split('-');
+        const ms=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+        return `${parseInt(day)} ${ms[parseInt(m)-1]} ${y}`;
+    }
+
+    const ts = getTacheStatus(c);
+    const callsSorted=[...(c.calls||[])].reverse();
+    const lastCall=callsSorted[0]||null;
+    const olderCalls=callsSorted.slice(1);
+
+    // Infos tab (editable)
+    const editInfosHtml=`
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+            <div class="info-block" style="margin-bottom:0;">
+                <h4>🏢 Entreprise</h4>
+                <div class="input-field"><label>Campagne</label><input id="ei_campagne" value="${escapeHtml(c.campagne||'')}"></div>
+                <div class="input-field"><label>Secteur</label><input id="ei_secteur" value="${escapeHtml(c.secteur||'')}"></div>
+                <div class="input-field"><label>NEQ</label><input id="ei_neq" value="${escapeHtml(c.neq||'')}"></div>
+                <div class="input-field"><label>Employés</label><input id="ei_employees" value="${escapeHtml(c.employees||'')}"></div>
+                <div class="input-field"><label>Année création</label><input id="ei_creation" value="${escapeHtml(c.companyCreationDate||'')}"></div>
+            </div>
+            <div class="info-block" style="margin-bottom:0;">
+                <h4>👤 Contact principal</h4>
+                <div class="input-field"><label>Âge</label><input id="ei_age" value="${escapeHtml(c.age||'')}" ${c.birthDate?'readonly style="background:var(--bg-page);"':''}></div>
+                <div class="input-field"><label>Date naissance</label><input type="date" id="ei_birthdate" value="${c.birthDate||''}" onchange="const bd=this.value;const af=document.getElementById('ei_age');if(bd){const t=new Date(),b=new Date(bd);let a=t.getFullYear()-b.getFullYear();if(t.getMonth()-b.getMonth()<0)a--;af.value=a+' ans';af.readOnly=true;}else{af.readOnly=false;af.value='';}"></div>
+                <div class="input-field"><label>Situation familiale</label><select id="ei_situation"><option ${c.situationFamiliale==='Célibataire'?'selected':''}>Célibataire</option><option ${c.situationFamiliale==='Marié(e)'?'selected':''}>Marié(e)</option><option ${c.situationFamiliale==='Conjoint(e) de fait'?'selected':''}>Conjoint(e) de fait</option><option ${c.situationFamiliale==='Divorcé(e)'?'selected':''}>Divorcé(e)</option><option ${c.situationFamiliale==='Veuf(ve)'?'selected':''}>Veuf(ve)</option></select></div>
+                <div class="input-field"><label>Enfants à charge</label><input type="number" id="ei_enfants" value="${c.enfantsCharge||'0'}" min="0"></div>
+                <div class="input-field"><label>Fumeur</label><select id="ei_fumeur"><option ${(c.fumeur||'Non-fumeur')==='Non-fumeur'?'selected':''}>Non-fumeur</option><option ${c.fumeur==='Fumeur'?'selected':''}>Fumeur</option></select></div>
+                <div class="input-field"><label>Associés</label><input id="ei_associes" value="${escapeHtml(c.nomsAssocies||'')}"></div>
+            </div>
+        </div>
+        <div class="info-block" style="margin-bottom:14px;">
+            <h4>📊 Suivi commercial</h4>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+                <div class="input-field"><label>Étape suivi</label><select id="ei_suivi">${suiviOptions.map(o=>`<option ${c.campaignSuivi===o?'selected':''}>${escapeHtml(o)}</option>`).join('')}</select></div>
+                <div class="input-field"><label>Statut</label><select id="ei_status"><option ${c.status==='Prospect'?'selected':''}>Prospect</option><option ${c.status==='En cours'?'selected':''}>En cours</option><option ${c.status==='Client'?'selected':''}>Client</option></select></div>
+                <div class="input-field"><label>Priorité</label><select id="ei_priority"><option value="high" ${c.priority==='high'?'selected':''}>🔴 Haute</option><option value="medium" ${c.priority==='medium'?'selected':''}>🟠 Moyenne</option><option value="low" ${c.priority==='low'?'selected':''}>🟢 Basse</option></select></div>
+            </div>
+        </div>
+        <div style="background:var(--orange-bg);border:0.5px solid var(--orange-border);border-radius:var(--radius-lg);padding:14px;margin-bottom:0;">
+            <h4 style="font-size:11px;font-weight:500;text-transform:uppercase;color:var(--orange-text);margin-bottom:10px;">📞 1er Appel (Prestataire)</h4>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div class="input-field"><label>Date 1er appel prévu</label><input type="date" id="ei_date1prev" value="${c.date1erAppelPrevu||''}"></div>
+                <div class="input-field"><label>Date 1er appel réalisé</label><input type="date" id="ei_date1real" value="${c.date1erAppelRealise||''}"></div>
+            </div>
+            <div class="input-field"><label>Note prestataire</label><textarea id="ei_notePrestataire" rows="2">${escapeHtml(c.notePrestataire||'')}</textarea></div>
+            <div class="input-field"><label>Recommandations prestataire</label><input id="ei_recoPrestataire" value="${escapeHtml(c.recoPrestataire||'')}"></div>
+            <div class="input-field"><label>Résumé Call 1 (besoins détectés)</label><textarea id="ei_resumeCall1" rows="3">${escapeHtml(c.resumeCall1||'')}</textarea></div>
+        </div>`;
+
+    // Actions tab (editable)
+    const tacheClass=ts==='En retard'?'late':ts==='Urgent'?'today':'future';
+    const editActionsHtml=`
+        <div class="tache-panel" style="margin-bottom:14px;">
+            <div class="tache-panel-header"><h4>📋 Tâche en cours</h4>${tacheStatusBadge(ts)}</div>
+            <div class="tache-body">
+                ${c.nextCall?.date?`<div class="tache-current ${tacheClass}" style="margin-bottom:12px;font-size:12px;">
+                    <span class="tache-icon">${ts==='En retard'?'⚠️':ts==='Urgent'?'🔔':'📅'}</span>
+                    <div><div style="font-weight:500;">${escapeHtml(c.nextCall.type)}</div><div style="font-size:11px;">Prévue le : <strong>${c.nextCall.date}</strong></div></div>
+                </div>`:''}
+                <div class="checkbox-row">
+                    <input type="checkbox" id="ei_tacheFaite" ${c.tacheFaite?'checked':''} onchange="document.getElementById('ei_commentaireRow').style.display=this.checked?'flex':'none'">
+                    <label for="ei_tacheFaite" style="font-size:12px;font-weight:500;">Tâche effectuée ✓</label>
+                </div>
+                <div class="input-field" id="ei_commentaireRow" style="${!c.tacheFaite?'display:none':''}">
+                    <label>Commentaire</label><input id="ei_commentaire" value="${escapeHtml(c.commentaireTache||'')}">
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 2fr;gap:10px;margin-top:8px;">
+                    <div class="input-field"><label>Date tâche</label><input type="date" id="ei_tacheDate" value="${c.nextCall?.date||''}"></div>
+                    <div class="input-field"><label>Type de tâche</label><select id="ei_tacheType">${tacheTypes.map(t=>`<option ${c.nextCall?.type===t?'selected':''}>${escapeHtml(t)}</option>`).join('')}</select></div>
+                </div>
+                <div class="input-field"><label>Résumé / compte-rendu</label><textarea id="ei_tacheSummary" rows="3" placeholder="Résumé de l'échange..."></textarea></div>
+                <div class="input-field"><label>Recommandations</label><input id="ei_tacheReco" value="${escapeHtml(c.nextCall?.recommendations||'')}"></div>
+                <div style="display:flex;gap:8px;margin-top:8px;">
+                    <button class="btn-validate" onclick="validateAndPlanEdit()">✅ Valider et planifier suivante</button>
+                </div>
+            </div>
+        </div>
+        <div style="background:var(--blue-bg);border:0.5px solid var(--blue-border);border-radius:var(--radius-lg);padding:14px;">
+            <h4 style="font-size:11px;font-weight:500;text-transform:uppercase;color:var(--blue-text);margin-bottom:10px;">📅 Prochaine tâche</h4>
+            <div style="display:grid;grid-template-columns:1fr 2fr;gap:10px;">
+                <div class="input-field"><label>Date</label><input type="date" id="ei_nextDate" value="${c.nextCall?.date||getNextWeekDate()}"></div>
+                <div class="input-field"><label>Type</label><select id="ei_nextType">${tacheTypes.map(t=>`<option ${c.nextCall?.type===t?'selected':''}>${escapeHtml(t)}</option>`).join('')}</select></div>
+            </div>
+        </div>
+        <div style="margin-top:14px;">
+            <h4 style="font-size:11px;font-weight:500;text-transform:uppercase;color:var(--text-secondary);margin-bottom:8px;">📜 Historique actions</h4>
+            ${callsSorted.slice(0,5).map(call=>`<div class="call-item"><div class="call-header"><span>${escapeHtml(call.type)}</span><span>${call.date}</span></div><div class="call-summary">${escapeHtml(call.summary)}</div></div>`).join('')||'<div style="font-size:12px;color:var(--text-tertiary);font-style:italic;">Aucune action</div>'}
+        </div>`;
+
+    // Notes tab
+    const editNotesHtml=`
+        <div class="note-card">
+            <div class="note-card-header"><span>📔 Notes générales</span></div>
+            <textarea id="ei_generalNotes" class="note-dialog-textarea" style="min-height:140px;border:none;border-radius:0;">${escapeHtml(c.generalNotes||'')}</textarea>
+        </div>
+        <div class="note-card">
+            <div class="note-card-header"><span>💼 Notes commerciales</span></div>
+            <textarea id="ei_commercialNotes" class="note-dialog-textarea" style="min-height:140px;border:none;border-radius:0;">${escapeHtml(c.commercialNotes||'')}</textarea>
+        </div>`;
+
+    // Historique tab
+    const editHistHtml=`<div class="info-block" style="margin-bottom:0;"><h4>📜 Historique des modifications</h4><div class="mod-history" style="max-height:320px;overflow-y:auto;">${(c.modificationHistory||[]).map(h=>`<div class="mod-item"><small>${escapeHtml(h.date)} · <span style="color:var(--accent)">${escapeHtml(h.by)}</span></small><br>${escapeHtml(h.action)}</div>`).join('')}</div></div>`;
+
+    document.getElementById("editContent").innerHTML=`
+        <div class="view-header-card">
+            <div class="entreprise-row">
+                <input type="text" id="ei_companyName" value="${escapeHtml(c.companyName)}" style="font-size:16px;font-weight:700;width:100%;padding:4px 0;background:transparent;border:none;border-bottom:1px dashed var(--border);font-family:inherit;color:var(--text-primary);">
+                <input type="text" id="ei_address" value="${escapeHtml(c.companyAddress||'')}" style="width:100%;margin-top:4px;padding:4px 0;background:transparent;border:none;border-bottom:1px dashed var(--border);font-family:inherit;font-size:12px;color:var(--text-secondary);">
+            </div>
+            <div class="contact-grid" style="margin-top:10px;">
+                <div class="contact-item"><span class="contact-lbl">Contact</span><input type="text" id="ei_contactName" value="${escapeHtml(c.contactName)}" class="editable-input" style="font-weight:600;"></div>
+                <div class="contact-item"><span class="contact-lbl">Cellulaire</span><input type="text" id="ei_phoneDirect" value="${escapeHtml(c.phoneDirect||'')}" class="editable-input"></div>
+                <div class="contact-item"><span class="contact-lbl">Courriel</span><input type="email" id="ei_email" value="${escapeHtml(c.email||'')}" class="editable-input"></div>
+                <div class="contact-item"><span class="contact-lbl">Fonction</span><input type="text" id="ei_fonction" value="${escapeHtml(c.fonction||'')}" class="editable-input"></div>
+                <div class="contact-item"><span class="contact-lbl">Téléphone</span><input type="text" id="ei_phoneMobile" value="${escapeHtml(c.phoneMobile||'')}" class="editable-input"></div>
+                <div class="contact-item"><span class="contact-lbl">Poste</span><input type="text" id="ei_phonePoste" value="${escapeHtml(c.phonePoste||'')}" class="editable-input"></div>
+            </div>
+        </div>
+        <div class="view-tabs" id="editTabsBar">
+            <button class="view-tab active" data-etab="infos">📋 Infos</button>
+            <button class="view-tab" data-etab="actions">📞 Actions</button>
+            <button class="view-tab" data-etab="notes">📝 Notes</button>
+            <button class="view-tab" data-etab="historique">📜 Historique</button>
+        </div>
+        <div id="et-infos" class="view-tab-content">${editInfosHtml}</div>
+        <div id="et-actions" class="view-tab-content" style="display:none;">${editActionsHtml}</div>
+        <div id="et-notes" class="view-tab-content" style="display:none;">${editNotesHtml}</div>
+        <div id="et-historique" class="view-tab-content" style="display:none;">${editHistHtml}</div>
+        <div class="modal-footer-bar">
+            <button class="btn-submit" onclick="saveEditTabbed()">💾 Sauvegarder</button>
+            ${!c.closed&&!c.dossierFinalise&&c.status!=='Client'?`<button class="btn-finalize" onclick="finalizeClientFromEdit()">🏆 Finaliser</button>`:''}
+            <button class="btn-cancel" onclick="closeEditModal()">Annuler</button>
+        </div>`;
+
+    document.getElementById('editTabsBar').querySelectorAll('.view-tab').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+            document.getElementById('editTabsBar').querySelectorAll('.view-tab').forEach(b=>b.classList.remove('active'));
+            btn.classList.add('active');
+            ['infos','actions','notes','historique'].forEach(t=>{const el=document.getElementById('et-'+t);if(el)el.style.display='none';});
+            const el=document.getElementById('et-'+btn.dataset.etab);
+            if(el) el.style.display='block';
+        });
+    });
+
+    document.getElementById("editModal").style.display="block";
+}
+
+function validateAndPlanEdit() {
+    const c=clients.find(x=>x.id===currentEditId);
+    if(!c) return;
+    const summary=document.getElementById('ei_tacheSummary')?.value?.trim();
+    if(!summary){showNotification('Résumé requis','error');return;}
+    const date=document.getElementById('ei_tacheDate')?.value;
+    const type=document.getElementById('ei_tacheType')?.value;
+    const reco=document.getElementById('ei_tacheReco')?.value||'';
+    c.calls.push({date,type,summary,recommendations:reco});
+    if(c.calls.length===1&&!c.resumeCall1) c.resumeCall1=summary;
+    if(!c.date1erAppelRealise&&c.calls.length===1) c.date1erAppelRealise=date;
+    c.tacheFaite=true; c.commentaireTache=summary;
+    c.nextCall={date:'',type:'',recommendations:''};
+    if(c.status==='Prospect') c.status='En cours';
+    c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:`Action validée : ${type} le ${date}`});
+    save(); render();
+    // Refresh edit modal on actions tab
+    openEditModal(currentEditId);
+    setTimeout(()=>{const btn=document.querySelector('[data-etab="actions"]');if(btn)btn.click();},50);
+    showNotification('✅ Action validée','success');
+}
+
+function saveEditTabbed() {
+    const c=clients.find(x=>x.id===currentEditId);
+    if(!c) return;
+    // Header inline fields
+    c.companyName=document.getElementById('ei_companyName')?.value||c.companyName;
+    c.companyAddress=document.getElementById('ei_address')?.value||c.companyAddress;
+    c.contactName=document.getElementById('ei_contactName')?.value||c.contactName;
+    c.phoneDirect=document.getElementById('ei_phoneDirect')?.value||c.phoneDirect;
+    c.phoneMobile=document.getElementById('ei_phoneMobile')?.value||c.phoneMobile;
+    c.phonePoste=document.getElementById('ei_phonePoste')?.value||c.phonePoste;
+    c.email=document.getElementById('ei_email')?.value||c.email;
+    c.fonction=document.getElementById('ei_fonction')?.value||c.fonction;
+    // Infos tab
+    const fieldsMap={campagne:'ei_campagne',secteur:'ei_secteur',neq:'ei_neq',employees:'ei_employees',companyCreationDate:'ei_creation',situationFamiliale:'ei_situation',enfantsCharge:'ei_enfants',fumeur:'ei_fumeur',nomsAssocies:'ei_associes',campaignSuivi:'ei_suivi',status:'ei_status',priority:'ei_priority',date1erAppelPrevu:'ei_date1prev',date1erAppelRealise:'ei_date1real',notePrestataire:'ei_notePrestataire',recoPrestataire:'ei_recoPrestataire',resumeCall1:'ei_resumeCall1'};
+    for(const [field,domId] of Object.entries(fieldsMap)){const el=document.getElementById(domId);if(el) c[field]=el.value;}
+    const ageEl=document.getElementById('ei_age'); if(ageEl) c.age=ageEl.value;
+    const bdEl=document.getElementById('ei_birthdate'); if(bdEl) c.birthDate=bdEl.value;
+    // Actions tab
+    const tacheFaiteEl=document.getElementById('ei_tacheFaite');
+    if(tacheFaiteEl){ c.tacheFaite=tacheFaiteEl.checked; c.commentaireTache=document.getElementById('ei_commentaire')?.value||''; }
+    const nextDate=document.getElementById('ei_nextDate')?.value;
+    const nextType=document.getElementById('ei_nextType')?.value;
+    if(nextDate&&nextType){ c.nextCall={date:nextDate,type:nextType,recommendations:document.getElementById('ei_tacheReco')?.value||''}; c.tacheFaite=false; }
+    // Notes tab
+    const gn=document.getElementById('ei_generalNotes'); if(gn) c.generalNotes=gn.value;
+    const cn=document.getElementById('ei_commercialNotes'); if(cn) c.commercialNotes=cn.value;
+    c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:'Dossier mis à jour'});
+    save(); render(); showNotification('✅ Dossier sauvegardé','success'); closeEditModal();
+}
+
+function closeViewModal() { document.getElementById("viewModal").style.display="none"; }
+function toggleCallHistory(btn) {
+    const content=btn.nextElementSibling;
+    if(content.style.display==='none'){content.style.display='block';btn.innerHTML=btn.innerHTML.replace('▼','▲');}
+    else{content.style.display='none';btn.innerHTML=btn.innerHTML.replace('▲','▼');}
+}
+function toggleViewDetails(btn) {
+    const d=btn.closest('.view-header-card').nextElementSibling;
+    if(d.style.display==='none'){d.style.display='block';btn.textContent='▲ Masquer les informations';}
+    else{d.style.display='none';btn.textContent='▼ Voir plus d\'informations';}
+}
+function openEditFromView() { if(currentViewId){closeViewModal();openEditModal(currentViewId);} }
+
+// ══ ÉDITION ══
+function openEditModal(id) {
+    currentEditId = id;
+    const c = clients.find(x=>x.id===id);
+    if(!c) return;
+    const ts = getTacheStatus(c);
+    const callsHtml = c.calls?.length>0
+        ?'<div class="call-history">'+[...c.calls].reverse().map(call=>`<div class="call-item"><div class="call-header"><span>${escapeHtml(call.type||'Action')}</span><span>${escapeHtml(call.date)}</span></div><div class="call-summary">${escapeHtml(call.summary)}</div>${call.recommendations?`<div class="call-reco">${escapeHtml(call.recommendations)}</div>`:''}</div>`).join('')+'</div>'
+        :'<div style="padding:12px;color:var(--text-tertiary);font-size:12px;font-style:italic;">Aucune action enregistrée</div>';
+
+    // Excel-style tache section
+    let tacheSection = '';
+    if(!c.closed && !c.dossierFinalise) {
+        if(c.nextCall?.date&&c.nextCall?.type) {
+            const tacheClass = ts==='En retard'?'late':ts==='Urgent'?'today':'future';
+            tacheSection = `<div class="tache-panel">
+                <div class="tache-panel-header">
+                    <h4>📋 Gestion de la tâche</h4>
+                    ${tacheStatusBadge(ts)}
+                </div>
+                <div class="tache-body">
+                    <div class="tache-current ${tacheClass}">
+                        <span class="tache-icon">${ts==='En retard'?'⚠️':ts==='Urgent'?'🔔':'📅'}</span>
+                        <div>
+                            <div style="font-weight:500;">${escapeHtml(c.nextCall.type)}</div>
+                            <div style="font-size:11px;margin-top:2px;">Prévue le : <strong>${c.nextCall.date}</strong>${c.nextCall.recommendations?` · ${escapeHtml(c.nextCall.recommendations)}`:''}</div>
+                        </div>
+                    </div>
+                    <div class="checkbox-row">
+                        <input type="checkbox" id="tacheFaiteCheck" ${c.tacheFaite?'checked':''} onchange="toggleTacheFaite()">
+                        <label for="tacheFaiteCheck">Tâche effectuée ✓</label>
+                    </div>
+                    <div class="input-field" id="commentaireTacheField" style="${!c.tacheFaite?'display:none':''}">
+                        <label>Commentaire sur la tâche</label>
+                        <input type="text" id="commentaireTacheInput" value="${escapeHtml(c.commentaireTache||'')}" placeholder="Résultat, notes...">
+                    </div>
+                    <div class="input-field"><label>Date de la tâche</label><input type="date" id="editNextCallDate" value="${escapeHtml(c.nextCall.date)}"></div>
+                    <div class="input-field"><label>Type de tâche</label><select id="editNextCallType">${tacheTypes.map(t=>`<option ${c.nextCall.type===t?'selected':''}>${escapeHtml(t)}</option>`).join('')}</select></div>
+                    <div class="input-field"><label>Résumé de l'échange (call 1 ou mise à jour)</label><textarea id="editNextCallSummary" rows="3" placeholder="Résumé..."></textarea></div>
+                    <div style="display:flex;gap:8px;margin-top:6px;">
+                        <button class="btn-validate" onclick="validateCallFromEdit()">✅ Valider et planifier suivante</button>
+                    </div>
+                </div>
+            </div>
+            <div class="tache-panel" id="nextTachePlanner" style="display:none;">
+                <div class="tache-panel-header"><h4>📅 Planifier la prochaine tâche</h4></div>
+                <div class="tache-body">
+                    <div class="input-field"><label>Date prochaine tâche</label><input type="date" id="editPrepareNextDate" value="${getNextWeekDate()}"></div>
+                    <div class="input-field"><label>Type prochaine tâche</label><select id="editPrepareNextType"><option value="">Sélectionner</option>${tacheTypes.map(t=>`<option>${escapeHtml(t)}</option>`).join('')}</select></div>
+                    <div class="input-field"><label>Recommandations</label><input type="text" id="editPrepareNextRecommendations" placeholder="Objectifs pour le prochain contact..."></div>
+                    <div style="display:flex;gap:8px;margin-top:6px;">
+                        <button class="btn-validate" onclick="prepareNextCallFromEdit()">📅 Confirmer et sauvegarder</button>
+                        <button class="btn-cancel" onclick="closeEditModal()">Fermer sans planifier</button>
+                    </div>
+                </div>
+            </div>`;
+        } else {
+            tacheSection = `<div class="tache-panel">
+                <div class="tache-panel-header"><h4>📅 Planifier une tâche</h4></div>
+                <div class="tache-body">
+                    <div class="input-field"><label>Date</label><input type="date" id="editPrepareNextDate"></div>
+                    <div class="input-field"><label>Type de tâche</label><select id="editPrepareNextType"><option value="">Sélectionner</option>${tacheTypes.map(t=>`<option>${escapeHtml(t)}</option>`).join('')}</select></div>
+                    <div class="input-field"><label>Recommandations</label><input type="text" id="editPrepareNextRecommendations" placeholder="Objectifs..."></div>
+                    <button class="btn-validate" onclick="prepareNextCallFromEdit()">📅 Planifier</button>
+                </div>
+            </div>`;
+        }
+    }
+
+    // Excel fields: call 1 info
+    const call1Section = `<div class="section-card" style="background:var(--orange-bg);border-color:var(--orange-border);">
+        <h4 style="color:var(--orange-text);">📞 Informations 1er appel (Campagne)</h4>
+        <div class="two-col">
+            <div class="input-field"><label>Date 1er appel réalisé</label><input type="date" id="edit1erAppelRealise" value="${escapeHtml(c.date1erAppelRealise||'')}"></div>
+            <div class="input-field"><label>Note prestataire</label><input type="text" id="editNotePrestataire" value="${escapeHtml(c.notePrestataire||'')}"></div>
+        </div>
+        <div class="input-field"><label>Résumé Call 1 (besoins détectés)</label><textarea id="editResumeCall1" rows="3" placeholder="Résumé complet du 1er appel...">${escapeHtml(c.resumeCall1||'')}</textarea></div>
+    </div>`;
+
+    document.getElementById("editContent").innerHTML = `
+        <div class="section-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+                <h4 style="margin:0;">Entreprise & Contact</h4>
+                <button class="btn-edit-info" onclick="openInfoEditModal(${c.id})">Modifier les infos</button>
+            </div>
+            <div class="two-col">
+                <div>
+                    <div class="info-row"><span class="lbl">Entreprise</span><br><span class="val">${escapeHtml(c.companyName)}</span></div>
+                    <div class="info-row"><span class="lbl">Campagne</span><br><span class="val">${escapeHtml(c.campagne)||'—'}</span></div>
+                </div>
+                <div>
+                    <div class="info-row"><span class="lbl">Contact</span><br><span class="val">${escapeHtml(c.contactName)}</span></div>
+                    <div class="info-row"><span class="lbl">Cellulaire</span><br><span class="val">${escapeHtml(c.phoneDirect)||'—'}</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="three-col" style="margin-bottom:12px;">
+            <div class="input-field"><label>Suivi</label><select id="editSuivi">${suiviOptions.map(o=>`<option ${c.campaignSuivi===o?'selected':''}>${escapeHtml(o)}</option>`).join('')}</select></div>
+            <div class="input-field"><label>Priorité</label><select id="editPriority"><option value="high" ${c.priority==='high'?'selected':''}>Haute</option><option value="medium" ${c.priority==='medium'?'selected':''}>Moyenne</option><option value="low" ${c.priority==='low'?'selected':''}>Basse</option></select></div>
+            <div class="input-field"><label>Statut</label><select id="editStatus"><option ${c.status==='Prospect'?'selected':''}>Prospect</option><option ${c.status==='En cours'?'selected':''}>En cours</option><option ${c.status==='Client'?'selected':''}>Client</option></select></div>
+        </div>
+        ${call1Section}
+        <div class="note-card">
+            <div class="note-card-header"><span>Notes</span><button class="btn-note" onclick="openNoteDialog('editGeneralNotes','editNotesPreview')">Éditer</button></div>
+            <div id="editNotesPreview" class="note-preview ${c.generalNotes?'':'empty'}" onclick="openNoteDialog('editGeneralNotes','editNotesPreview')">${c.generalNotes?escapeHtml(c.generalNotes):'Cliquer pour rédiger...'}</div>
+            <textarea id="editGeneralNotes" style="display:none;">${escapeHtml(c.generalNotes||'')}</textarea>
+        </div>
+        <div class="note-card">
+            <div class="note-card-header"><span>Notes commerciales</span><button class="btn-note" onclick="openNoteDialog('editCommercialNotes','editCommercialNotesPreview')">Éditer</button></div>
+            <div id="editCommercialNotesPreview" class="note-preview ${c.commercialNotes?'':'empty'}" onclick="openNoteDialog('editCommercialNotes','editCommercialNotesPreview')">${c.commercialNotes?escapeHtml(c.commercialNotes):'Cliquer pour rédiger...'}</div>
+            <textarea id="editCommercialNotes" style="display:none;">${escapeHtml(c.commercialNotes||'')}</textarea>
+        </div>
+        <button class="btn-submit" onclick="updateClientQuickInfo()">💾 Sauvegarder</button>
+        <div style="font-size:11px;font-weight:500;color:var(--text-secondary);text-transform:uppercase;margin:16px 0 6px;">Historique des actions</div>
+        ${callsHtml}
+        ${tacheSection}
+        ${!c.closed&&!c.dossierFinalise&&c.status!=='Client'?`<div style="text-align:center;margin:14px 0;"><button class="btn-finalize" onclick="finalizeClientFromEdit()">🏆 Finaliser — Dossier Client</button></div>`:''}`;
+    document.getElementById("editModal").style.display="block";
+}
+
+function toggleTacheFaite() {
+    const checked = document.getElementById('tacheFaiteCheck').checked;
+    document.getElementById('commentaireTacheField').style.display = checked?'flex':'none';
+}
+
+function updateClientQuickInfo() {
+    const c=clients.find(x=>x.id===currentEditId);
+    if(!c) return;
+    c.campaignSuivi=document.getElementById("editSuivi").value;
+    c.priority=document.getElementById("editPriority").value;
+    c.status=document.getElementById("editStatus").value;
+    c.generalNotes=document.getElementById("editGeneralNotes").value;
+    c.commercialNotes=document.getElementById("editCommercialNotes").value;
+    c.date1erAppelRealise=document.getElementById("edit1erAppelRealise")?.value||c.date1erAppelRealise||'';
+    c.notePrestataire=document.getElementById("editNotePrestataire")?.value||c.notePrestataire||'';
+    c.resumeCall1=document.getElementById("editResumeCall1")?.value||c.resumeCall1||'';
+    // tache faite
+    const checkEl=document.getElementById("tacheFaiteCheck");
+    if(checkEl) {
+        c.tacheFaite=checkEl.checked;
+        c.commentaireTache=document.getElementById("commentaireTacheInput")?.value||'';
+    }
+    c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:"Informations mises à jour"});
+    save(); showNotification("Dossier mis à jour","success"); closeEditModal(); render();
+}
+function closeEditModal() { document.getElementById("editModal").style.display="none"; currentEditId=null; }
+
+// ══ VALIDATION ACTIONS ══
+function validateCallFromEdit() {
+    const c=clients.find(x=>x.id===currentEditId);
+    if(!c) return;
+    const summary=document.getElementById("editNextCallSummary").value.trim();
+    if(!summary) return showNotification("Résumé requis","error");
+    c.calls.push({
+        date:document.getElementById("editNextCallDate").value,
+        summary, recommendations:c.nextCall?.recommendations||'',
+        type:document.getElementById("editNextCallType").value
+    });
+    // If this was call 1, record resumeCall1
+    if(c.calls.length===1&&!c.resumeCall1) c.resumeCall1=summary;
+    if(!c.date1erAppelRealise&&c.calls.length===1) c.date1erAppelRealise=document.getElementById("editNextCallDate").value;
+    c.tacheFaite=true;
+    c.commentaireTache=summary;
+    c.nextCall={date:'',type:'',recommendations:''};
+    if(c.status==='Prospect') c.status='En cours';
+    c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:`Action ${c.calls.length} validée`});
+    save(); render();
+    // Show next task planner
+    document.getElementById('nextTachePlanner').style.display='block';
+    document.querySelector('.tache-panel .tache-body').style.display='none';
+    showNotification('✅ Action validée — Planifiez la suivante','success');
+}
+
+function prepareNextCallFromEdit() {
+    const c=clients.find(x=>x.id===currentEditId);
+    if(!c) return;
+    const d=document.getElementById("editPrepareNextDate").value;
+    const t=document.getElementById("editPrepareNextType").value;
+    const r=document.getElementById("editPrepareNextRecommendations")?.value.trim()||'';
+    if(!d) return showNotification("Date requise","error");
+    if(!t) return showNotification("Type requis","error");
+    c.nextCall={date:d,type:t,recommendations:r};
+    c.tacheFaite=false; c.commentaireTache='';
+    c.prochainesTache=t; c.prochainesTacheDate=d;
+    c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:`Prochaine tâche planifiée : ${t} le ${d}`});
+    save(); showNotification("📅 Prochaine tâche planifiée","success"); closeEditModal(); render();
+}
+
+function finalizeClientFromEdit() {
+    const c=clients.find(x=>x.id===currentEditId);
+    if(!c||!confirm(`Finaliser ${c.companyName} comme client ?`)) return;
+    const notes=prompt("Notes de clôture :","")??'';
+    c.closed=true; c.dossierFinalise=true; c.status='Client'; c.campaignSuivi='Finalisé';
+    c.closingDate=getCurrentDateTime(); c.closingBy=currentUser; c.closingNotes=notes;
+    c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:'Dossier finalisé — Client'});
+    save(); showNotification(`🏆 ${c.companyName} est maintenant client !`,"success"); closeEditModal(); render();
+}
+
+// ══ INFO EDIT ══
+function openInfoEditModal(id) {
+    currentInfoEditId=id;
+    const c=clients.find(x=>x.id===id);
+    document.getElementById("infoEditContent").innerHTML=`
+        <div class="two-col">
+            <div>
+                <h4 style="font-size:11px;font-weight:500;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;">Entreprise</h4>
+                <div class="input-field"><label>Entreprise</label><input id="infoCompanyName" value="${escapeHtml(c.companyName)}"></div>
+                <div class="input-field"><label>Campagne</label><input id="infoCampagne" value="${escapeHtml(c.campagne||'')}"></div>
+                <div class="input-field"><label>Adresse</label><input id="infoCompanyAddress" value="${escapeHtml(c.companyAddress||'')}"></div>
+                <div class="input-field"><label>NEQ</label><input id="infoNeq" value="${escapeHtml(c.neq||'')}"></div>
+                <div class="input-field"><label>Secteur</label><input id="infoSecteur" value="${escapeHtml(c.secteur||'')}"></div>
+                <div style="display:flex;gap:8px;">
+                    <div class="input-field" style="flex:1;"><label>Employés</label><input id="infoEmployees" value="${escapeHtml(c.employees||'')}"></div>
+                    <div class="input-field" style="width:95px;"><label>Année création</label><input type="number" id="infoCompanyCreationDate" value="${escapeHtml(c.companyCreationDate||'')}"></div>
+                </div>
+            </div>
+            <div>
+                <h4 style="font-size:11px;font-weight:500;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;">Contact</h4>
+                <div class="input-field"><label>Nom complet</label><input id="infoContactName" value="${escapeHtml(c.contactName)}"></div>
+                <div class="input-field"><label>Prénom</label><input id="infoContactPrenom" value="${escapeHtml(c.contactPrenom||'')}"></div>
+                <div class="input-field"><label>Fonction</label><input id="infoFonction" value="${escapeHtml(c.fonction||'')}"></div>
+                <div class="input-field"><label>Rôle</label><select id="infoProprietaire"><option value="">Sélectionner</option><option ${c.proprietaire==='Propriétaire'?'selected':''}>Propriétaire</option><option ${c.proprietaire==='Associé'?'selected':''}>Associé</option><option ${c.proprietaire==='Salarié'?'selected':''}>Salarié</option><option ${c.proprietaire==='Actionnaire'?'selected':''}>Actionnaire</option><option ${c.proprietaire==='Dirigeant'?'selected':''}>Dirigeant</option></select></div>
+                <div style="display:flex;gap:8px;">
+                    <div class="input-field" style="flex:1;"><label>Âge</label><input type="text" id="infoAge" value="${escapeHtml(c.age||'')}" ${c.birthDate?'readonly':''} style="${c.birthDate?'background:var(--bg-page);':''}"></div>
+                    <div class="input-field" style="flex:1;"><label>Date naissance</label><input type="date" id="infoBirthDate" value="${c.birthDate||''}" onchange="updateInfoEditAge()"></div>
+                </div>
+                <div style="display:flex;gap:6px;">
+                    <div class="input-field" style="flex:1;"><label>Cellulaire</label><input id="infoPhoneDirect" value="${escapeHtml(c.phoneDirect||'')}"></div>
+                    <div class="input-field" style="flex:1;"><label>Téléphone</label><input id="infoPhoneMobile" value="${escapeHtml(c.phoneMobile||'')}"></div>
+                    <div class="input-field" style="width:70px;"><label>Poste</label><input id="infoPhonePoste" value="${escapeHtml(c.phonePoste||'')}"></div>
+                </div>
+                <div class="input-field"><label>Courriel</label><input id="infoEmail" value="${escapeHtml(c.email||'')}"></div>
+                <div style="display:flex;gap:8px;">
+                    <div class="input-field" style="flex:1;"><label>Fumeur</label><select id="infoFumeur"><option value="Non-fumeur" ${(c.fumeur||'Non-fumeur')==='Non-fumeur'?'selected':''}>Non-fumeur</option><option value="Fumeur" ${c.fumeur==='Fumeur'?'selected':''}>Fumeur</option></select></div>
+                    <div class="input-field" style="flex:1;"><label>Situation</label><select id="infoSituationFamiliale"><option value="">Sélectionner</option><option ${c.situationFamiliale==='Célibataire'?'selected':''}>Célibataire</option><option ${c.situationFamiliale==='Marié(e)'?'selected':''}>Marié(e)</option><option ${c.situationFamiliale==='Conjoint(e) de fait'?'selected':''}>Conjoint(e) de fait</option><option ${c.situationFamiliale==='Divorcé(e)'?'selected':''}>Divorcé(e)</option><option ${c.situationFamiliale==='Veuf(ve)'?'selected':''}>Veuf(ve)</option></select></div>
+                    <div class="input-field" style="width:70px;"><label>Enfants</label><input type="number" id="infoEnfantsCharge" value="${escapeHtml(c.enfantsCharge||'0')}" min="0"></div>
+                </div>
+                <div class="input-field"><label>Associés</label><input id="infoNomsAssocies" value="${escapeHtml(c.nomsAssocies||'')}"></div>
+            </div>
+        </div>`;
+    document.getElementById("infoEditModal").style.display="block";
+}
+function updateInfoEditAge() {
+    const bd=document.getElementById("infoBirthDate").value,af=document.getElementById("infoAge");
+    if(bd){af.value=calcAge(bd);af.readOnly=true;af.style.background="var(--bg-page)";}
+    else{af.value='';af.readOnly=false;af.style.background='';}
+}
+function saveInfoEdit() {
+    const c=clients.find(x=>x.id===currentInfoEditId);
+    if(!c) return;
+    c.companyName=document.getElementById("infoCompanyName").value;
+    c.campagne=document.getElementById("infoCampagne").value;
+    c.companyAddress=document.getElementById("infoCompanyAddress").value;
+    c.neq=document.getElementById("infoNeq").value;
+    c.employees=document.getElementById("infoEmployees").value;
+    c.secteur=document.getElementById("infoSecteur").value;
+    c.companyCreationDate=document.getElementById("infoCompanyCreationDate").value;
+    c.contactName=document.getElementById("infoContactName").value;
+    c.contactPrenom=document.getElementById("infoContactPrenom").value;
+    c.fonction=document.getElementById("infoFonction").value;
+    c.proprietaire=document.getElementById("infoProprietaire").value;
+    const nbd=document.getElementById("infoBirthDate").value;
+    c.birthDate=nbd; c.age=nbd?calcAge(nbd):document.getElementById("infoAge").value;
+    c.phoneDirect=document.getElementById("infoPhoneDirect").value;
+    c.phoneMobile=document.getElementById("infoPhoneMobile").value;
+    c.phonePoste=document.getElementById("infoPhonePoste").value;
+    c.email=document.getElementById("infoEmail").value;
+    c.fumeur=document.getElementById("infoFumeur").value;
+    c.situationFamiliale=document.getElementById("infoSituationFamiliale").value;
+    c.enfantsCharge=document.getElementById("infoEnfantsCharge").value;
+    c.nomsAssocies=document.getElementById("infoNomsAssocies").value;
+    c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:"Informations modifiées"});
+    save(); showNotification("Informations mises à jour","success"); closeInfoEditModal(); closeEditModal(); render(); updateCampagneFilter();
+}
+function closeInfoEditModal() { document.getElementById("infoEditModal").style.display="none"; currentInfoEditId=null; }
+
+// ══ ARCHIVAGE ══
+function archiveClient(id) {
+    const c=clients.find(x=>x.id===id);
+    if(confirm(`Archiver ${c.companyName} ?`)){c.archived=true;c.archivedDate=getCurrentDateTime();c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:"Dossier archivé"});save();render();showNotification(`${c.companyName} archivé`,"info");}
+}
+function restoreClient(id) {
+    const c=clients.find(x=>x.id===id);
+    if(confirm(`Restaurer ${c.companyName} ?`)){c.archived=false;c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:"Dossier restauré"});save();render();showNotification(`${c.companyName} restauré`,"success");}
+}
+function deletePermanent(id) {
+    const c=clients.find(x=>x.id===id);
+    if(confirm(`Supprimer définitivement ${c.companyName} ?`)){clients=clients.filter(x=>x.id!==id);save();render();showNotification(`${c.companyName} supprimé`,"error");}
+}
+
+// ══ KANBAN ══
+function renderKanban() {
+    const today = getCurrentDate();
+    const active = clients.filter(c=>!c.archived);
+    const stages = ["À relancer","Proposition envoyée","Négociation","Accord de principe","Finalisé"];
+    document.getElementById("kanbanView").innerHTML='<div class="kanban-wrap">'+stages.map(stage=>{
+        const items=active.filter(c=>c.campaignSuivi===stage);
+        return `<div class="kanban-col"><div class="kanban-col-header"><span>${escapeHtml(stage)}</span><span>${items.length}</span></div>${items.map(c=>{
+            const late=c.nextCall?.date&&c.nextCall.date<today&&!c.tacheFaite;
+            const tod=c.nextCall?.date===today;
+            return `<div class="kanban-card ${late?'late':tod?'today-card':''}" onclick="openViewModal(${c.id})">
+                <div class="kanban-card-name">${escapeHtml(c.companyName)}</div>
+                <div class="kanban-card-meta"><span>${escapeHtml(c.contactName||'')}</span><span>${c.nextCall?.date||'Non planifié'}</span></div>
+                <div style="margin-top:4px;">${tacheStatusBadge(getTacheStatus(c))}</div>
+            </div>`;
+        }).join('')||'<div style="padding:12px;font-size:11px;color:var(--text-tertiary);font-style:italic;">Aucun</div>'}</div>`;
+    }).join('')+'</div>';
+}
+
+// ══ TABS ══
+function switchTab(tab) {
+    currentTab=tab;
+    document.querySelectorAll('.tab').forEach((t,i)=>{t.classList.toggle('active',(tab==='active'&&i===0)||(tab==='archived'&&i===1)||(tab==='kanban'&&i===2));});
+    document.getElementById("tableView").style.display=tab==='kanban'?'none':'block';
+    document.getElementById("kanbanView").style.display=tab==='kanban'?'block':'none';
+    if(tab==='kanban') renderKanban(); else render();
+}
+
+// ══ EXPORTS ══
+function exporterVersExcel() {
+    if(!clients.length) return alert("Aucun dossier !");
+    const rows=clients.map(c=>({'Campagne':c.campagne||'','Entreprise':c.companyName,'Contact':c.contactName,'Cellulaire':c.phoneDirect,'Courriel':c.email,'Suivi':c.campaignSuivi,'Statut':c.status,'Statut Tâche':getTacheStatus(c),'Date Tâche':c.nextCall?.date||'','Type Tâche':c.nextCall?.type||'','Tâche Faite':c.tacheFaite?'Oui':'Non','Résumé Call 1':c.resumeCall1||'','Dossier Finalisé':(c.closed||c.dossierFinalise)?'Oui':'Non'}));
+    const cols=Object.keys(rows[0]);
+    const csv=[cols.join(';'),...rows.map(r=>cols.map(k=>String(r[k]||'').replace(/;/g,',').replace(/\n/g,' ')).join(';'))].join('\n');
+    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'}));a.download=`crm_b2b_${new Date().toISOString().slice(0,10)}.csv`;a.click();
+    showNotification(`${clients.length} dossiers exportés`,"success");
+}
+function exporterDonnees() {
+    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(clients,null,2)],{type:'application/json'}));a.download=`crm_backup_${new Date().toISOString().slice(0,10)}.json`;a.click();
+    showNotification("Sauvegarde JSON créée","success");
+}
+function importerDonnees() {
+    const inp=document.createElement('input');inp.type='file';inp.accept='.json';
+    inp.onchange=async e=>{
+        const file=e.target.files[0];if(!file) return;
+        try{
+            const d=JSON.parse(await file.text());
+            if(!Array.isArray(d)||!d[0]?.id) throw new Error();
+            if(confirm(`Restaurer ${d.length} dossiers ?\n⚠️ Ceci remplacera les données actuelles.`)){clients=d;save();render();updateCampagneFilter();showNotification(`✅ ${clients.length} dossiers restaurés`,"success");}
+        }catch{showNotification("Fichier JSON invalide","error");}
+    };
+    inp.click();
+}
+function exportToPDF() {
+    const el=document.getElementById("viewContent");
+    const c=clients.find(x=>x.id===currentViewId);
+    html2pdf().set({margin:[0.5,0.5,0.5,0.5],filename:`fiche_${c?.companyName||'dossier'}.pdf`,image:{type:'jpeg',quality:0.98},html2canvas:{scale:2},jsPDF:{unit:'in',format:'a4',orientation:'portrait'}}).from(el).save();
+    showNotification("PDF généré","success");
+}
+
+// ══ RENDER ══
+function render() {
+    const search=(document.getElementById("search")?.value||'').toLowerCase();
+    const fs=document.getElementById("filterStatus")?.value||'';
+    const fsuivi=document.getElementById("filterSuivi")?.value||'';
+    const ftache=document.getElementById("filterTache")?.value||'';
+    const fcamp=document.getElementById("filterCampagne")?.value||'';
+    const today=getCurrentDate();
+
+    let filtered=clients.filter(c=>currentTab==='active'?!c.archived:c.archived);
+    filtered=filtered.filter(c=>
+        ((c.companyName||'').toLowerCase().includes(search)||(c.contactName||'').toLowerCase().includes(search)||(c.phoneDirect||'').toLowerCase().includes(search)||(c.email||'').toLowerCase().includes(search)||(c.campagne||'').toLowerCase().includes(search))&&
+        (!fs||c.status===fs)&&(!fsuivi||c.campaignSuivi===fsuivi)&&(!fcamp||c.campagne===fcamp)&&
+        (!ftache||getTacheStatus(c)===ftache)
+    );
+    filtered.sort((a,b)=>{
+        const va=getSortValue(a,currentSort.column),vb=getSortValue(b,currentSort.column);
+        return va<vb?(currentSort.order==='asc'?-1:1):va>vb?(currentSort.order==='asc'?1:-1):0;
+    });
+
+    const ac=clients.filter(c=>!c.archived);
+    document.getElementById("prospects").textContent=ac.filter(c=>c.status==="Prospect").length;
+    document.getElementById("encours").textContent=ac.filter(c=>c.status==="En cours").length;
+    document.getElementById("clients").textContent=ac.filter(c=>c.status==="Client").length;
+    document.getElementById("callsToday").textContent=ac.filter(c=>c.nextCall?.date===today&&!c.tacheFaite&&!c.closed).length;
+    document.getElementById("countRetard").textContent=ac.filter(c=>getTacheStatus(c)==='En retard').length;
+    document.getElementById("pageInfo").textContent=`${filtered.length} dossier${filtered.length>1?'s':''} affiché${filtered.length>1?'s':''}`;
+    updateDashboard(); updateCampagneFilter();
+
+    const tbody=document.getElementById("table");
+    if(!filtered.length){tbody.innerHTML=`<tr><td colspan="11" class="empty-state">Aucun dossier trouvé</td></tr>`;return;}
+    tbody.innerHTML=filtered.map(c=>{
+        const ts=getTacheStatus(c);
+        let ncHtml='';
+        if(c.nextCall?.date){
+            if(c.nextCall.date<today&&!c.tacheFaite) ncHtml=`<span class="badge badge-retard">⚠ Retard · ${c.nextCall.date.slice(5).replace('-','/')}</span>`;
+            else if(c.nextCall.date===today&&!c.tacheFaite) ncHtml=`<span class="badge badge-today">🔔 Aujourd'hui</span>`;
+            else if(c.tacheFaite) ncHtml=`<span class="badge badge-done">✓ Fait</span>`;
+            else if(c.closed||c.dossierFinalise) ncHtml=`<span class="badge badge-finalized">✅ Finalisé</span>`;
+            else ncHtml=`<span class="badge badge-ok">${c.nextCall.date}</span>`;
+        } else { ncHtml=`<span style="font-size:11px;color:var(--text-tertiary);">Non planifiée</span>`; }
+        const statusCls=c.status==='Prospect'?'prospect':c.status==='En cours'?'encours':'client';
+        const actionBtns=currentTab==='active'
+            ?`<button class="btn-icon" onclick="openEditModal(${c.id})" title="Modifier">✏️</button><button class="btn-icon danger" onclick="archiveClient(${c.id})" title="Archiver">📦</button>`
+            :`<button class="btn-icon restore" onclick="restoreClient(${c.id})" title="Restaurer">♻️</button><button class="btn-icon danger" onclick="deletePermanent(${c.id})" title="Supprimer">🗑️</button>`;
+        return `<tr class="${getRowClass(c)}">
+            <td><span class="priority-bar p-${c.priority}"></span></td>
+            <td><span class="eye-icon" onclick="openViewModal(${c.id})" title="Consulter">👁</span></td>
+            <td><span class="badge badge-suivi">${escapeHtml(c.campaignSuivi)}</span></td>
+            <td><span style="font-size:11px;color:var(--text-secondary);font-weight:500;">${escapeHtml(c.campagne||'—')}</span></td>
+            <td><span class="co-name">${escapeHtml(c.companyName)}</span></td>
+            <td><div class="contact-cell"><span class="contact-name">${escapeHtml(c.contactName)}</span><span class="contact-role">${escapeHtml(c.fonction||'')}</span><span class="contact-info">${escapeHtml(c.phoneDirect||'')}</span></div></td>
+            <td><span class="badge badge-${statusCls}">${escapeHtml(c.status)}</span></td>
+            <td>${tacheStatusBadge(ts)}</td>
+            <td>${ncHtml}</td>
+            <td><span style="font-size:10px;color:var(--text-tertiary);">${escapeHtml(c.nextCall?.type||'—')}</span></td>
+            <td><div class="action-row">${actionBtns}</div></td>
+        </tr>`;
+    }).join('');
+}
+
+// ══ MODALS CLOSE ══
+window.onclick=e=>{
+    ['createModal','viewModal','editModal','infoEditModal','noteDialogModal'].forEach(id=>{
+        if(e.target===document.getElementById(id)){
+            if(id==='createModal') closeCreateModal();
+            else if(id==='viewModal') closeViewModal();
+            else if(id==='editModal') closeEditModal();
+            else if(id==='infoEditModal') closeInfoEditModal();
+            else if(id==='noteDialogModal') closeNoteDialog();
+        }
+    });
+};
+</script>
+</body>
+</html>
