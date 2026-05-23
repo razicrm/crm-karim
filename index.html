@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -420,6 +421,26 @@
         .btn-save-contact { background:var(--green-bg);color:var(--green-text);border:0.5px solid var(--green-border);border-radius:var(--radius-md);padding:8px 16px;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit; }
         .btn-save-contact:hover { background:var(--green-border); }
 
+    
+        /* ASSOCIÉS TAGS */
+        .associe-tag { display:inline-flex;align-items:center;gap:5px;background:var(--purple-bg);color:var(--purple-text);border:0.5px solid var(--purple-border);border-radius:var(--radius-pill);padding:3px 10px;font-size:11px;font-weight:500;margin:2px; }
+        .associe-tag button { background:none;border:none;cursor:pointer;color:var(--purple-text);font-size:13px;line-height:1;padding:0 0 0 2px; }
+        .associe-row { display:flex;gap:6px;align-items:center;margin-bottom:5px; }
+        .associe-row input { flex:1;padding:6px 8px;border:0.5px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:12px; }
+        .associe-row input:focus { outline:none;border-color:var(--accent); }
+        /* JOURNAL NOTES */
+        .journal-entry { background:var(--bg-subtle);border:0.5px solid var(--border-light);border-radius:var(--radius-md);padding:10px 12px;margin-bottom:8px; }
+        .journal-entry-header { display:flex;justify-content:space-between;align-items:center;margin-bottom:6px; }
+        .journal-entry-meta { font-size:10px;color:var(--text-tertiary);font-family:'DM Mono',monospace; }
+        .journal-entry-author { font-size:10px;font-weight:600;color:var(--accent);background:var(--accent-light);padding:2px 7px;border-radius:var(--radius-pill); }
+        .journal-entry-text { font-size:12px;color:var(--text-primary);line-height:1.5;white-space:pre-wrap; }
+        .journal-add-area { background:var(--bg-white);border:0.5px solid var(--border);border-radius:var(--radius-md);padding:10px 12px;margin-top:8px; }
+        .journal-add-area textarea { width:100%;border:none;background:transparent;font-family:inherit;font-size:12px;color:var(--text-primary);resize:vertical;min-height:70px;outline:none; }
+        .btn-journal-add { background:var(--accent);color:#fff;border:none;border-radius:var(--radius-md);padding:7px 14px;font-size:11px;font-weight:500;cursor:pointer;font-family:inherit;margin-top:6px; }
+        .btn-journal-add:hover { background:var(--accent-dark); }
+        .btn-journal-del { background:none;border:none;cursor:pointer;color:var(--text-tertiary);font-size:12px;padding:2px 4px;border-radius:var(--radius-sm); }
+        .btn-journal-del:hover { color:var(--red-text);background:var(--red-bg); }
+
     </style>
 </head>
 <body>
@@ -644,6 +665,21 @@
                             <option value="Campagne 10">Campagne 10</option>
                         </select>
                     </div>
+                    <div class="input-field">
+                        <label>Type d'entreprise</label>
+                        <input id="typeEntreprise" list="typeEntrepriseList" placeholder="Sélectionner ou écrire...">
+                        <datalist id="typeEntrepriseList">
+                            <option>Incorporation (société par actions)</option>
+                            <option>Société en nom collectif (SENC)</option>
+                            <option>Entreprise individuelle (travailleur autonome)</option>
+                            <option>Société en commandite</option>
+                            <option>Coopérative</option>
+                            <option>OBNL (organisme à but non lucratif)</option>
+                            <option>Fiducie</option>
+                            <option>Holding</option>
+                            <option>Franchise</option>
+                        </datalist>
+                    </div>
                     <div class="input-field"><label>NEQ</label><input id="neq" placeholder="1234567890"></div>
                     <div class="input-field">
                         <label>Secteur</label>
@@ -659,6 +695,36 @@
                     <div style="display:flex;gap:8px;">
                         <div class="input-field" style="flex:1;"><label>Employés</label><input id="employees" type="number" placeholder="Ex: 50"></div>
                         <div class="input-field" style="width:100px;"><label>Année création</label><input type="number" id="companyCreationDate" placeholder="2005" min="1800" max="2099"></div>
+                    </div>
+                    <!-- ASSOCIÉS -->
+                    <div class="input-field" style="margin-bottom:6px;">
+                        <label style="display:flex;align-items:center;gap:8px;">
+                            <input type="checkbox" id="hasAssocies" onchange="toggleAssocies()" style="width:14px;height:14px;accent-color:var(--accent);">
+                            Associé(s)
+                        </label>
+                    </div>
+                    <div id="associesSection" style="display:none;">
+                        <div id="associesList" style="margin-bottom:6px;"></div>
+                        <button type="button" onclick="addAssocie()" style="background:var(--accent-light);color:var(--accent);border:0.5px solid var(--purple-border);border-radius:var(--radius-sm);padding:4px 10px;font-size:11px;cursor:pointer;font-family:inherit;">+ Ajouter un associé</button>
+                    </div>
+                    <!-- PRODUITS IA + CONSEILLER -->
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;">
+                        <div class="input-field" style="margin-bottom:0;">
+                            <label>Produits chez IA</label>
+                            <select id="produitsIA">
+                                <option value="">— vide —</option>
+                                <option value="Oui">Oui</option>
+                                <option value="Non">Non</option>
+                            </select>
+                        </div>
+                        <div class="input-field" style="margin-bottom:0;">
+                            <label>Conseiller séc. financière</label>
+                            <select id="conseillerSecFin">
+                                <option value="">— vide —</option>
+                                <option value="Oui">Oui</option>
+                                <option value="Non">Non</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
@@ -1278,10 +1344,7 @@ function openCreateModal() {
 }
 
 function handleCreateModalClick(event) {
-    // Only close if clicking the dark overlay itself, not the modal box
-    if(event.target === document.getElementById('createModal')) {
-        // Do NOT close — per spec
-    }
+    // Intentionally empty — clicking outside does NOT close create modal
 }
 
 function addCreateContact() {
@@ -1318,24 +1381,109 @@ function renderCreateContacts() {
 }
 function closeCreateModal() {
     document.getElementById("createModal").style.display="none";
-    // Reset all fields
-    ["companyName","companyAddress","neq","employees","companyCreationDate",
+    ["companyName","companyAddress","typeEntreprise","neq","employees","companyCreationDate",
      "contactName","contactPrenom","fonction","birthDate","age",
-     "phoneDirect","phoneMobile","phonePoste","email","nomsAssocies",
+     "phoneDirect","phoneMobile","phonePoste","email",
      "enfantsCharge","notePrestataire","recoPrestataire","date1erAppelPrevu"].forEach(id=>{
         const el=document.getElementById(id); if(el) el.value="";
     });
     ["secteur"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
-    const s1=document.getElementById("proprietaire"); if(s1) s1.selectedIndex=0;
-    const s2=document.getElementById("fumeur"); if(s2) s2.value="";
-    const s3=document.getElementById("situationFamiliale"); if(s3) s3.selectedIndex=0;
-    const s4=document.getElementById("campaignSuivi"); if(s4) s4.selectedIndex=0;
-    const s5=document.getElementById("priority"); if(s5) s5.value="medium";
-    const s6=document.getElementById("initialStatus"); if(s6) s6.value="Prospect";
-    const s7=document.getElementById("contactType"); if(s7) s7.value="📞 Appel découverte";
-    const s8=document.getElementById("campagne"); if(s8) s8.value="Inconnue";
-    createContacts=[];
-    renderCreateContacts();
+    const selects={proprietaire:0,fumeur:'',situationFamiliale:0,campaignSuivi:0,
+                   priority:'medium',initialStatus:'Prospect',
+                   contactType:'📞 Appel découverte',campagne:'Inconnue',
+                   produitsIA:'',conseillerSecFin:''};
+    for(const[id,val] of Object.entries(selects)){
+        const el=document.getElementById(id);
+        if(!el) continue;
+        if(typeof val==='number') el.selectedIndex=val;
+        else el.value=val;
+    }
+    const hac=document.getElementById('hasAssocies'); if(hac){hac.checked=false;}
+    const as=document.getElementById('associesSection'); if(as) as.style.display='none';
+    createAssocies=[]; renderAssociesForm();
+    createContacts=[]; renderCreateContacts();
+}
+
+
+// ══ ASSOCIÉS (create form) ══
+let createAssocies = [];
+
+function toggleAssocies() {
+    const checked = document.getElementById('hasAssocies').checked;
+    document.getElementById('associesSection').style.display = checked ? 'block' : 'none';
+    if(!checked) { createAssocies=[]; renderAssociesForm(); }
+}
+
+function addAssocie() {
+    createAssocies.push({id:'as_'+Date.now(), name:''});
+    renderAssociesForm();
+    setTimeout(()=>{ const inputs=document.querySelectorAll('.associe-row input'); if(inputs.length) inputs[inputs.length-1].focus(); },30);
+}
+
+function removeAssocieForm(idx) {
+    createAssocies.splice(idx,1);
+    renderAssociesForm();
+    if(!createAssocies.length) { document.getElementById('hasAssocies').checked=false; toggleAssocies(); }
+}
+
+function renderAssociesForm() {
+    const el=document.getElementById('associesList');
+    if(!el) return;
+    el.innerHTML=createAssocies.map((a,i)=>`
+        <div class="associe-row">
+            <input value="${escapeHtml(a.name)}" oninput="createAssocies[${i}].name=this.value" placeholder="Prénom Nom de l'associé">
+            <button type="button" onclick="removeAssocieForm(${i})" style="background:var(--red-bg);color:var(--red-text);border:0.5px solid var(--red-border);border-radius:var(--radius-sm);padding:4px 7px;cursor:pointer;font-size:12px;">✕</button>
+        </div>`).join('');
+}
+
+// ══ JOURNAL NOTES ══
+function addJournalNote(clientId) {
+    const c=clients.find(x=>x.id===clientId);
+    if(!c) return;
+    const textarea=document.getElementById('journalNewText');
+    const text=textarea?.value?.trim();
+    if(!text){showNotification('Saisissez une note','error');return;}
+    if(!c.clientNotes) c.clientNotes=[];
+    c.clientNotes.unshift({
+        id:'jn_'+Date.now(),
+        text,
+        date: new Date().toLocaleDateString('fr-CA',{year:'numeric',month:'2-digit',day:'2-digit'}),
+        time: new Date().toLocaleTimeString('fr-CA',{hour:'2-digit',minute:'2-digit'}),
+        author: currentUser
+    });
+    c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:'Note ajoutée'});
+    save();
+    textarea.value='';
+    renderJournalNotes(clientId);
+    showNotification('Note ajoutée','success');
+}
+
+function deleteJournalNote(clientId, noteId) {
+    const c=clients.find(x=>x.id===clientId);
+    if(!c||!confirm('Supprimer cette note ?')) return;
+    c.clientNotes=(c.clientNotes||[]).filter(n=>n.id!==noteId);
+    save(); renderJournalNotes(clientId);
+    showNotification('Note supprimée','info');
+}
+
+function renderJournalNotes(clientId) {
+    const c=clients.find(x=>x.id===clientId);
+    const el=document.getElementById('journalNotesList');
+    if(!el||!c) return;
+    const notes=c.clientNotes||[];
+    el.innerHTML=notes.length
+        ?notes.map(n=>`
+            <div class="journal-entry">
+                <div class="journal-entry-header">
+                    <span class="journal-entry-meta">📅 ${n.date} · ${n.time}</span>
+                    <div style="display:flex;align-items:center;gap:6px;">
+                        <span class="journal-entry-author">${escapeHtml(n.author)}</span>
+                        <button class="btn-journal-del" onclick="deleteJournalNote(${clientId},'${n.id}')" title="Supprimer">🗑</button>
+                    </div>
+                </div>
+                <div class="journal-entry-text">${escapeHtml(n.text)}</div>
+            </div>`).join('')
+        :'<div style="padding:16px;text-align:center;font-size:11px;color:var(--text-tertiary);font-style:italic;">Aucune note — ajoutez votre première note ci-dessous</div>';
 }
 
 function addClientB2B() {
@@ -1345,18 +1493,25 @@ function addClientB2B() {
     const ft=document.getElementById("contactType").value;
     if(!cn) return showNotification("Nom de l'entreprise requis","error");
     if(!co) return showNotification("Nom du contact requis","error");
-    if(!fd) return showNotification("Date du 1er appel requis ★","error");
+    if(!fd) return showNotification("Date du 1er appel requise ★","error");
     const bd=document.getElementById("birthDate").value;
     const age=bd?calcAge(bd):document.getElementById("age").value;
+    // Associés
+    const hasAssoc=document.getElementById("hasAssocies")?.checked;
+    const associesList=hasAssoc?createAssocies.filter(a=>a.name.trim()).map(a=>a.name.trim()):[];
     const client = {
         id: Date.now(),
         campagne: document.getElementById("campagne").value||'Inconnue',
         companyName: cn,
         companyAddress: document.getElementById("companyAddress").value||'',
+        typeEntreprise: document.getElementById("typeEntreprise").value||'',
         neq: document.getElementById("neq").value||'',
         employees: document.getElementById("employees").value||'',
         secteur: document.getElementById("secteur").value||'',
         companyCreationDate: document.getElementById("companyCreationDate").value||'',
+        associes: associesList,
+        produitsIA: document.getElementById("produitsIA").value||'',
+        conseillerSecFin: document.getElementById("conseillerSecFin").value||'',
         contactName: co,
         contactPrenom: document.getElementById("contactPrenom").value||'',
         fonction: document.getElementById("fonction").value||'',
@@ -1369,33 +1524,28 @@ function addClientB2B() {
         fumeur: document.getElementById("fumeur").value||'',
         situationFamiliale: document.getElementById("situationFamiliale").value||'',
         enfantsCharge: document.getElementById("enfantsCharge").value||'',
-        nomsAssocies: document.getElementById("nomsAssocies").value||'',
-        // Prestataire
+        nomsAssocies: associesList.join(', '),
         date1erAppelPrevu: fd,
         notePrestataire: document.getElementById("notePrestataire").value||'',
         recoPrestataire: document.getElementById("recoPrestataire").value||'',
-        date1erAppelRealise: '', resumeCall1: '',
-        // Task
-        tacheFaite: false, commentaireTache: '',
-        prochainesTache: '', prochainesTacheDate: '',
-        dossierFinalise: false,
-        // Notes
-        generalNotes: '', commercialNotes: '',
-        // Suivi
+        date1erAppelRealise:'', resumeCall1:'',
+        tacheFaite:false, commentaireTache:'',
+        prochainesTache:'', prochainesTacheDate:'',
+        dossierFinalise:false,
+        generalNotes:'', commercialNotes:'',
+        clientNotes:[],
         campaignSuivi: document.getElementById("campaignSuivi").value,
-        status: document.getElementById("initialStatus").value||'Prospect',
+        status: 'Prospect',
         priority: document.getElementById("priority").value,
-        // Action planifiée = date 1er appel prévu
-        calls: [],
-        nextCall: { date: fd, type: ft, recommendations: document.getElementById("recoPrestataire").value||'' },
-        // Secondary contacts from form
+        calls:[],
+        nextCall:{ date:fd, type:ft, recommendations:document.getElementById("recoPrestataire").value||'' },
         secondaryContacts: createContacts.filter(c=>c.name.trim()).map(c=>({
             ...c, id:'sc_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),
             isMainContact:false, addedAt:getCurrentDate(), addedBy:currentUser
         })),
-        closed: false, archived: false, archivedDate: null,
-        createdAt: getCurrentDateTime(), createdBy: currentUser,
-        modificationHistory: [{date:getCurrentDateTime(),by:currentUser,action:`Dossier créé — Statut: Prospect — 1er appel: ${fd}`}]
+        closed:false, archived:false, archivedDate:null,
+        createdAt:getCurrentDateTime(), createdBy:currentUser,
+        modificationHistory:[{date:getCurrentDateTime(),by:currentUser,action:`Dossier créé — Statut: Prospect — 1er appel: ${fd}`}]
     };
     clients.push(client); save(); render(); updateCampagneFilter();
     showNotification(`✅ Dossier créé — ${escapeHtml(cn)} · 1er appel le ${fd}`,"success");
@@ -1434,11 +1584,17 @@ function buildViewModal(c) {
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
             <div class="info-block" style="margin-bottom:0;">
                 <h4>🏢 Entreprise</h4>
+                ${c.typeEntreprise?`<div class="info-row"><span class="lbl">Type</span><span class="val">${escapeHtml(c.typeEntreprise)}</span></div>`:''}
                 <div class="info-row"><span class="lbl">Secteur</span><span class="val">${escapeHtml(c.secteur)||'—'}</span></div>
                 <div class="info-row"><span class="lbl">NEQ</span><span class="val">${escapeHtml(c.neq)||'—'}</span></div>
                 <div class="info-row"><span class="lbl">Employés</span><span class="val">${escapeHtml(c.employees)||'—'}</span></div>
                 <div class="info-row"><span class="lbl">Année création</span><span class="val">${escapeHtml(c.companyCreationDate)||'—'}</span></div>
                 ${c.campagne?`<div class="info-row"><span class="lbl">Campagne</span><span class="val">${escapeHtml(c.campagne)}</span></div>`:''}
+                ${(c.associes&&c.associes.length)?`<div class="info-row"><span class="lbl">Associé(s)</span><div style="margin-top:3px;">${c.associes.map(a=>`<span class="associe-tag" style="margin:2px;">${escapeHtml(a)}</span>`).join('')}</div></div>`:''}
+                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;">
+                    ${c.produitsIA?`<div class="info-row" style="margin-bottom:0;"><span class="lbl">Produits chez IA</span><br><span class="badge" style="margin-top:3px;background:${c.produitsIA==='Oui'?'var(--green-bg)':'var(--red-bg)'};color:${c.produitsIA==='Oui'?'var(--green-text)':'var(--red-text)'};">${escapeHtml(c.produitsIA)}</span></div>`:''}
+                    ${c.conseillerSecFin?`<div class="info-row" style="margin-bottom:0;"><span class="lbl">Cons. séc. fin.</span><br><span class="badge" style="margin-top:3px;background:${c.conseillerSecFin==='Oui'?'var(--green-bg)':'var(--red-bg)'};color:${c.conseillerSecFin==='Oui'?'var(--green-text)':'var(--red-text)'};">${escapeHtml(c.conseillerSecFin)}</span></div>`:''}
+                </div>
             </div>
             <div class="info-block" style="margin-bottom:0;">
                 <h4>👤 Contact principal</h4>
@@ -1526,17 +1682,17 @@ function buildViewModal(c) {
             </div>
         </div>`;
 
-    // TAB: NOTES
+    // TAB: NOTES (journal horodaté)
     const notesHtml=`
-        <div class="note-card">
-            <div class="note-card-header"><span>📔 Notes générales</span><button class="btn-note" onclick="editNoteInline('generalNotes','viewNoteGeneral')">Éditer</button></div>
-            <div id="viewNoteGeneral" class="note-preview ${c.generalNotes?'':'empty'}">${c.generalNotes?escapeHtml(c.generalNotes):'Aucune note...'}</div>
-            <textarea id="viewNoteGeneralEdit" style="display:none;" class="note-dialog-textarea">${escapeHtml(c.generalNotes||'')}</textarea>
+        <div style="margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-secondary);">💼 Notes</span>
+            <span style="font-size:10px;color:var(--text-tertiary);">${(c.clientNotes||[]).length} note(s)</span>
         </div>
-        <div class="note-card">
-            <div class="note-card-header"><span>💼 Notes commerciales</span><button class="btn-note" onclick="editNoteInline('commercialNotes','viewNoteCommercial')">Éditer</button></div>
-            <div id="viewNoteCommercial" class="note-preview ${c.commercialNotes?'':'empty'}">${c.commercialNotes?escapeHtml(c.commercialNotes):'Aucune note commerciale...'}</div>
-            <textarea id="viewNoteCommercialEdit" style="display:none;" class="note-dialog-textarea">${escapeHtml(c.commercialNotes||'')}</textarea>
+        <div id="journalNotesList"></div>
+        <div class="journal-add-area">
+            <div style="font-size:10px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px;">+ Ajouter une note</div>
+            <textarea id="journalNewText" placeholder="Saisissez votre note ici..."></textarea>
+            <button class="btn-journal-add" onclick="addJournalNote(${c.id})">+ Ajouter</button>
         </div>`;
 
     // TAB: HISTORIQUE
@@ -1595,6 +1751,8 @@ function buildViewModal(c) {
         });
     });
     renderSecondaryContacts();
+    // Render journal if notes tab already active
+    renderJournalNotes(c.id);
 }
 
 // ══ SECONDARY CONTACTS ══
@@ -1822,15 +1980,17 @@ function openEditModal(id) {
             ${callsSorted.slice(0,5).map(call=>`<div class="call-item"><div class="call-header"><span>${escapeHtml(call.type)}</span><span>${call.date}</span></div><div class="call-summary">${escapeHtml(call.summary)}</div></div>`).join('')||'<div style="font-size:12px;color:var(--text-tertiary);font-style:italic;">Aucune action</div>'}
         </div>`;
 
-    // Notes tab
+    // Notes tab (journal)
     const editNotesHtml=`
-        <div class="note-card">
-            <div class="note-card-header"><span>📔 Notes générales</span></div>
-            <textarea id="ei_generalNotes" class="note-dialog-textarea" style="min-height:140px;border:none;border-radius:0;">${escapeHtml(c.generalNotes||'')}</textarea>
+        <div style="margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-secondary);">💼 Notes</span>
+            <span style="font-size:10px;color:var(--text-tertiary);">${(c.clientNotes||[]).length} note(s)</span>
         </div>
-        <div class="note-card">
-            <div class="note-card-header"><span>💼 Notes commerciales</span></div>
-            <textarea id="ei_commercialNotes" class="note-dialog-textarea" style="min-height:140px;border:none;border-radius:0;">${escapeHtml(c.commercialNotes||'')}</textarea>
+        <div id="journalNotesList"></div>
+        <div class="journal-add-area">
+            <div style="font-size:10px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px;">+ Ajouter une note</div>
+            <textarea id="journalNewText" placeholder="Saisissez votre note ici..."></textarea>
+            <button class="btn-journal-add" onclick="addJournalNote(${c.id})">+ Ajouter</button>
         </div>`;
 
     // Historique tab
@@ -1874,6 +2034,7 @@ function openEditModal(id) {
             ['infos','actions','notes','historique'].forEach(t=>{const el=document.getElementById('et-'+t);if(el)el.style.display='none';});
             const el=document.getElementById('et-'+btn.dataset.etab);
             if(el) el.style.display='block';
+            if(btn.dataset.etab==='notes') renderJournalNotes(c.id);
         });
     });
 
@@ -1925,9 +2086,7 @@ function saveEditTabbed() {
     const nextDate=document.getElementById('ei_nextDate')?.value;
     const nextType=document.getElementById('ei_nextType')?.value;
     if(nextDate&&nextType){ c.nextCall={date:nextDate,type:nextType,recommendations:document.getElementById('ei_tacheReco')?.value||''}; c.tacheFaite=false; }
-    // Notes tab
-    const gn=document.getElementById('ei_generalNotes'); if(gn) c.generalNotes=gn.value;
-    const cn=document.getElementById('ei_commercialNotes'); if(cn) c.commercialNotes=cn.value;
+    // Notes are saved directly via addJournalNote(), no batch save needed here
     c.modificationHistory.unshift({date:getCurrentDateTime(),by:currentUser,action:'Dossier mis à jour'});
     save(); render(); showNotification('✅ Dossier sauvegardé','success'); closeEditModal();
 }
@@ -2345,7 +2504,11 @@ function render() {
             <td><span class="eye-icon" onclick="openViewModal(${c.id})" title="Consulter">👁</span></td>
             <td><span class="badge badge-suivi">${escapeHtml(c.campaignSuivi)}</span></td>
             <td><span style="font-size:11px;color:var(--text-secondary);font-weight:500;">${escapeHtml(c.campagne||'—')}</span></td>
-            <td><span class="co-name">${escapeHtml(c.companyName)}</span></td>
+            <td>
+                <span class="co-name">${escapeHtml(c.companyName)}</span>
+                ${(c.associes&&c.associes.length)?`<div style="margin-top:2px;">${c.associes.map(a=>`<span style="font-size:9px;background:var(--purple-bg);color:var(--purple-text);border-radius:99px;padding:1px 6px;margin-right:2px;">${escapeHtml(a)}</span>`).join('')}</div>`:''}
+                ${c.produitsIA?`<div style="font-size:9px;color:${c.produitsIA==='Oui'?'var(--green-text)':'var(--text-tertiary)'};margin-top:1px;">IA: ${escapeHtml(c.produitsIA)}</div>`:''}
+            </td>
             <td><div class="contact-cell"><span class="contact-name">${escapeHtml(c.contactName)}</span><span class="contact-role">${escapeHtml(c.fonction||'')}</span><span class="contact-info">${escapeHtml(c.phoneDirect||'')}</span></div></td>
             <td><span class="badge badge-${statusCls}">${escapeHtml(c.status)}</span></td>
             <td>${tacheStatusBadge(ts)}</td>
@@ -2358,10 +2521,9 @@ function render() {
 
 // ══ MODALS CLOSE ══
 window.onclick=e=>{
-    ['createModal','viewModal','editModal','infoEditModal','noteDialogModal'].forEach(id=>{
+    ['viewModal','editModal','infoEditModal','noteDialogModal'].forEach(id=>{
         if(e.target===document.getElementById(id)){
-            if(id==='createModal') closeCreateModal();
-            else if(id==='viewModal') closeViewModal();
+            if(id==='viewModal') closeViewModal();
             else if(id==='editModal') closeEditModal();
             else if(id==='infoEditModal') closeInfoEditModal();
             else if(id==='noteDialogModal') closeNoteDialog();
