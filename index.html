@@ -72,11 +72,8 @@ body.light-mode .timeline-item:hover { background: var(--bg2); }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { 
   background: var(--accent); 
-  border-radius: 20px; 
-}
-body.light-mode ::-webkit-scrollbar-thumb {
-  background: var(--text3);
-}
+  border-radius: 20px; }
+body.light-mode ::-webkit-scrollbar-thumb {  background: var(--text3);}
 
 /* ===== RESET & BASE ===== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -87,17 +84,8 @@ input, select, textarea { font-family: var(--font-body); }
 
 ::selection { background: var(--accent); color: var(--bg-inv); }
 
-.error-msg {
-  display: none;
-  color: var(--red);
-  font-size: 11px;
-  margin-top: 4px;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 8px;
-  border-radius: 4px;
-  background: rgba(239,68,68,.08);
-}
+.error-msg {  display: none;  color: var(--red);  font-size: 11px;  margin-top: 4px;  align-items: center;
+  gap: 4px;  padding: 4px 8px; border-radius: 4px;  background: rgba(239,68,68,.08);}
 .error-msg i { font-size: 12px; }
 .error-msg.visible { display: flex; }
 
@@ -127,7 +115,6 @@ input, select, textarea { font-family: var(--font-body); }
 #sidebar { width:var(--sidebar-w); flex-shrink:0; background:linear-gradient(145deg,var(--bg2) 0%,var(--bg) 100%); border-right:1px solid var(--border); display:flex; flex-direction:column; overflow:hidden; transition:width .1s ease; position:relative; }
 .resizer { width:4px; background:var(--border); cursor:col-resize; flex-shrink:0; transition:background .2s,width .2s; }
 .resizer:hover, .resizer.active { background:var(--accent); width:6px; }
-
 .sidebar-minimized .sidebar-header,
 .sidebar-minimized .sidebar-user,
 .sidebar-minimized .view-tabs,
@@ -1420,71 +1407,209 @@ const firebaseConfig = {
   measurementId: "G-B47DFPFJR9"
 };
 
-let fbReady       = false;
-let fbDb          = null;
-let fbDocRef      = null;
-let fbUnsubscribe = null;
-let fbPushTimeout = null;
-let fbLastUpdateId = null; // pour ignorer l'écho de nos propres écritures
-let fbSyncStatus  = 'offline'; // offline | connecting | online | error
-let fbLastSyncAt  = null;
+let fbReady        = false;
+let fbDb           = null;
+let fbUnsubClients = null;
+let fbUnsubTrash   = null;
+let fbUnsubSettings= null;
+let fbPushTimeout  = null;
+let fbSyncStatus   = 'offline'; // offline | connecting | online | error
+let fbLastSyncAt   = null;
+// Comptes autorisés à synchroniser (doivent aussi exister dans Firebase Authentication)
+const FB_ALLOWED_EMAILS = ['karim@crm.com', 'assistante@crm.com'];
+// Copies locales du dernier état poussé, pour ne réécrire que ce qui a réellement changé
+let fbLastPushedClients  = {};
+let fbLastPushedTrash    = {};
+let fbLastPushedSettings = null;
 
 function fbInit() {
   try {
     firebase.initializeApp(firebaseConfig);
     fbDb = firebase.firestore();
-    fbDocRef = fbDb.collection('crm').doc('shared-data');
-    fbSetStatus('connecting');
-    firebase.auth().signInAnonymously()
-      .then(() => { fbReady = true; fbListen(); })
-      .catch(err => { console.error('Firebase auth error', err); fbSetStatus('error'); });
+    fbSetStatus('offline');
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        fbReady = true;
+        fbSetStatus('connecting');
+        fbListenClients();
+        fbListenTrash();
+        fbListenSettings();
+        fbPush(); // pousse les éventuelles données locales pas encore en ligne
+      } else {
+        fbReady = false;
+        fbSetStatus('offline');
+        if (fbUnsubClients)  { fbUnsubClients();  fbUnsubClients  = null; }
+        if (fbUnsubTrash)    { fbUnsubTrash();    fbUnsubTrash    = null; }
+        if (fbUnsubSettings) { fbUnsubSettings(); fbUnsubSettings = null; }
+      }
+    });
   } catch (err) {
     console.error('Firebase init error', err);
     fbSetStatus('error');
   }
 }
 
-function fbListen() {
-  if (fbUnsubscribe) fbUnsubscribe();
-  fbUnsubscribe = fbDocRef.onSnapshot(doc => {
+// Appelée depuis doLogin() avec les mêmes identifiants que la connexion à l'app
+function fbSignIn(email, password) {
+  if (!firebase.apps || !firebase.apps.length) return;
+  firebase.auth().signInWithEmailAndPassword(email, password).catch(err => {
+    console.error('Firebase sign-in error', err);
+    toast('⚠️ Compte de synchro introuvable pour cet email — la synchro ne fonctionnera pas', 'error');
+  });
+}
+
+function fbSignOut() {
+  if (firebase.apps && firebase.apps.length) firebase.auth().signOut().catch(() => {});
+}
+
+function fbListenClients() {
+  if (fbUnsubClients) fbUnsubClients();
+  fbUnsubClients = fbDb.collection('clients').onSnapshot(snap => {
+    fbSetStatus('online');
+    let changed = false;
+    snap.docChanges().forEach(change => {
+      const id = change.doc.id;
+      if (change.type === 'removed') {
+        const idx = state.clients.findIndex(c => c.id === id);
+        if (idx !== -1) { state.clients.splice(idx, 1); changed = true; }
+        delete fbLastPushedClients[id];
+        return;
+      }
+      const data = change.doc.data();
+      const json = JSON.stringify(data);
+      if (fbLastPushedClients[id] === json) return; // écho de notre propre écriture
+      fbLastPushedClients[id] = json;
+      const idx = state.clients.findIndex(c => c.id === id);
+      if (idx !== -1) state.clients[idx] = data; else state.clients.unshift(data);
+      changed = true;
+    });
+    if (changed) {
+      storage.save('crm_karim_v31', state);
+      fbLastSyncAt = new Date();
+      fbRefreshAllViews();
+      updateSyncIndicator();
+    }
+  }, err => { console.error('Firebase listen (clients) error', err); fbSetStatus('error'); });
+}
+
+function fbListenTrash() {
+  if (fbUnsubTrash) fbUnsubTrash();
+  fbUnsubTrash = fbDb.collection('trash').onSnapshot(snap => {
+    fbSetStatus('online');
+    let changed = false;
+    snap.docChanges().forEach(change => {
+      const id = change.doc.id;
+      if (change.type === 'removed') {
+        const idx = state.trash.findIndex(c => c.id === id);
+        if (idx !== -1) { state.trash.splice(idx, 1); changed = true; }
+        delete fbLastPushedTrash[id];
+        return;
+      }
+      const data = change.doc.data();
+      const json = JSON.stringify(data);
+      if (fbLastPushedTrash[id] === json) return;
+      fbLastPushedTrash[id] = json;
+      const idx = state.trash.findIndex(c => c.id === id);
+      if (idx !== -1) state.trash[idx] = data; else state.trash.unshift(data);
+      changed = true;
+    });
+    if (changed) {
+      storage.save('crm_karim_v31', state);
+      fbLastSyncAt = new Date();
+      fbRefreshAllViews();
+      updateSyncIndicator();
+    }
+  }, err => { console.error('Firebase listen (trash) error', err); fbSetStatus('error'); });
+}
+
+function fbListenSettings() {
+  if (fbUnsubSettings) fbUnsubSettings();
+  fbUnsubSettings = fbDb.collection('meta').doc('settings').onSnapshot(doc => {
     fbSetStatus('online');
     if (!doc.exists) return;
     const data = doc.data();
-    if (!data || data.updateId === fbLastUpdateId) return; // c'est notre propre écriture qui revient
-    if (data.state)           state          = data.state;
-    if (data.customLists)     customLists    = data.customLists;
-    if (data.columnOrder)     columnOrder    = data.columnOrder;
-    if (data.visibleColumns)  visibleColumns = data.visibleColumns;
-    storage.save('crm_karim_v31', state);
+    const json = JSON.stringify(data);
+    if (fbLastPushedSettings === json) return; // écho de notre propre écriture
+    fbLastPushedSettings = json;
+    if (data.customLists)    customLists    = data.customLists;
+    if (data.columnOrder)    columnOrder    = data.columnOrder;
+    if (data.visibleColumns) visibleColumns = data.visibleColumns;
     storage.save('custom_lists_v31', customLists);
     storage.save('table_column_order_v31', columnOrder);
     storage.save('table_visible_columns_v31', visibleColumns);
     fbLastSyncAt = new Date();
     fbRefreshAllViews();
     updateSyncIndicator();
-    if (data.updatedBy) toast(`🔄 Mis à jour par ${data.updatedBy}`, 'info');
-  }, err => {
-    console.error('Firebase listen error', err);
-    fbSetStatus('error');
-  });
+    if (data.updatedBy) toast(`🔄 Réglages mis à jour par ${data.updatedBy}`, 'info');
+  }, err => { console.error('Firebase listen (settings) error', err); fbSetStatus('error'); });
 }
 
-// Appelé automatiquement à chaque save() local (debounced pour éviter le spam d'écritures)
+// Appelée automatiquement à chaque save() local (debounced pour regrouper les écritures)
 function fbPush() {
-  if (!fbReady || !fbDocRef) return;
+  if (!fbReady) return;
   clearTimeout(fbPushTimeout);
   fbPushTimeout = setTimeout(fbPushNow, 1200);
 }
 
+// N'écrit dans Firestore QUE les documents qui ont réellement changé, un par client.
+// Deux personnes qui modifient deux dossiers différents en même temps ne s'écrasent donc plus.
 function fbPushNow() {
-  if (!fbReady || !fbDocRef) return;
-  fbLastUpdateId = uid();
-  fbDocRef.set({
-    state, customLists, columnOrder, visibleColumns,
-    updateId: fbLastUpdateId,
+  if (!fbReady || !fbDb) return;
+  const batch = fbDb.batch();
+  let opCount = 0;
+
+  const currentClientIds = new Set();
+  (state.clients || []).forEach(c => {
+    currentClientIds.add(c.id);
+    const json = JSON.stringify(c);
+    if (fbLastPushedClients[c.id] !== json) {
+      batch.set(fbDb.collection('clients').doc(c.id), c);
+      fbLastPushedClients[c.id] = json;
+      opCount++;
+    }
+  });
+  Object.keys(fbLastPushedClients).forEach(id => {
+    if (!currentClientIds.has(id)) {
+      batch.delete(fbDb.collection('clients').doc(id));
+      delete fbLastPushedClients[id];
+      opCount++;
+    }
+  });
+
+  const currentTrashIds = new Set();
+  (state.trash || []).forEach(c => {
+    currentTrashIds.add(c.id);
+    const json = JSON.stringify(c);
+    if (fbLastPushedTrash[c.id] !== json) {
+      batch.set(fbDb.collection('trash').doc(c.id), c);
+      fbLastPushedTrash[c.id] = json;
+      opCount++;
+    }
+  });
+  Object.keys(fbLastPushedTrash).forEach(id => {
+    if (!currentTrashIds.has(id)) {
+      batch.delete(fbDb.collection('trash').doc(id));
+      delete fbLastPushedTrash[id];
+      opCount++;
+    }
+  });
+
+  const settings = {
+    customLists, columnOrder, visibleColumns,
     updatedBy: state.user?.name || 'Inconnu',
     updatedAt: new Date().toISOString()
-  }).then(() => {
+  };
+  const settingsJson = JSON.stringify(settings);
+  if (fbLastPushedSettings !== settingsJson) {
+    batch.set(fbDb.collection('meta').doc('settings'), settings);
+    fbLastPushedSettings = settingsJson;
+    opCount++;
+  }
+
+  if (opCount === 0) { fbSetStatus('online'); return; }
+  fbSetStatus('connecting');
+  batch.commit().then(() => {
     fbLastSyncAt = new Date();
     fbSetStatus('online');
     updateSyncIndicator();
@@ -1495,30 +1620,12 @@ function fbPushNow() {
   });
 }
 
-// Bouton "Sync" manuel : récupère la dernière version distante puis pousse l'état courant
+// Bouton "Sync" manuel : force l'envoi immédiat sans attendre le debounce
 function fbManualSync() {
-  if (!fbReady || !fbDocRef) { toast('Synchronisation non disponible', 'error'); return; }
-  fbSetStatus('connecting');
-  fbDocRef.get().then(doc => {
-    if (doc.exists) {
-      const data = doc.data();
-      if (data && data.updateId !== fbLastUpdateId) {
-        if (data.state)          state          = data.state;
-        if (data.customLists)    customLists    = data.customLists;
-        if (data.columnOrder)    columnOrder    = data.columnOrder;
-        if (data.visibleColumns) visibleColumns = data.visibleColumns;
-        storage.save('crm_karim_v31', state);
-        fbRefreshAllViews();
-      }
-    }
-    fbPushNow();
-    toast('✅ Synchronisé', 'success');
-  }).catch(err => {
-    console.error(err);
-    fbSetStatus('error');
-    updateSyncIndicator();
-    toast('❌ Erreur de synchronisation', 'error');
-  });
+  if (!fbReady) { toast('Synchronisation non disponible (non connecté)', 'error'); return; }
+  clearTimeout(fbPushTimeout);
+  fbPushNow();
+  toast('✅ Synchronisation lancée', 'success');
 }
 
 function fbRefreshAllViews() {
@@ -1865,11 +1972,13 @@ function doLogin() {
   const user  = DEMO_USERS.find(u => u.email === email && u.password === pass);
   if (!user) { document.getElementById('login-error').textContent = 'Email ou mot de passe incorrect.'; return; }
   state.user = { email: user.email, name: user.name, role: user.role };
+  fbSignIn(user.email, user.password); // connecte aussi la synchro Firebase avec le même compte
   save(); showApp();
 }
 
 function doLogout() {
   state.user = null; save();
+  fbSignOut();
   document.getElementById('app').classList.add('hidden');
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('login-email').value = '';
@@ -4235,7 +4344,6 @@ function deleteSelectedTrash() {
   toast(`${count} dossier(s) supprimés définitivement`, 'success');
 }
 
-// ============================================================
 //  INIT
 // ============================================================
 (function init() {
