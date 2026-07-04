@@ -72,8 +72,11 @@ body.light-mode .timeline-item:hover { background: var(--bg2); }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { 
   background: var(--accent); 
-  border-radius: 20px; }
-body.light-mode ::-webkit-scrollbar-thumb {  background: var(--text3);}
+  border-radius: 20px; 
+}
+body.light-mode ::-webkit-scrollbar-thumb {
+  background: var(--text3);
+}
 
 /* ===== RESET & BASE ===== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -84,8 +87,17 @@ input, select, textarea { font-family: var(--font-body); }
 
 ::selection { background: var(--accent); color: var(--bg-inv); }
 
-.error-msg {  display: none;  color: var(--red);  font-size: 11px;  margin-top: 4px;  align-items: center;
-  gap: 4px;  padding: 4px 8px; border-radius: 4px;  background: rgba(239,68,68,.08);}
+.error-msg {
+  display: none;
+  color: var(--red);
+  font-size: 11px;
+  margin-top: 4px;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: rgba(239,68,68,.08);
+}
 .error-msg i { font-size: 12px; }
 .error-msg.visible { display: flex; }
 
@@ -115,6 +127,7 @@ input, select, textarea { font-family: var(--font-body); }
 #sidebar { width:var(--sidebar-w); flex-shrink:0; background:linear-gradient(145deg,var(--bg2) 0%,var(--bg) 100%); border-right:1px solid var(--border); display:flex; flex-direction:column; overflow:hidden; transition:width .1s ease; position:relative; }
 .resizer { width:4px; background:var(--border); cursor:col-resize; flex-shrink:0; transition:background .2s,width .2s; }
 .resizer:hover, .resizer.active { background:var(--accent); width:6px; }
+
 .sidebar-minimized .sidebar-header,
 .sidebar-minimized .sidebar-user,
 .sidebar-minimized .view-tabs,
@@ -4344,6 +4357,7 @@ function deleteSelectedTrash() {
   toast(`${count} dossier(s) supprimés définitivement`, 'success');
 }
 
+// ============================================================
 //  INIT
 // ============================================================
 (function init() {
