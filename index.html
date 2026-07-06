@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CRM Karim — V2.0 Sécurisé</title>
+<title>CRM Karim — V3.3 Sécurisé</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -115,8 +115,6 @@ input, select, textarea { font-family: var(--font-body); }
 .btn-primary:hover { opacity:.9; transform:scale(1.02); box-shadow:0 4px 12px rgba(108,99,255,.3); }
 .btn-primary:disabled { opacity:.5; cursor:not-allowed; transform:none; }
 .login-error { color:var(--red); font-size:12px; margin-top:10px; min-height:16px; }
-.demo-hint { margin-top:24px; padding:12px 14px; background:var(--bg3); border-radius:var(--radius); border:1px solid var(--border); font-size:12px; color:var(--text3); line-height:1.8; }
-.demo-hint strong { color:var(--text2); }
 
 /* ===== APP ===== */
 #app { display:flex; height:100vh; }
@@ -736,8 +734,7 @@ input, select, textarea { font-family: var(--font-body); }
     <div class="field-group"><label>Mot de passe</label><input type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
     <button class="btn-primary" onclick="doLogin()">Se connecter</button>
     <div class="login-error" id="login-error"></div>
-    <div class="demo-hint"><strong>Comptes démo :</strong><br>karim@crm.com / <code>karim123</code><br>assistante@crm.com / <code>assist123</code></div>
-  </div>
+   </div>
 </div>
 
 <!-- ===== APP ===== -->
@@ -745,7 +742,7 @@ input, select, textarea { font-family: var(--font-body); }
   <aside id="sidebar">
     <div class="sidebar-header">
       <div class="sidebar-logo">CRM <span>Karim</span></div>
-      <span class="sidebar-version">V2.0</span>
+      <span class="sidebar-version">V3.3</span>
     </div>
     <div class="sidebar-user">
       <div class="avatar" id="sidebar-avatar">K</div>
@@ -1388,10 +1385,6 @@ const VALID_STATUSES  = ['Nouveau', 'En cours', 'En attente', 'Clos'];
 const STATUS_CLASS    = { Nouveau:'s-nouveau','En cours':'s-encours','En attente':'s-attente',Clos:'s-clos' };
 const STATUS_DOT      = { Nouveau:'dot-nouveau','En cours':'dot-encours','En attente':'dot-attente',Clos:'dot-clos' };
 const BAR_COLORS      = { Nouveau:'#60a5fa','En cours':'#8b85ff','En attente':'#fbbf24',Clos:'#4ade80' };
-const DEMO_USERS      = [
-  { email:'karim@crm.com',      password:'karim123',  name:'Karim', role:'Conseiller' },
-  { email:'assistante@crm.com', password:'assist123', name:'Asma',  role:'Assistante' },
-];
 
 const TEXT_FIELDS = ['prenom','nom','fonction','telephone','cellulaire','courriel','entreprise',
                      'anneeCreation','nbEmployes','ca','neq','adresse','secteur','potentiel'];
@@ -1426,11 +1419,9 @@ let fbUnsubClients = null;
 let fbUnsubTrash   = null;
 let fbUnsubSettings= null;
 let fbPushTimeout  = null;
-let fbSyncStatus   = 'offline'; // offline | connecting | online | error
+let fbSyncStatus   = 'offline';
 let fbLastSyncAt   = null;
-// Comptes autorisés à synchroniser (doivent aussi exister dans Firebase Authentication)
 const FB_ALLOWED_EMAILS = ['karim@crm.com', 'assistante@crm.com'];
-// Copies locales du dernier état poussé, pour ne réécrire que ce qui a réellement changé
 let fbLastPushedClients  = {};
 let fbLastPushedTrash    = {};
 let fbLastPushedSettings = null;
@@ -1448,7 +1439,7 @@ function fbInit() {
         fbListenClients();
         fbListenTrash();
         fbListenSettings();
-        fbPush(); // pousse les éventuelles données locales pas encore en ligne
+        fbPush();
       } else {
         fbReady = false;
         fbSetStatus('offline');
@@ -1463,13 +1454,8 @@ function fbInit() {
   }
 }
 
-// Appelée depuis doLogin() avec les mêmes identifiants que la connexion à l'app
-function fbSignIn(email, password) {
-  if (!firebase.apps || !firebase.apps.length) return;
-  firebase.auth().signInWithEmailAndPassword(email, password).catch(err => {
-    console.error('Firebase sign-in error', err);
-    toast('⚠️ Compte de synchro introuvable pour cet email — la synchro ne fonctionnera pas', 'error');
-  });
+function fbSignIn() {
+  console.log('✅ Authentification gérée par doLogin()');
 }
 
 function fbSignOut() {
@@ -1491,7 +1477,7 @@ function fbListenClients() {
       }
       const data = change.doc.data();
       const json = JSON.stringify(data);
-      if (fbLastPushedClients[id] === json) return; // écho de notre propre écriture
+      if (fbLastPushedClients[id] === json) return;
       fbLastPushedClients[id] = json;
       const idx = state.clients.findIndex(c => c.id === id);
       if (idx !== -1) state.clients[idx] = data; else state.clients.unshift(data);
@@ -1543,7 +1529,7 @@ function fbListenSettings() {
     if (!doc.exists) return;
     const data = doc.data();
     const json = JSON.stringify(data);
-    if (fbLastPushedSettings === json) return; // écho de notre propre écriture
+    if (fbLastPushedSettings === json) return;
     fbLastPushedSettings = json;
     if (data.customLists)    customLists    = data.customLists;
     if (data.columnOrder)    columnOrder    = data.columnOrder;
@@ -1558,15 +1544,12 @@ function fbListenSettings() {
   }, err => { console.error('Firebase listen (settings) error', err); fbSetStatus('error'); });
 }
 
-// Appelée automatiquement à chaque save() local (debounced pour regrouper les écritures)
 function fbPush() {
   if (!fbReady) return;
   clearTimeout(fbPushTimeout);
   fbPushTimeout = setTimeout(fbPushNow, 1200);
 }
 
-// N'écrit dans Firestore QUE les documents qui ont réellement changé, un par client.
-// Deux personnes qui modifient deux dossiers différents en même temps ne s'écrasent donc plus.
 function fbPushNow() {
   if (!fbReady || !fbDb) return;
   const batch = fbDb.batch();
@@ -1633,7 +1616,6 @@ function fbPushNow() {
   });
 }
 
-// Bouton "Sync" manuel : force l'envoi immédiat sans attendre le debounce
 function fbManualSync() {
   if (!fbReady) { toast('Synchronisation non disponible (non connecté)', 'error'); return; }
   clearTimeout(fbPushTimeout);
@@ -1948,7 +1930,7 @@ function save() {
   storage.save('table_visible_columns_v31', visibleColumns);
   storage.save('table_column_order_v31', columnOrder);
   storage.save('custom_lists_v31', customLists);
-  fbPush(); // 🔄 synchro Firebase (debounced ~1.2s)
+  fbPush();
 }
 
 function load() {
@@ -1981,22 +1963,92 @@ function load() {
 // ============================================================
 function doLogin() {
   const email = document.getElementById('login-email').value.trim();
-  const pass  = document.getElementById('login-pass').value;
-  const user  = DEMO_USERS.find(u => u.email === email && u.password === pass);
-  if (!user) { document.getElementById('login-error').textContent = 'Email ou mot de passe incorrect.'; return; }
-  state.user = { email: user.email, name: user.name, role: user.role };
-  fbSignIn(user.email, user.password); // connecte aussi la synchro Firebase avec le même compte
-  save(); showApp();
+  const pass = document.getElementById('login-pass').value;
+  
+  if (!email || !pass) {
+    document.getElementById('login-error').textContent = 'Veuillez saisir email et mot de passe.';
+    return;
+  }
+    
+  const btn = document.querySelector('.btn-primary');
+  btn.disabled = true;
+  btn.textContent = 'Connexion en cours...';
+  
+  firebase.auth().signInWithEmailAndPassword(email, pass)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      createUserProfile();
+      
+      const db = firebase.firestore();
+      db.collection('users').doc(user.uid).get()
+        .then((doc) => {
+          let role = 'Utilisateur';
+          let displayName = user.email.split('@')[0];
+          
+          if (doc.exists) {
+            const data = doc.data();
+            role = data.role || role;
+            displayName = data.displayName || displayName;
+          }
+          
+          state.user = {
+            email: user.email,
+            uid: user.uid,
+            name: displayName,
+            role: role
+          };
+          
+          save();
+          showApp();
+          toast(`Bienvenue ${displayName} !`, 'success');
+          
+          btn.disabled = false;
+          btn.textContent = 'Se connecter';
+        });
+    })
+    .catch((error) => {
+      console.error('Erreur de connexion:', error);
+      let message = 'Erreur de connexion. ';
+      
+      switch (error.code) {
+        case 'auth/user-not-found':
+          message += 'Utilisateur non trouvé.';
+          break;
+        case 'auth/wrong-password':
+          message += 'Mot de passe incorrect.';
+          break;
+        case 'auth/invalid-email':
+          message += 'Email invalide.';
+          break;
+        case 'auth/too-many-requests':
+          message += 'Trop de tentatives. Réessayez plus tard.';
+          break;
+        default:
+          message += error.message;
+      }
+      
+      document.getElementById('login-error').textContent = message;
+      btn.disabled = false;
+      btn.textContent = 'Se connecter';
+    });
 }
 
 function doLogout() {
-  state.user = null; save();
-  fbSignOut();
-  document.getElementById('app').classList.add('hidden');
-  document.getElementById('login-screen').style.display = 'flex';
-  document.getElementById('login-email').value = '';
-  document.getElementById('login-pass').value  = '';
-  document.getElementById('login-error').textContent = '';
+  firebase.auth().signOut().then(() => {
+    state.user = null;
+    save();
+    
+    document.getElementById('app').classList.add('hidden');
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('login-email').value = '';
+    document.getElementById('login-pass').value = '';
+    document.getElementById('login-error').textContent = '';
+    
+    toast('Déconnecté', 'info');
+  }).catch((error) => {
+    console.error('Erreur de déconnexion:', error);
+    toast('Erreur lors de la déconnexion', 'error');
+  });
 }
 
 function showApp() {
@@ -2226,14 +2278,48 @@ function updateFilterCounts() {
 function handleSearch() {
   const term = document.getElementById('search-input').value.toLowerCase().trim();
   const resultsDiv = document.getElementById('search-results');
-  const recentDiv  = document.getElementById('recent-section');
-  if (term === '') { resultsDiv.style.display = 'none'; recentDiv.style.display = 'block'; return; }
-  const results = state.clients.filter(c => c.name.toLowerCase().includes(term) || (c.entreprise && c.entreprise.toLowerCase().includes(term)));
-  resultsDiv.innerHTML = results.length === 0
-    ? '<div class="no-data">Aucun résultat</div>'
-    : results.map(c => `<div class="search-result-item" onclick="selectClient('${c.id}')"><div class="search-result-name">${esc(c.name)}</div><div class="search-result-status">${esc(c.status||'')}</div></div>`).join('');
+  const recentDiv = document.getElementById('recent-section');
+  
+  if (term === '') {
+    resultsDiv.style.display = 'none';
+    recentDiv.style.display = 'block';
+    return;
+  }
+  
+  const results = state.clients.filter(c => 
+    c.name.toLowerCase().includes(term) || 
+    (c.entreprise && c.entreprise.toLowerCase().includes(term))
+  );
+  
+  resultsDiv.innerHTML = '';
   resultsDiv.style.display = 'block';
   recentDiv.style.display = 'none';
+  
+  if (results.length === 0) {
+    const noData = document.createElement('div');
+    noData.className = 'no-data';
+    noData.textContent = 'Aucun résultat';
+    resultsDiv.appendChild(noData);
+    return;
+  }
+  
+  for (const client of results) {
+    const item = document.createElement('div');
+    item.className = 'search-result-item';
+    item.onclick = () => selectClient(client.id);
+    
+    const name = document.createElement('div');
+    name.className = 'search-result-name';
+    name.textContent = client.name;
+    item.appendChild(name);
+    
+    const status = document.createElement('div');
+    status.className = 'search-result-status';
+    status.textContent = client.status || '';
+    item.appendChild(status);
+    
+    resultsDiv.appendChild(item);
+  }
 }
 
 function addToRecent(clientId) {
@@ -2247,12 +2333,38 @@ function addToRecent(clientId) {
 function renderRecentList() {
   const container = document.getElementById('recent-list');
   if (!container) return;
-  const recent = recentClients.slice(0,10);
-  if (recent.length === 0) { container.innerHTML = '<div class="no-data" style="padding:12px;">Aucun récent</div>'; return; }
-  container.innerHTML = recent.map(id => {
-    const c = getClient(id); if (!c) return '';
-    return `<div class="recent-item" onclick="selectClient('${c.id}')"><div class="client-dot ${dotClass(c.status)}"></div><div class="recent-item-name">${esc(c.name)}</div></div>`;
-  }).join('');
+  
+  container.innerHTML = '';
+  
+  const recent = recentClients.slice(0, 10);
+  if (recent.length === 0) {
+    const noData = document.createElement('div');
+    noData.className = 'no-data';
+    noData.style.cssText = 'padding:12px;';
+    noData.textContent = 'Aucun récent';
+    container.appendChild(noData);
+    return;
+  }
+  
+  for (const id of recent) {
+    const client = getClient(id);
+    if (!client) continue;
+    
+    const item = document.createElement('div');
+    item.className = 'recent-item';
+    item.onclick = () => selectClient(client.id);
+    
+    const dot = document.createElement('div');
+    dot.className = `client-dot ${dotClass(client.status)}`;
+    item.appendChild(dot);
+    
+    const name = document.createElement('div');
+    name.className = 'recent-item-name';
+    name.textContent = client.name;
+    item.appendChild(name);
+    
+    container.appendChild(item);
+  }
 }
 
 // ============================================================
@@ -2666,7 +2778,14 @@ function renderTableView() {
 
   if (data.length === 0) {
     const colspan = (isTrash ? 1 : 0) + orderedColumns.length;
-    tbody.innerHTML = `<tr><td colspan="${colspan}" class="no-data">Aucun dossier trouvé</td></tr>`;
+    tbody.innerHTML = '';
+    const tr = document.createElement('tr');
+    const td = document.createElement('td');
+    td.colSpan = (isTrash ? 1 : 0) + orderedColumns.length;
+    td.className = 'no-data';
+    td.textContent = 'Aucun dossier trouvé';
+    tr.appendChild(td);
+    tbody.appendChild(tr);
     document.getElementById('col-count-badge').textContent = visibleColumns.length;
     return;
   }
@@ -2676,37 +2795,48 @@ function renderTableView() {
     const tr = document.createElement('tr');
     tr.className = `row-color-${client.manualColor || 'none'}`;
     tr.onclick = () => selectClient(client.id);
+
     if (isTrash) {
       const tdSelect = document.createElement('td');
       tdSelect.style.cssText = 'text-align:center; width:30px;';
       tdSelect.onclick = (e) => e.stopPropagation();
+
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
       checkbox.className = 'trash-select-item';
       checkbox.dataset.id = client.id;
       checkbox.onchange = updateTrashCount;
+
       tdSelect.appendChild(checkbox);
       tr.appendChild(tdSelect);
     }
+
     for (const col of orderedColumns) {
       const td = document.createElement('td');
       const value = getCellValue(client, col);
+
       if (col === 'color') {
         td.style.position = 'relative';
         td.onclick = (e) => e.stopPropagation();
+
         const colorSpan = document.createElement('span');
         colorSpan.className = `color-pill ${client.manualColor || 'none'}`;
         colorSpan.title = 'Cliquer pour définir une couleur';
         colorSpan.onclick = (e) => toggleColorMenu(client.id, e);
+
         td.appendChild(colorSpan);
+
       } else if (col === 'firstMeeting') {
         td.style.cssText = 'text-align:center;font-size:18px;';
         const span = document.createElement('span');
         span.className = value === '✅' ? 'first-meeting-check checked' : 'first-meeting-check unchecked';
         span.textContent = value;
         td.appendChild(span);
+
       } else if (['health', 'potential', 'source', 'age', 'nbSuivis', 'responsible', 'lastNote', 'illustration'].includes(col)) {
-        td.innerHTML = value;
+        const template = document.createElement('template');
+        template.innerHTML = value;
+        td.appendChild(template.content);
       } else {
         td.textContent = esc(value);
       }
@@ -2714,6 +2844,7 @@ function renderTableView() {
     }
     fragment.appendChild(tr);
   }
+
   tbody.innerHTML = '';
   tbody.appendChild(fragment);
 
@@ -2978,7 +3109,6 @@ function updateCol1Fields(c) {
   if (notesEl) notesEl.textContent = c.infos || '';
   if (resumeEl) resumeEl.textContent = c.resumeRencontre1 || '';
   
-  // Mise à jour de la 1ère rencontre
   updateFirstMeetingDisplay(c);
 }
 
@@ -3006,7 +3136,6 @@ function updateFirstMeetingDisplay(client) {
 }
 
 function toggleFirstMeetingCheckbox(event) {
-  // Empêcher le clic sur le label de déclencher deux fois
   if (event.target.tagName === 'INPUT') return;
   const checkbox = document.getElementById('info-firstMeetingChecked');
   checkbox.checked = !checkbox.checked;
@@ -3021,7 +3150,6 @@ function toggleFirstMeeting() {
   const dateInput = document.getElementById('info-firstMeetingDate');
   
   if (checkbox.checked) {
-    // Activation : utiliser la date du champ ou aujourd'hui
     const date = dateInput.value || new Date().toISOString().slice(0, 10);
     c.firstMeetingDate = date + 'T00:00:00.000Z';
     
@@ -3033,7 +3161,6 @@ function toggleFirstMeeting() {
     addEntry(c, `✅ 1ère rencontre validée le ${fmt(c.firstMeetingDate)}`, 'note-manual', state.user?.name || 'Utilisateur');
     toast('✅ 1ère rencontre validée', 'success');
   } else {
-    // Désactivation
     if (!confirm('Annuler la validation de la 1ère rencontre ?')) {
       checkbox.checked = true;
       return;
@@ -3458,12 +3585,10 @@ function openCompleteSuiviModal(id) {
   document.getElementById('modal-note-text').value = '';
   document.getElementById('modal-note-text-error').classList.remove('visible');
   const today = new Date().toISOString().slice(0, 10);
-  // Pré-remplir avec l'échéance du suivi si elle existe et n'est pas future,
-  // sinon aujourd'hui. Évite que les anciennes tâches se retrouvent
-  // systématiquement datées du jour de traitement.
   document.getElementById('modal-validation-date').value = (s.deadline && s.deadline <= today) ? s.deadline : today;
   document.getElementById('note-obligatoire-modal').classList.remove('hidden');
 }
+
 function confirmCompleteSuivi() {
     const validationDate = document.getElementById('modal-validation-date').value;
     if (!validationDate) {
@@ -3492,14 +3617,12 @@ function confirmCompleteSuivi() {
         return;
     }
     
-    // ✅ Utiliser la date de validation pour tout
     const validationDateISO = new Date(validationDate + 'T00:00:00').toISOString();
     
     s.done = true;
     s.completionNote = note;
     s.completedAt = validationDateISO;
 
-    // DÉTECTION AUTOMATIQUE DE LA 1ÈRE RENCONTRE
     const meetingTypes = ['Visio', 'RDV physique', 'Téléphone', 'Appel découverte'];
     if (meetingTypes.includes(s.type) && !c.firstMeetingDate) {
         c.firstMeetingDate = validationDateISO;
@@ -3513,7 +3636,7 @@ function confirmCompleteSuivi() {
                 text: 'Statut : Nouveau → En cours (1ère rencontre via suivi)',
                 type: 'status',
                 author: 'Système',
-                createdAt: validationDateISO // ✅ date de validation
+                createdAt: validationDateISO
             });
         }
         
@@ -3523,13 +3646,12 @@ function confirmCompleteSuivi() {
             text: `✅ 1ère rencontre automatique via suivi : ${s.type} — ${note}`,
             type: 'note-system',
             author: 'Système',
-            createdAt: validationDateISO // ✅ date de validation
+            createdAt: validationDateISO
         });
         
         toast('✅ 1ère rencontre automatique via suivi', 'success');
     }
 
-    // Changement de statut automatique (si pas déjà fait)
     const oldStatus = c.status;
     if (oldStatus === 'Nouveau' && !c.firstMeetingDate) {
         c.status = 'En cours';
@@ -3539,7 +3661,7 @@ function confirmCompleteSuivi() {
             text: `Statut : Nouveau → En cours (automatique après validation)`,
             type: 'status',
             author: 'Système',
-            createdAt: validationDateISO // ✅ date de validation
+            createdAt: validationDateISO
         });
     }
     
@@ -3549,7 +3671,7 @@ function confirmCompleteSuivi() {
         text: `Suivi terminé : ${s.type} — ${s.text}\n📝 ${note}`,
         type: 'suivi-done',
         author: state.user?.name || 'Utilisateur',
-        createdAt: validationDateISO // ✅ date de validation
+        createdAt: validationDateISO
     });
     
     const upcoming = (c.suivis || [])
@@ -3678,7 +3800,12 @@ function renderSuivis() {
     return new Date(a.deadline) - new Date(b.deadline);
   });
   const el = document.getElementById('suivis-list');
-  if (!list.length) { el.innerHTML = '<div class="no-items">Aucun suivi</div>'; return; }
+  
+  if (!list.length) {
+    el.innerHTML = '<div class="no-items">Aucun suivi</div>';
+    return;
+  }
+  
   const today = new Date().toISOString().slice(0,10);
   el.innerHTML = list.map(s => {
     const isToday = s.deadline === today;
@@ -3745,7 +3872,10 @@ function deleteTimelineEntry(id) {
 function renderTimeline() {
   const c = getCurrentClient(); if (!c) return;
   const el = document.getElementById('timeline-list');
-  if (!c.timeline?.length) { el.innerHTML = '<div class="no-items">Aucune activité.</div>'; return; }
+  if (!c.timeline?.length) {
+    el.innerHTML = '<div class="no-items">Aucune activité.</div>';
+    return;
+  }
   let entries = [...c.timeline].sort((a,b) => new Date(b.createdAt)-new Date(a.createdAt));
   if (currentTimelineFilter==='note')  entries = entries.filter(e => e.type==='note-manual');
   if (currentTimelineFilter==='suivi') entries = entries.filter(e => ['suivi-created','suivi-done'].includes(e.type));
@@ -3871,36 +4001,117 @@ function switchView(view, el) {
 // ============================================================
 function renderKanban() {
   const container = document.getElementById('kanban-view');
-  container.innerHTML = VALID_STATUSES.map(status => {
+  container.innerHTML = ''; 
+  const statuses = ['Nouveau', 'En cours', 'En attente', 'Clos'];
+  for (const status of statuses) {
     const clients = state.clients.filter(c => c.status === status);
-    return `<div class="kanban-col">
-      <div class="kanban-col-header ${statusClass(status)}">
-        <span>${status}</span><span class="kanban-count ${statusClass(status)}">${clients.length}</span>
-      </div>
-      <div class="kanban-drop-zone" data-status="${status}"
-           ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'${status}')">
-        ${clients.map(c => {
-          const p  = (c.suivis||[]).filter(s=>!s.done).length;
-          const od = c.dateProchaineRelance && new Date(c.dateProchaineRelance)<new Date();
-          const health = getHealthStatus(c);
-          const healthDot = `<span class="health-dot ${health.color}" style="display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:4px;"></span>`;
-          const firstMeeting = getFirstMeetingStatus(c);
-          const fmIcon = firstMeeting === '✅' ? ' ✅' : ' ☐';
-          return `<div class="kanban-card" draggable="true" data-id="${c.id}"
-            ondragstart="onDragStart(event,'${c.id}')" ondragend="onDragEnd(event)"
-            onclick="openFromKanban('${c.id}')">
-            <div class="kanban-card-name">${healthDot} ${esc(c.name)}${fmIcon}</div>
-            <div class="kanban-card-meta">
-              ${c.entreprise?`<span style="color:var(--accent2);font-size:11px">${esc(c.entreprise)}</span><br>`:''}
-              ${p} suivi${p!==1?'s':''} en attente · ${fmt(c.createdAt)}
-              ${od?`<br><span style="color:var(--red);font-size:10px"><i class="bi bi-bell-fill"></i> Relance dépassée</span>`:c.dateProchaineRelance?`<br><span style="color:var(--amber);font-size:10px"><i class="bi bi-bell"></i> ${fmt(c.dateProchaineRelance)}</span>`:''}
-              ${c.potentiel ? `<br><span style="color:var(--green);font-size:10px;">💰 ${esc(c.potentiel)}</span>` : ''}
-            </div>
-          </div>`;
-        }).join('')}
-      </div>
-    </div>`;
-  }).join('');
+   
+    const col = document.createElement('div');
+    col.className = 'kanban-col';
+    
+    const header = document.createElement('div');
+    header.className = `kanban-col-header ${statusClass(status)}`;
+    
+    const statusSpan = document.createElement('span');
+    statusSpan.textContent = status;
+    header.appendChild(statusSpan);
+    
+    const countSpan = document.createElement('span');
+    countSpan.className = `kanban-count ${statusClass(status)}`;
+    countSpan.textContent = clients.length;
+    header.appendChild(countSpan);
+    
+    col.appendChild(header);
+    
+    const dropZone = document.createElement('div');
+    dropZone.className = 'kanban-drop-zone';
+    dropZone.dataset.status = status;
+    dropZone.ondragover = onDragOver;
+    dropZone.ondragleave = onDragLeave;
+    dropZone.ondrop = (e) => onDrop(e, status);
+    
+    for (const client of clients) {
+      const card = document.createElement('div');
+      card.className = 'kanban-card';
+      card.draggable = true;
+      card.dataset.id = client.id;
+      card.ondragstart = (e) => onDragStart(e, client.id);
+      card.ondragend = onDragEnd;
+      card.onclick = () => openFromKanban(client.id);
+            
+      const nameDiv = document.createElement('div');
+      nameDiv.className = 'kanban-card-name';
+      
+      const health = getHealthStatus(client);
+      const healthDot = document.createElement('span');
+      healthDot.className = `health-dot ${health.color}`;
+      healthDot.style.cssText = 'display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:4px;';
+      nameDiv.appendChild(healthDot);
+      nameDiv.appendChild(document.createTextNode(` ${esc(client.name)}`));
+      
+      const firstMeeting = getFirstMeetingStatus(client);
+      const fmSpan = document.createElement('span');
+      fmSpan.textContent = firstMeeting === '✅' ? ' ✅' : ' ☐';
+      nameDiv.appendChild(fmSpan);
+      
+      card.appendChild(nameDiv);
+      
+      const meta = document.createElement('div');
+      meta.className = 'kanban-card-meta';
+  
+      if (client.entreprise) {
+        const entrepriseSpan = document.createElement('span');
+        entrepriseSpan.style.cssText = 'color:var(--accent2);font-size:11px;';
+        entrepriseSpan.textContent = esc(client.entreprise);
+        meta.appendChild(entrepriseSpan);
+        meta.appendChild(document.createElement('br'));
+      }
+     
+      const pendingSuivis = (client.suivis || []).filter(s => !s.done).length;
+      const suivisSpan = document.createElement('span');
+      suivisSpan.textContent = `${pendingSuivis} suivi${pendingSuivis !== 1 ? 's' : ''} en attente · ${fmt(client.createdAt)}`;
+      meta.appendChild(suivisSpan);
+      
+      const isOverdue = client.dateProchaineRelance && new Date(client.dateProchaineRelance) < new Date();
+      if (isOverdue) {
+        meta.appendChild(document.createElement('br'));
+        const overdueSpan = document.createElement('span');
+        overdueSpan.style.cssText = 'color:var(--red);font-size:10px;';
+        
+        const overdueIcon = document.createElement('i');
+        overdueIcon.className = 'bi bi-bell-fill';
+        overdueSpan.appendChild(overdueIcon);
+        overdueSpan.appendChild(document.createTextNode(' Relance dépassée'));
+        meta.appendChild(overdueSpan);
+      } else if (client.dateProchaineRelance) {
+        meta.appendChild(document.createElement('br'));
+        const relanceSpan = document.createElement('span');
+        relanceSpan.style.cssText = 'color:var(--amber);font-size:10px;';
+        
+        const relanceIcon = document.createElement('i');
+        relanceIcon.className = 'bi bi-bell';
+        relanceSpan.appendChild(relanceIcon);
+        relanceSpan.appendChild(document.createTextNode(` ${fmt(client.dateProchaineRelance)}`));
+        meta.appendChild(relanceSpan);
+      }
+      
+      if (client.potentiel) {
+        meta.appendChild(document.createElement('br'));
+        const potentielSpan = document.createElement('span');
+        potentielSpan.style.cssText = 'color:var(--green);font-size:10px;';
+        
+        const potentielIcon = document.createElement('i');
+        potentielIcon.className = 'bi bi-currency-dollar';
+        potentielSpan.appendChild(potentielIcon);
+        potentielSpan.appendChild(document.createTextNode(` ${esc(client.potentiel)}`));
+        meta.appendChild(potentielSpan);
+      }
+      card.appendChild(meta);
+      dropZone.appendChild(card);
+    }
+    col.appendChild(dropZone);
+    container.appendChild(col);
+  }
 }
 
 function openFromKanban(id) { currentClientId=id; switchView('clients',document.querySelector('[data-view="clients"]')); }
@@ -3925,46 +4136,189 @@ function onDrop(e,status) {
 //  ANALYTICS
 // ============================================================
 function renderAnalytics() {
-  const el      = document.getElementById('analytics-view');
-  const total   = state.clients.length;
-  const pending = state.clients.reduce((a,c)=>a+(c.suivis?.filter(s=>!s.done).length||0),0);
-  const overdue = state.clients.reduce((a,c)=>a+(c.suivis?.filter(s=>!s.done&&isOverdue(s.deadline)).length||0),0);
-  const closed  = state.clients.filter(c=>c.status==='Clos').length;
-  const counts  = {}; VALID_STATUSES.forEach(s=>counts[s]=state.clients.filter(c=>c.status===s).length);
-
+  const el = document.getElementById('analytics-view');
+  el.innerHTML = '';
+  
+  const total = state.clients.length;
+  const pending = state.clients.reduce((a, c) => a + (c.suivis?.filter(s => !s.done).length || 0), 0);
+  const overdue = state.clients.reduce((a, c) => a + (c.suivis?.filter(s => !s.done && isOverdue(s.deadline)).length || 0), 0);
+  const closed = state.clients.filter(c => c.status === 'Clos').length;
+  
+  const counts = {};
+  ['Nouveau', 'En cours', 'En attente', 'Clos'].forEach(s => {
+    counts[s] = state.clients.filter(c => c.status === s).length;
+  });
+  
   const healthCounts = { good: 0, warn: 0, critical: 0, unknown: 0 };
   state.clients.forEach(c => {
     const h = getHealthStatus(c);
     healthCounts[h.status] = (healthCounts[h.status] || 0) + 1;
   });
-
-  el.innerHTML = `
-    <div class="analytics-title"><i class="bi bi-graph-up"></i> Tableau de bord</div>
-    <div class="stats-grid">
-      <div class="stat-card"><div class="stat-num">${total}</div><div class="stat-label">Dossiers</div></div>
-      <div class="stat-card"><div class="stat-num">${pending}</div><div class="stat-label">Suivis en attente</div></div>
-      <div class="stat-card"><div class="stat-num" style="color:var(--red)">${overdue}</div><div class="stat-label">En retard</div></div>
-      <div class="stat-card"><div class="stat-num" style="color:var(--green)">${closed}</div><div class="stat-label">Clos</div></div>
-    </div>
-    <div class="status-bars"><h4>Santé des dossiers</h4>
-      <div class="bar-row"><span class="bar-label">🟢 Bon</span><div class="bar-track"><div class="bar-fill" style="width:${total?Math.round(healthCounts.good/total*100):0}%;background:var(--green)"></div></div><span class="bar-count">${healthCounts.good}</span></div>
-      <div class="bar-row"><span class="bar-label">🟡 À surveiller</span><div class="bar-track"><div class="bar-fill" style="width:${total?Math.round(healthCounts.warn/total*100):0}%;background:var(--amber)"></div></div><span class="bar-count">${healthCounts.warn}</span></div>
-      <div class="bar-row"><span class="bar-label">🔴 Critique</span><div class="bar-track"><div class="bar-fill" style="width:${total?Math.round(healthCounts.critical/total*100):0}%;background:var(--red)"></div></div><span class="bar-count">${healthCounts.critical}</span></div>
-    </div>
-    <div class="status-bars"><h4>Répartition par statut</h4>
-      ${VALID_STATUSES.map(s=>`<div class="bar-row">
-        <span class="bar-label">${s}</span>
-        <div class="bar-track"><div class="bar-fill" style="width:${total?Math.round(counts[s]/total*100):0}%;background:${BAR_COLORS[s]}"></div></div>
-        <span class="bar-count">${counts[s]}</span>
-      </div>`).join('')}
-    </div>
-    <div class="status-bars"><h4>Dossiers récents</h4>
-      ${state.clients.slice(0,8).map(c=>`<div class="bar-row" style="cursor:pointer" onclick="openFromKanban('${c.id}')">
-        <span class="bar-label" style="width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(c.name)}</span>
-        <span class="status-badge ${statusClass(c.status)}" style="font-size:10px;padding:2px 8px">${c.status}</span>
-        <span class="bar-count" style="color:var(--text2)">${c.suivis?.filter(s=>!s.done).length||0}s</span>
-      </div>`).join('')}
-    </div>`;
+  
+  const title = document.createElement('div');
+  title.className = 'analytics-title';
+  const titleIcon = document.createElement('i');
+  titleIcon.className = 'bi bi-graph-up';
+  title.appendChild(titleIcon);
+  title.appendChild(document.createTextNode(' Tableau de bord'));
+  el.appendChild(title);
+  
+  const statsGrid = document.createElement('div');
+  statsGrid.className = 'stats-grid';
+  
+  const stats = [
+    { value: total, label: 'Dossiers' },
+    { value: pending, label: 'Suivis en attente' },
+    { value: overdue, label: 'En retard', color: 'var(--red)' },
+    { value: closed, label: 'Clos', color: 'var(--green)' }
+  ];
+  
+  for (const stat of stats) {
+    const card = document.createElement('div');
+    card.className = 'stat-card';
+    
+    const num = document.createElement('div');
+    num.className = 'stat-num';
+    if (stat.color) num.style.color = stat.color;
+    num.textContent = stat.value;
+    card.appendChild(num);
+    
+    const label = document.createElement('div');
+    label.className = 'stat-label';
+    label.textContent = stat.label;
+    card.appendChild(label);
+    
+    statsGrid.appendChild(card);
+  }
+  
+  el.appendChild(statsGrid);
+  
+  const healthSection = document.createElement('div');
+  healthSection.className = 'status-bars';
+  
+  const healthTitle = document.createElement('h4');
+  healthTitle.textContent = 'Santé des dossiers';
+  healthSection.appendChild(healthTitle);
+  
+  const healthData = [
+    { label: '🟢 Bon', count: healthCounts.good, color: 'var(--green)' },
+    { label: '🟡 À surveiller', count: healthCounts.warn, color: 'var(--amber)' },
+    { label: '🔴 Critique', count: healthCounts.critical, color: 'var(--red)' }
+  ];
+  
+  for (const h of healthData) {
+    const barRow = document.createElement('div');
+    barRow.className = 'bar-row';
+    
+    const label = document.createElement('span');
+    label.className = 'bar-label';
+    label.textContent = h.label;
+    barRow.appendChild(label);
+    
+    const track = document.createElement('div');
+    track.className = 'bar-track';
+    
+    const fill = document.createElement('div');
+    fill.className = 'bar-fill';
+    const percentage = total ? Math.round(h.count / total * 100) : 0;
+    fill.style.width = percentage + '%';
+    fill.style.background = h.color;
+    track.appendChild(fill);
+    
+    barRow.appendChild(track);
+    
+    const countSpan = document.createElement('span');
+    countSpan.className = 'bar-count';
+    countSpan.textContent = h.count;
+    barRow.appendChild(countSpan);
+    
+    healthSection.appendChild(barRow);
+  }
+  
+  el.appendChild(healthSection);
+  
+  const statusSection = document.createElement('div');
+  statusSection.className = 'status-bars';
+  
+  const statusTitle = document.createElement('h4');
+  statusTitle.textContent = 'Répartition par statut';
+  statusSection.appendChild(statusTitle);
+  
+  const statusColors = {
+    'Nouveau': '#60a5fa',
+    'En cours': '#8b85ff',
+    'En attente': '#fbbf24',
+    'Clos': '#4ade80'
+  };
+  
+  for (const [statut, count] of Object.entries(counts)) {
+    const barRow = document.createElement('div');
+    barRow.className = 'bar-row';
+    
+    const label = document.createElement('span');
+    label.className = 'bar-label';
+    label.textContent = statut;
+    barRow.appendChild(label);
+    
+    const track = document.createElement('div');
+    track.className = 'bar-track';
+    
+    const fill = document.createElement('div');
+    fill.className = 'bar-fill';
+    const percentage = total ? Math.round(count / total * 100) : 0;
+    fill.style.width = percentage + '%';
+    fill.style.background = statusColors[statut] || 'var(--text3)';
+    track.appendChild(fill);
+    
+    barRow.appendChild(track);
+    
+    const countSpan = document.createElement('span');
+    countSpan.className = 'bar-count';
+    countSpan.textContent = count;
+    barRow.appendChild(countSpan);
+    
+    statusSection.appendChild(barRow);
+  }
+  
+  el.appendChild(statusSection);
+  
+  const recentSection = document.createElement('div');
+  recentSection.className = 'status-bars';
+  
+  const recentTitle = document.createElement('h4');
+  recentTitle.textContent = 'Dossiers récents';
+  recentSection.appendChild(recentTitle);
+  
+  const recentClients = state.clients.slice(0, 8);
+  for (const client of recentClients) {
+    const barRow = document.createElement('div');
+    barRow.className = 'bar-row';
+    barRow.style.cssText = 'cursor:pointer';
+    barRow.onclick = () => openFromKanban(client.id);
+    
+    const label = document.createElement('span');
+    label.className = 'bar-label';
+    label.style.cssText = 'width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;';
+    label.textContent = client.name;
+    barRow.appendChild(label);
+    
+    const statusBadge = document.createElement('span');
+    statusBadge.className = `status-badge ${statusClass(client.status)}`;
+    statusBadge.style.cssText = 'font-size:10px;padding:2px 8px;';
+    statusBadge.textContent = client.status;
+    barRow.appendChild(statusBadge);
+    
+    const countSpan = document.createElement('span');
+    countSpan.className = 'bar-count';
+    countSpan.style.cssText = 'color:var(--text2)';
+    const pendingSuivis = (client.suivis || []).filter(s => !s.done).length;
+    countSpan.textContent = pendingSuivis + 's';
+    barRow.appendChild(countSpan);
+    
+    recentSection.appendChild(barRow);
+  }
+  
+  el.appendChild(recentSection);
 }
 
 // ============================================================
@@ -3972,28 +4326,113 @@ function renderAnalytics() {
 // ============================================================
 function renderSuiviView() {
   const el = document.getElementById('suivi-view');
+  el.innerHTML = '';
+  
   const all = [];
-  state.clients.forEach(c => (c.suivis || []).forEach(s => all.push({ ...s, clientId: c.id, clientName: c.name })));
+  state.clients.forEach(c => {
+    (c.suivis || []).forEach(s => {
+      all.push({ ...s, clientId: c.id, clientName: c.name });
+    });
+  });
+  
   const now = new Date();
   const today = now.toISOString().slice(0, 10);
+  
   const overdue = all.filter(s => !s.done && s.deadline && s.deadline < today);
-  const soon = all.filter(s => !s.done && s.deadline && (s.deadline === today || (new Date(s.deadline) - now) / 86400000 <= 3));
-  const relances = state.clients.filter(c => c.dateProchaineRelance).map(c => ({ clientId: c.id, clientName: c.name, date: c.dateProchaineRelance }));
+  const soon = all.filter(s => !s.done && s.deadline && 
+    (s.deadline === today || (new Date(s.deadline) - now) / 86400000 <= 3)
+  );
+  const relances = state.clients.filter(c => c.dateProchaineRelance)
+    .map(c => ({ clientId: c.id, clientName: c.name, date: c.dateProchaineRelance }));
+  
+  const title = document.createElement('div');
+  title.className = 'analytics-title';
+  const titleIcon = document.createElement('i');
+  titleIcon.className = 'bi bi-clipboard-check';
+  title.appendChild(titleIcon);
+  title.appendChild(document.createTextNode(' Tableau de bord Suivi'));
+  el.appendChild(title);
+  
+  const grid = document.createElement('div');
+  grid.className = 'suivi-view-grid';
+  
+  const card1 = createSuiviCard('En retard', overdue.length, 'var(--red)', 'bi-exclamation-triangle', overdue);
+  grid.appendChild(card1);
+  
+  const card2 = createSuiviCard('Proches', soon.length, 'var(--amber)', 'bi-alarm', soon);
+  grid.appendChild(card2);
+  
+  const card3 = createSuiviCard('Relances', relances.length, 'var(--blue)', 'bi-bell', relances);
+  grid.appendChild(card3);
+  
+  el.appendChild(grid);
+}
 
-  const card = (items) => items.length
-    ? items.map(s => `<div class="suivi-card-item" onclick="selectClient('${s.clientId}');setTimeout(()=>switchView('clients',document.querySelector('.view-tab[data-view=\\'clients\\']')),10)">
-        <div class="suivi-card-name">${esc(s.clientName)}</div>
-        <div class="suivi-card-detail">${s.text ? esc(s.text) : 'Relance prévue'} · <i class="bi bi-calendar3"></i> ${fmt(s.deadline || s.date)} ${s.assigned ? '· <i class="bi bi-person"></i> ' + esc(s.assigned) : ''}</div>
-      </div>`).join('')
-    : '<div class="no-items">Rien ici</div>';
-
-  el.innerHTML = `
-    <div class="analytics-title"><i class="bi bi-clipboard-check"></i> Tableau de bord Suivi</div>
-    <div class="suivi-view-grid">
-      <div class="suivi-card"><div class="suivi-card-header" style="color:var(--red)"><i class="bi bi-exclamation-triangle"></i> En retard (${overdue.length})</div><div class="suivi-card-list">${card(overdue)}</div></div>
-      <div class="suivi-card"><div class="suivi-card-header" style="color:var(--amber)"><i class="bi bi-alarm"></i> Proches (${soon.length})</div><div class="suivi-card-list">${card(soon)}</div></div>
-      <div class="suivi-card"><div class="suivi-card-header" style="color:var(--blue)"><i class="bi bi-bell"></i> Relances (${relances.length})</div><div class="suivi-card-list">${card(relances)}</div></div>
-    </div>`;
+function createSuiviCard(title, count, color, icon, items) {
+  const card = document.createElement('div');
+  card.className = 'suivi-card';
+  
+  const header = document.createElement('div');
+  header.className = 'suivi-card-header';
+  header.style.color = color;
+  
+  const iconEl = document.createElement('i');
+  iconEl.className = icon;
+  header.appendChild(iconEl);
+  header.appendChild(document.createTextNode(` ${title} (${count})`));
+  card.appendChild(header);
+  
+  const list = document.createElement('div');
+  list.className = 'suivi-card-list';
+  
+  if (items.length === 0) {
+    const noItems = document.createElement('div');
+    noItems.className = 'no-items';
+    noItems.textContent = 'Rien ici';
+    list.appendChild(noItems);
+  } else {
+    for (const item of items) {
+      const itemDiv = document.createElement('div');
+      itemDiv.className = 'suivi-card-item';
+      itemDiv.onclick = () => {
+        selectClient(item.clientId);
+        setTimeout(() => {
+          switchView('clients', document.querySelector('.view-tab[data-view="clients"]'));
+        }, 10);
+      };
+      
+      const nameDiv = document.createElement('div');
+      nameDiv.className = 'suivi-card-name';
+      nameDiv.textContent = item.clientName;
+      itemDiv.appendChild(nameDiv);
+      
+      const detailDiv = document.createElement('div');
+      detailDiv.className = 'suivi-card-detail';
+      
+      const text = item.text || 'Relance prévue';
+      detailDiv.appendChild(document.createTextNode(text));
+      detailDiv.appendChild(document.createTextNode(' · '));
+      
+      const calIcon = document.createElement('i');
+      calIcon.className = 'bi bi-calendar3';
+      detailDiv.appendChild(calIcon);
+      detailDiv.appendChild(document.createTextNode(` ${fmt(item.deadline || item.date)}`));
+      
+      if (item.assigned) {
+        detailDiv.appendChild(document.createTextNode(' · '));
+        const personIcon = document.createElement('i');
+        personIcon.className = 'bi bi-person';
+        detailDiv.appendChild(personIcon);
+        detailDiv.appendChild(document.createTextNode(` ${item.assigned}`));
+      }
+      
+      itemDiv.appendChild(detailDiv);
+      list.appendChild(itemDiv);
+    }
+  }
+  
+  card.appendChild(list);
+  return card;
 }
 
 // ============================================================
@@ -4050,39 +4489,81 @@ function saveLists() {
 
 function renderListes() {
   const container = document.getElementById('listes-grid');
-  if (!container) return;
+  container.innerHTML = '';
+  
   const currentUser = state.user?.email || '';
   const filteredLists = customLists.filter(liste => {
     return liste.createdByEmail === currentUser || liste.shared === true;
   });
+  
   if (filteredLists.length === 0) {
-    container.innerHTML = `
-      <div style="grid-column:1/-1; text-align:center; padding:60px 20px; color:var(--text3);">
-        <div style="font-size:48px; margin-bottom:16px;"><i class="bi bi-list-ul"></i></div>
-        <h3 style="font-family:var(--font-head); font-size:18px; color:var(--text);">Aucune liste disponible</h3>
-        <p>Créez votre première liste personnalisée</p>
-      </div>
-    `;
+    const emptyDiv = document.createElement('div');
+    emptyDiv.style.cssText = 'grid-column:1/-1; text-align:center; padding:60px 20px; color:var(--text3);';
+    
+    const iconDiv = document.createElement('div');
+    iconDiv.style.cssText = 'font-size:48px; margin-bottom:16px;';
+    const icon = document.createElement('i');
+    icon.className = 'bi bi-list-ul';
+    iconDiv.appendChild(icon);
+    emptyDiv.appendChild(iconDiv);
+    
+    const title = document.createElement('h3');
+    title.style.cssText = 'font-family:var(--font-head); font-size:18px; color:var(--text);';
+    title.textContent = 'Aucune liste disponible';
+    emptyDiv.appendChild(title);
+    
+    const p = document.createElement('p');
+    p.textContent = 'Créez votre première liste personnalisée';
+    emptyDiv.appendChild(p);
+    
+    container.appendChild(emptyDiv);
     return;
   }
-  container.innerHTML = filteredLists.map(liste => {
+  
+  for (const liste of filteredLists) {
+    const card = document.createElement('div');
+    card.className = 'liste-card';
+    card.onclick = () => openListe(liste.id);
+    
+    const header = document.createElement('div');
+    header.className = 'liste-card-header';
+    
+    const title = document.createElement('div');
+    title.className = 'liste-card-title';
+    title.textContent = liste.name;
+    header.appendChild(title);
+    
+    const count = document.createElement('span');
+    count.className = 'liste-card-count';
     const clientCount = liste.clients ? liste.clients.length : 0;
-    const sharedIcon = liste.shared ? '<i class="bi bi-people" style="color:var(--green);"></i>' : '<i class="bi bi-person" style="color:var(--text3);"></i>';
-    const date = fmt(liste.createdAt);
-    return `
-      <div class="liste-card" onclick="openListe('${liste.id}')">
-        <div class="liste-card-header">
-          <div class="liste-card-title">${esc(liste.name)}</div>
-          <span class="liste-card-count">${clientCount}</span>
-        </div>
-        <div class="liste-card-desc">${esc(liste.description || 'Aucune description')}</div>
-        <div class="liste-card-footer">
-          <span>${sharedIcon} ${liste.shared ? 'Partagée' : 'Privée'}</span>
-          <span>Créée le ${date}</span>
-        </div>
-      </div>
-    `;
-  }).join('');
+    count.textContent = clientCount;
+    header.appendChild(count);
+    
+    card.appendChild(header);
+    
+    const desc = document.createElement('div');
+    desc.className = 'liste-card-desc';
+    desc.textContent = liste.description || 'Aucune description';
+    card.appendChild(desc);
+    
+    const footer = document.createElement('div');
+    footer.className = 'liste-card-footer';
+    
+    const sharedSpan = document.createElement('span');
+    const sharedIcon = document.createElement('i');
+    sharedIcon.className = liste.shared ? 'bi bi-people' : 'bi bi-person';
+    sharedIcon.style.color = liste.shared ? 'var(--green)' : 'var(--text3)';
+    sharedSpan.appendChild(sharedIcon);
+    sharedSpan.appendChild(document.createTextNode(` ${liste.shared ? 'Partagée' : 'Privée'}`));
+    footer.appendChild(sharedSpan);
+    
+    const dateSpan = document.createElement('span');
+    dateSpan.appendChild(document.createTextNode(`Créée le ${fmt(liste.createdAt)}`));
+    footer.appendChild(dateSpan);
+    
+    card.appendChild(footer);
+    container.appendChild(card);
+  }
 }
 
 function openListe(id) {
@@ -4103,38 +4584,82 @@ function closeListeDetail() {
 
 function renderListeDetail(liste) {
   const container = document.getElementById('liste-clients-container');
-  if (!container) return;
+  container.innerHTML = '';
+  
   const clients = liste.clients || [];
+  
   if (clients.length === 0) {
-    container.innerHTML = `
-      <div style="padding:40px; text-align:center; color:var(--text3);">
-        <i class="bi bi-inbox" style="font-size:32px;"></i>
-        <p style="margin-top:8px;">Cette liste est vide</p>
-      </div>
-    `;
+    const emptyDiv = document.createElement('div');
+    emptyDiv.style.cssText = 'padding:40px; text-align:center; color:var(--text3);';
+    
+    const icon = document.createElement('i');
+    icon.className = 'bi bi-inbox';
+    icon.style.cssText = 'font-size:32px;';
+    emptyDiv.appendChild(icon);
+    
+    const p = document.createElement('p');
+    p.style.cssText = 'margin-top:8px;';
+    p.textContent = 'Cette liste est vide';
+    emptyDiv.appendChild(p);
+    
+    container.appendChild(emptyDiv);
     return;
   }
-  container.innerHTML = clients.map(clientId => {
+  
+  for (const clientId of clients) {
     const client = getClient(clientId);
-    if (!client) return '';
-    return `
-      <div class="liste-client-item" onclick="selectClient('${client.id}')">
-        <div class="client-info">
-          <div class="client-dot ${dotClass(client.status)}"></div>
-          <div>
-            <div class="client-name">${esc(client.name)}</div>
-            <div class="client-company">${esc(client.entreprise || '—')}</div>
-          </div>
-        </div>
-        <div style="display:flex; align-items:center; gap:12px;">
-          <span class="status-badge ${statusClass(client.status)}" style="font-size:11px; padding:2px 12px;">${client.status}</span>
-          <span class="remove-btn" onclick="event.stopPropagation(); removeFromListe('${client.id}')" title="Retirer de la liste">
-            <i class="bi bi-x-circle"></i>
-          </span>
-        </div>
-      </div>
-    `;
-  }).join('');
+    if (!client) continue;
+    
+    const item = document.createElement('div');
+    item.className = 'liste-client-item';
+    item.onclick = () => selectClient(client.id);
+    
+    const info = document.createElement('div');
+    info.className = 'client-info';
+    
+    const dot = document.createElement('div');
+    dot.className = `client-dot ${dotClass(client.status)}`;
+    info.appendChild(dot);
+    
+    const textDiv = document.createElement('div');
+    
+    const name = document.createElement('div');
+    name.className = 'client-name';
+    name.textContent = client.name;
+    textDiv.appendChild(name);
+    
+    const company = document.createElement('div');
+    company.className = 'client-company';
+    company.textContent = client.entreprise || '—';
+    textDiv.appendChild(company);
+    
+    info.appendChild(textDiv);
+    item.appendChild(info);
+    
+    const actions = document.createElement('div');
+    actions.style.cssText = 'display:flex; align-items:center; gap:12px;';
+    
+    const statusBadge = document.createElement('span');
+    statusBadge.className = `status-badge ${statusClass(client.status)}`;
+    statusBadge.style.cssText = 'font-size:11px; padding:2px 12px;';
+    statusBadge.textContent = client.status;
+    actions.appendChild(statusBadge);
+    
+    const removeBtn = document.createElement('span');
+    removeBtn.className = 'remove-btn';
+    removeBtn.title = 'Retirer de la liste';
+    removeBtn.onclick = (e) => {
+      e.stopPropagation();
+      removeFromListe(client.id);
+    };
+    const removeIcon = document.createElement('i');
+    removeIcon.className = 'bi bi-x-circle';
+    removeBtn.appendChild(removeIcon);
+    actions.appendChild(removeBtn);
+    
+    item.appendChild(actions);
+    container.appendChild(item);
+  }
 }
 
 function openAddListeModal() {
@@ -4181,19 +4706,40 @@ function confirmAddListe() {
 function openAddToListeModal() {
   const liste = customLists.find(l => l.id === currentListId);
   if (!liste) return;
+  
   const available = state.clients.filter(c => !liste.clients.includes(c.id));
   const container = document.getElementById('modal-liste-clients');
+  container.innerHTML = '';
+  
   if (available.length === 0) {
-    container.innerHTML = '<div class="no-data">Tous les clients sont déjà dans cette liste</div>';
+    const noData = document.createElement('div');
+    noData.className = 'no-data';
+    noData.textContent = 'Tous les clients sont déjà dans cette liste';
+    container.appendChild(noData);
   } else {
-    container.innerHTML = available.map(c => `
-      <label style="display:flex; align-items:center; gap:8px; padding:6px 8px; cursor:pointer; border-radius:6px; transition:background var(--tr);">
-        <input type="checkbox" value="${c.id}" class="liste-client-checkbox">
-        <span>${esc(c.name)}</span>
-        <span style="font-size:11px; color:var(--text3); margin-left:auto;">${esc(c.entreprise || '')}</span>
-      </label>
-    `).join('');
+    for (const client of available) {
+      const label = document.createElement('label');
+      label.style.cssText = 'display:flex; align-items:center; gap:8px; padding:6px 8px; cursor:pointer; border-radius:6px; transition:background var(--tr);';
+      
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.value = client.id;
+      checkbox.className = 'liste-client-checkbox';
+      label.appendChild(checkbox);
+      
+      const nameSpan = document.createElement('span');
+      nameSpan.textContent = client.name;
+      label.appendChild(nameSpan);
+      
+      const companySpan = document.createElement('span');
+      companySpan.style.cssText = 'font-size:11px; color:var(--text3); margin-left:auto;';
+      companySpan.textContent = client.entreprise || '';
+      label.appendChild(companySpan);
+      
+      container.appendChild(label);
+    }
   }
+  
   document.getElementById('modal-liste-search').value = '';
   document.getElementById('add-to-liste-modal').classList.remove('hidden');
 }
@@ -4355,6 +4901,55 @@ function deleteSelectedTrash() {
   renderAnalytics();
   renderSuiviView();
   toast(`${count} dossier(s) supprimés définitivement`, 'success');
+}
+
+// ============================================================
+//  CREATE USER PROFILE
+// ============================================================
+function createUserProfile() {
+  const user = firebase.auth().currentUser;
+  if (!user) {
+    console.warn('⚠️ Aucun utilisateur connecté');
+    return;
+  }
+  
+  const db = firebase.firestore();
+  const userRef = db.collection('users').doc(user.uid);
+  
+  userRef.get()
+    .then((doc) => {
+      if (doc.exists) {
+        console.log('ℹ️ Profil utilisateur existe déjà');
+        return;
+      }
+      
+      let role = 'Utilisateur';
+      let displayName = user.email.split('@')[0];
+      
+      if (user.email === 'karim@crm.com') {
+        role = 'Conseiller';
+        displayName = 'Karim';
+      } else if (user.email === 'assistante@crm.com') {
+        role = 'Assistante';
+        displayName = 'Asma';
+      }
+      
+      userRef.set({
+        email: user.email,
+        displayName: displayName,
+        role: role,
+        createdAt: new Date().toISOString()
+      })
+      .then(() => {
+        console.log('✅ Profil utilisateur créé pour', displayName);
+      })
+      .catch((err) => {
+        console.error('❌ Erreur création profil:', err);
+      });
+    })
+    .catch((err) => {
+      console.error('❌ Erreur vérification profil:', err);
+    });
 }
 
 // ============================================================
